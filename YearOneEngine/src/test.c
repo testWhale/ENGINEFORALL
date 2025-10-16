@@ -1,6 +1,6 @@
 #include "test.h"
-#include "pickup.h"
-#include "utils.h"
+#include "state/pickup.h"
+#include "utils/utils.h"
 
 //define minWidth of HealthBar
 #define minWidth 0.0f

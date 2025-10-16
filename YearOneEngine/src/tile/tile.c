@@ -1,6 +1,6 @@
 #include "tile.h"
 #include "cprocessing.h"
-#include "../SM.h"
+#include "utils/SM.h"
 Tile g_TileMap[TILE_ROWS][TILE_COLUMNS];
 
 void Map_Init() {

@@ -24,10 +24,7 @@
     <ClCompile Include="src\mainmenu.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\utils.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\health.c">
+    <ClCompile Include="src\utils\utils.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\test.h">
@@ -36,10 +33,10 @@
     <ClCompile Include="src\test.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\SM.c">
+    <ClCompile Include="src\utils\SM.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\pickup.c">
+    <ClCompile Include="src\state\pickup.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\tile\tile.c">
@@ -53,13 +50,13 @@
     <ClInclude Include="src\mainmenu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\utils.h">
+    <ClInclude Include="src\utils\utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\SM.h">
+    <ClInclude Include="src\utils\SM.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\pickup.h">
+    <ClInclude Include="src\state\pickup.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\tile\tile.h">

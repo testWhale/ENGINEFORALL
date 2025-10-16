@@ -1,7 +1,7 @@
 #ifndef TILE_H
 #define TILE_H
 #include "cprocessing.h"
-#include "../SM.h"
+#include "utils/SM.h"
 #define TILE_ROWS 6
 #define TILE_COLUMNS 12
 typedef struct Tile{

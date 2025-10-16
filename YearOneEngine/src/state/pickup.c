@@ -1,5 +1,5 @@
 #include "pickup.h"
-#include "utils.h"
+#include "utils/utils.h"
 #include "tile/tile.h"
 
 void PlayerIdle_Init(GameEntity* entity, StateMachine* SM, float dt) {
