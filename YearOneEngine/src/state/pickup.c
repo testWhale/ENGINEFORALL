@@ -4,7 +4,6 @@
 
 void PlayerIdle_Init(GameEntity* entity, StateMachine* SM, float dt) {
 	//printf("Player entered IDLE::INIT state\n");
-	
 	entity->color.red = 100;
 	entity->color.green = 100;
 	entity->color.blue = 255;
@@ -48,6 +47,8 @@ void PickedUp_Update(GameEntity* entity, StateMachine* SM, float dt) {
 	/*//printf("UPDATING\n");*/
 	entity->stateTimer += dt;
 	entity->centerPos = (CP_Vector){ CP_Input_GetMouseX(), CP_Input_GetMouseY() };
+	hoverTileAt(entity, (CP_Vector) { CP_Input_GetMouseX(), CP_Input_GetMouseY() });
+
 	if (IsCircleClicked(entity->centerPos.x, entity->centerPos.y, entity->diameter, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
 		getTileAt(entity, (CP_Vector) { CP_Input_GetMouseX(), CP_Input_GetMouseY() });
 		FSM_SetState(SM, IdleState, entity, dt);
@@ -57,16 +58,13 @@ void PickedUp_Update(GameEntity* entity, StateMachine* SM, float dt) {
 
 void PickedUp_Exit(GameEntity* entity, StateMachine* SM, float dt) {
 	//printf("Player left IDLE state\n");
-	
+	hoverTileExit();
 }
 
 void Sel_Init(GameEntity* entity, StateMachine* SM, float dt) {
 	//printf("Player entered Attck state\n");
 	printf("NOW selecting..\n");
-
-	entity->color.red = 0;
-	entity->color.green = 0;
-	entity->color.blue = 255;
+	hoverTileExit();
 	entity->stateTimer = 0.0f;
 }
 
@@ -74,9 +72,10 @@ void Sel_Update(GameEntity* entity, StateMachine* SM, float dt) {
 	/*//printf("UPDATING\n");*/
 	entity->stateTimer += dt;
 	//printf("WE ARE SELECTION\n");
+	hoverTileAt(entity, (CP_Vector) { entity->centerPos.x, entity->centerPos.y });
 
 	if (IsCircleClicked(entity->centerPos.x, entity->centerPos.y, entity->diameter, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
-
+		hoverTileExit();
 		FSM_SetState(SM, IdleState, entity, dt);
 		return;
 	}
@@ -84,8 +83,7 @@ void Sel_Update(GameEntity* entity, StateMachine* SM, float dt) {
 
 void Sel_Exit(GameEntity* entity, StateMachine* SM, float dt) {
 	printf("BYE SELECTION\n");
-	
-		
+	hoverTileExit();
 }
 
 States IdleState = {

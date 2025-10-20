@@ -8,6 +8,7 @@
 #define Down 270.0
 #define Right 180.0
 
+
 typedef int EntityID;
 typedef struct GameEntity GameEntity;
 typedef struct StateMachine StateMachine;

@@ -1,4 +1,6 @@
 #include "SM.h"
+//Defined Colours
+
 // Transition state code
 StateFunction FSM_SetState(StateMachine* fsm, States newState, GameEntity* data, float dt) {
 	if (fsm->currState.exit) {

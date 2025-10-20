@@ -1,7 +1,7 @@
 #include "test.h"
 #include "state/pickup.h"
 #include "utils/utils.h"
-
+#include "utils/container.h"
 //define minWidth of HealthBar
 #define minWidth 0.0f
 #define maxWidth 1400.0f
@@ -11,10 +11,7 @@
 //defined Sound
 CP_Sound mySound = NULL;
 
-//Defined Colours
-Color Green = { 0, 255, 0, 255 };
-const  Color Red = { 255, 0, 0, 255 };
-Color Blue = { 0, 0, 255, 255 };
+
 
 float winWidth;
 float winHeight;
@@ -25,7 +22,10 @@ GameEntity* Player;
 GameEntity _player;
 StateMachine* _SM;
 
-
+Color Blue = { 0, 0, 255, 255 };
+Color Green = { 0, 255, 0, 255 };
+Color Red = { 255, 0, 0, 255 };
+Color White = { 0, 0, 0, 255};
 void inArea(CP_Vector, CP_Vector);
 typedef void (*funcArea)(CP_Vector, CP_Vector);
 
@@ -73,6 +73,7 @@ void initEnemies() {
 
 }
 
+
 void Test_Init(void)
 {
 	initEnemies();
@@ -88,7 +89,14 @@ void Test_Init(void)
 	//_SM_Instance.transitionMap[Damage] = Exit_Damage_State;
 	myFont = CP_Font_Load("Assets/Exo2-Regular.ttf");
 	mySound = CP_Sound_Load("Assets/sound.mp3");
+	
+	/*EXTERNAL FUNCTIONS*/
 	Map_Init();
+	CONTAINERS[0] = (Container){ 0, "TEST", {100.0f,100.0f},264,595,NULL,"Assets/templ0.jpg" };
+	CONTAINERS[1] = (Container){ 1, "Icons", {300.0f,300.0f},797,144,NULL,"Assets/templ1.jpg" };
+
+	Container_Init(&CONTAINERS[0]);
+
 	//myFont = CP_Font_Load("Assets/Exo2-Regular.ttf");
 }
 
@@ -101,6 +109,7 @@ void Test_Update(void)
 	
 	CP_Graphics_ClearBackground(CP_Color_Create(128, 128, 128, 255));
 	Map_Update();
+	Container_Update(&CONTAINERS[0]);
 	for (int i = 0; i < MAX_ENTITIES; i++) {
 		ActiveEntity entity = activeEntityList[i];
 		FSM_Update(entity.fsm, entity.unit, dt);
@@ -110,6 +119,8 @@ void Test_Update(void)
 		
 		//printf("%s", activeEntityList[i].fsm.currState);
 	}
+
+
 	////Set Circles
 	//CP_Settings_RectMode(CP_POSITION_CENTER);
 	//CP_Settings_Fill(CP_Color_Create(circles[0].color.red, circles[0].color.green, circles[0].color.blue, circles[0].color.opacity));
@@ -124,6 +135,9 @@ void Test_Update(void)
 
 void Test_Exit(void)
 {
+	Container_Destroy(&CONTAINERS[0]);
+	Container_Destroy(&CONTAINERS[1]);
+
 	CP_Font_Free(myFont);
 	CP_Sound_Free(mySound);
 }

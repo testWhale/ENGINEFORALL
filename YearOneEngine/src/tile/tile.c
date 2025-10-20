@@ -2,7 +2,12 @@
 #include "cprocessing.h"
 #include "utils/SM.h"
 Tile g_TileMap[TILE_ROWS][TILE_COLUMNS];
+#define RED   (Color){ 255, 0,   0,   255 }
+#define BLUE  (Color){ 0,   0, 255, 255 }
+#define GREEN (Color){ 0, 255,  0,  255 }
+#define WHITE (Color){ 255, 255,  255,  255 }
 
+/*---------------------------------MAP_INIT FUNCTION-----------------------------*/
 void Map_Init() {
 	float scrn_width, scrn_height;
 	scrn_width = CP_System_GetWindowWidth(); scrn_height = CP_System_GetWindowHeight();
@@ -29,6 +34,8 @@ void Map_Init() {
 			g_TileMap[i][j].entity = NULL;
 			g_TileMap[i][j].hasEntity = 0;
 			g_TileMap[i][j].nextTileCheck = NULL;
+			g_TileMap[i][j].tcolor = WHITE;
+			g_TileMap[i][j].currHovered = 0;
 			CP_Settings_Fill(CP_Color_Create(0, 255, 0, 255));
 			CP_Graphics_DrawCircle(startPoint.x, startPoint.y, 10);
 			CP_Settings_Fill(CP_Color_Create(255, 255, 255, 255));
@@ -42,6 +49,7 @@ void Map_Init() {
 	}
 }
 
+/*---------------------------------Check TILE FUNCTIONS-----------------------------*/
 Tile* getTileAt(GameEntity* Entity,CP_Vector mouse) {
 	int row = mouse.y / g_TileMap[0][0].dim.y;
 	int col = mouse.x / g_TileMap[0][0].dim.x;
@@ -51,16 +59,18 @@ Tile* getTileAt(GameEntity* Entity,CP_Vector mouse) {
 	}
 	if (1 == c_tile->hasEntity) {
 		printf("Cannot Place Unit Here.\n");
-		CP_Settings_Fill(CP_Color_Create(150, 150, 255, 255));
+		CP_Settings_Fill(CP_Color_Create(255, 0, 0, 255));
 		Entity->centerPos = (CP_Vector){0,0};
 		return NULL;
 	}
 	if (1 == c_tile->nextTileCheck) {
 		printf("Cannot Place, Enemy Too Close.\n");
+		CP_Settings_Fill(CP_Color_Create(255, 0, 0, 255));
 		Entity->centerPos = (CP_Vector){ 0,0 };
 		return NULL;
 	}
 	else{
+		CP_Settings_Fill(CP_Color_Create(0, 255, 255, 255));
 		c_tile->hasEntity = 1;
 		Entity->isItActive = 1;
 		Entity->centerPos = c_tile->centerPos;
@@ -68,14 +78,46 @@ Tile* getTileAt(GameEntity* Entity,CP_Vector mouse) {
 	}
 }
 
+/*---------------------------------HOVER FUNCTIONS-----------------------------*/
+Tile* hoverTileAt(GameEntity* Entity, CP_Vector mouse) {
+	//reset all tileMaps to 0 first
+	for (int i = 0; i < TILE_ROWS; i++) {
+		for (int j = 0; j < TILE_COLUMNS; j++) {
+			g_TileMap[i][j].currHovered=0;
+		}
+	}
+	int row = mouse.y / g_TileMap[0][0].dim.y;
+	int col = mouse.x / g_TileMap[0][0].dim.x;
+	Tile* c_tile = &g_TileMap[row][col];
+	c_tile->currHovered = 1;
+	if (row < 0 || row >= TILE_ROWS || col < 0 || col >= TILE_COLUMNS) {
+		printf("ERROR");
+	}
+}
+Tile* hoverTileExit() {
+	for (int i = 0; i < TILE_ROWS; i++) {
+		for (int j = 0; j < TILE_COLUMNS; j++) {
+			g_TileMap[i][j].currHovered = 0;
+		}
+	}
+}
+
+/*---------------------------------MAP_UPDATE FUNCTIONS-----------------------------*/
 void Map_Update() {
 	for (int i = 0; i < TILE_ROWS; i++) {
 		for (int j = 0; j < TILE_COLUMNS; j++) {
 			Tile* c_tile = &g_TileMap[i][j];
-		
+			Color t_color = c_tile->tcolor;
+			if (c_tile->currHovered) {
+				t_color = BLUE;
+			}
+			else {
+				t_color = WHITE; // NOT HOVERED = WHITE
+			}
 			//CP_Settings_Fill(CP_Color_Create(0, 255, 0, 255));
 			//CP_Graphics_DrawCircle(startPoint.x, startPoint.y, 10);
-			CP_Settings_Fill(CP_Color_Create(255, 255, 255, 255));
+			{ CP_Settings_Fill(CP_Color_Create(t_color.red, t_color.green, t_color.blue, t_color.opacity)); }
+
 			CP_Graphics_DrawCircle(c_tile->centerPos.x, c_tile->centerPos.y, 10);
 			CP_Graphics_DrawRect(c_tile->centerPos.x, c_tile->centerPos.y, c_tile->dim.x - 2, c_tile->dim.y - 2);
 		}

@@ -5,6 +5,7 @@
 #include "../test.h"
 #include "utils.h"
 
+
 int IsAreaClicked(float area_center_x, float area_center_y, float area_width, float area_height, float click_x, float click_y, int button)
 {
 	if (click_x >= area_center_x - (area_width / 2) && click_x <= area_center_x + (area_width / 2) &&
