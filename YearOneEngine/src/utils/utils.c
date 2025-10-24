@@ -1,28 +1,18 @@
-
 #include <math.h>
 #include <stdio.h>
 
-#include "../test.h"
+#include "test.h"
 #include "utils.h"
 
 
-int IsAreaClicked(float area_center_x, float area_center_y, float area_width, float area_height, float click_x, float click_y, int button)
+
+int IsAreaClicked(float area_center_x, float area_center_y, float area_width, float area_height, float click_x, float click_y)
 {
 	if (click_x >= area_center_x - (area_width / 2) && click_x <= area_center_x + (area_width / 2) &&
 		click_y >= area_center_y - (area_height / 2) && click_y <= area_center_y + (area_height / 2))
 	{
 		if (CP_Input_MouseClicked())
 		{
-			printf("Clicked\n");
-			if(button==1)
-			{
-				CP_Engine_SetNextGameState(Test_Init, Test_Update, NULL);
-			}
-			if (button == 2)
-			{
-				CP_Engine_Terminate();
-			}
-
 			return 1;
 		}
 	}

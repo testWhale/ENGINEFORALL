@@ -7,7 +7,11 @@
 #define Left 0.0
 #define Down 270.0
 #define Right 180.0
-
+#define MAX_ENTITIES 2
+#define RED   (Color){ 255, 0,   0,   255 }
+#define BLUE  (Color){ 0,   0, 255, 255 }
+#define GREEN (Color){ 0, 255,  0,  255 }
+#define WHITE (Color){ 255, 255,  255,  255 }
 
 typedef int EntityID;
 typedef struct GameEntity GameEntity;
@@ -24,7 +28,8 @@ struct GameEntity {
 	Color color;
 	float diameter;
 	float stateTimer;
-	int isItActive;
+	int isItOnMap;
+	int isSel;
 }; //Base For all Entities
 
 // Step 1: State function pointer type:
@@ -47,11 +52,15 @@ struct StateMachine {
 
 typedef struct ActiveEntity {
 	int id;
-	GameEntity* unit;
+	GameEntity* unit; //Array
 	StateMachine* fsm;
+
 }ActiveEntity;
+
 
 StateFunction FSM_SetState(StateMachine* fsm, States newState, GameEntity* data, float dt);
 StateFunction FSM_Update(StateMachine* fsm, GameEntity* data, float dt);
+
+ActiveEntity activeEntityList[MAX_ENTITIES];
 // Init, Set currState, send function pointer to States.init
 #endif

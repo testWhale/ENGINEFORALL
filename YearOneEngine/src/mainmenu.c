@@ -1,6 +1,7 @@
 #include "cprocessing.h"
 #include "utils/utils.h"
 #include "mainmenu.h"
+#include "test.h"
 
 CP_Font myFont;
 float winWidth;
@@ -38,8 +39,12 @@ void Main_Menu_Update(void)
     CP_Settings_TextSize(60.0f);
     CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
     CP_Font_DrawText("Play", firstButtonCx, firstButtonCy);
-    IsAreaClicked(firstButtonCx, firstButtonCy, 300.0f, 200.0f, CP_Input_GetMouseX(), CP_Input_GetMouseY(),1);
+    if (IsAreaClicked(firstButtonCx, firstButtonCy, 300.0f, 200.0f, CP_Input_GetMouseX(), CP_Input_GetMouseY())){   
+        CP_Engine_SetNextGameState(Test_Init, Test_Update, NULL);
+    }
     
+   
+
 
     //2nd Text Box
     secButtonCx = winWidth / 2.0f;
@@ -53,7 +58,9 @@ void Main_Menu_Update(void)
     CP_Settings_TextSize(60.0f);
     CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
     CP_Font_DrawText("Exit", secButtonCx, secButtonCy);
-    IsAreaClicked(secButtonCx, secButtonCy, 300.0f, 200.0f, CP_Input_GetMouseX(), CP_Input_GetMouseY(), 2);
+    if (IsAreaClicked(secButtonCx, secButtonCy, 300.0f, 200.0f, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
+        CP_Engine_Terminate();
+    }
 
 }
 

@@ -21,9 +21,10 @@
   <ItemGroup>
     <ClCompile Include="src\state\pickup.c" />
     <ClCompile Include="src\tile\layout.c" />
+    <ClCompile Include="src\utils\arr.c" />
     <ClCompile Include="src\utils\container.c" />
     <ClCompile Include="src\utils\SM.c" />
-    <ClCompile Include="src\test.h" />
+    <ClInclude Include="src\test.h" />
     <ClCompile Include="src\main.c" />
     <ClCompile Include="src\mainmenu.c" />
     <ClCompile Include="src\test.c" />
@@ -34,6 +35,7 @@
     <ClInclude Include="DataTypes.h" />
     <ClInclude Include="src\mainmenu.h" />
     <ClInclude Include="src\state\pickup.h" />
+    <ClInclude Include="src\utils\arr.h" />
     <ClInclude Include="src\utils\container.h" />
     <ClInclude Include="src\utils\SM.h" />
     <ClInclude Include="src\tile\tile.h" />

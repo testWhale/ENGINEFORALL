@@ -2,10 +2,7 @@
 #include "cprocessing.h"
 #include "utils/SM.h"
 Tile g_TileMap[TILE_ROWS][TILE_COLUMNS];
-#define RED   (Color){ 255, 0,   0,   255 }
-#define BLUE  (Color){ 0,   0, 255, 255 }
-#define GREEN (Color){ 0, 255,  0,  255 }
-#define WHITE (Color){ 255, 255,  255,  255 }
+
 
 /*---------------------------------MAP_INIT FUNCTION-----------------------------*/
 void Map_Init() {
@@ -50,7 +47,7 @@ void Map_Init() {
 }
 
 /*---------------------------------Check TILE FUNCTIONS-----------------------------*/
-Tile* getTileAt(GameEntity* Entity,CP_Vector mouse) {
+Tile* setOnTile(GameEntity* Entity,CP_Vector mouse) {
 	int row = mouse.y / g_TileMap[0][0].dim.y;
 	int col = mouse.x / g_TileMap[0][0].dim.x;
 	Tile* c_tile = &g_TileMap[row][col];
@@ -70,11 +67,11 @@ Tile* getTileAt(GameEntity* Entity,CP_Vector mouse) {
 		return NULL;
 	}
 	else{
-		CP_Settings_Fill(CP_Color_Create(0, 255, 255, 255));
 		c_tile->hasEntity = 1;
-		Entity->isItActive = 1;
-		Entity->centerPos = c_tile->centerPos;
-		c_tile->entity = Entity;
+		Entity->isItOnMap = 1; 
+
+		Entity->centerPos = c_tile->centerPos; //magnetise entity to tile
+		c_tile->entity = Entity; //in case tile needs entity data give it
 	}
 }
 
@@ -98,7 +95,17 @@ Tile* hoverTileExit() {
 	for (int i = 0; i < TILE_ROWS; i++) {
 		for (int j = 0; j < TILE_COLUMNS; j++) {
 			g_TileMap[i][j].currHovered = 0;
+			g_TileMap[i][j].tsel = 0;
 		}
+	}
+}
+Tile* SelAfterPlaced(GameEntity* Entity, CP_Vector mouse) {
+	int row = mouse.y / g_TileMap[0][0].dim.y;
+	int col = mouse.x / g_TileMap[0][0].dim.x;
+	Tile* c_tile = &g_TileMap[row][col];
+	c_tile->tsel = 1;
+	if (row < 0 || row >= TILE_ROWS || col < 0 || col >= TILE_COLUMNS) {
+		printf("ERROR");
 	}
 }
 
@@ -108,8 +115,9 @@ void Map_Update() {
 		for (int j = 0; j < TILE_COLUMNS; j++) {
 			Tile* c_tile = &g_TileMap[i][j];
 			Color t_color = c_tile->tcolor;
-			if (c_tile->currHovered) {
+			if (c_tile->currHovered || c_tile->tsel) {
 				t_color = BLUE;
+
 			}
 			else {
 				t_color = WHITE; // NOT HOVERED = WHITE

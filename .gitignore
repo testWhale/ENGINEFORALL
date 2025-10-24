@@ -1,4 +1,4 @@
 .tmp
 .vs
 .bin
-.bin/Debug-x64
+.bin\Debug-x64

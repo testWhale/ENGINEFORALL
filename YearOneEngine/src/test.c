@@ -1,12 +1,14 @@
-#include "test.h"
 #include "state/pickup.h"
 #include "utils/utils.h"
 #include "utils/container.h"
+#include "utils/arr.h"
+#include "utils/SM.h"
 //define minWidth of HealthBar
 #define minWidth 0.0f
 #define maxWidth 1400.0f
 #define extraBars 10
-#define MAX_ENTITIES 2
+
+
 
 //defined Sound
 CP_Sound mySound = NULL;
@@ -47,6 +49,8 @@ int size = 80;
 int i;
 CP_Font myFont;
 
+//TestArr
+
 
 int isInArea(Circle circle, GameEntity* player) {
 	CP_Vector PlayerToCircleDist = CP_Vector_Subtract(circle.centerPos, player->centerPos);
@@ -61,14 +65,20 @@ int isInArea(Circle circle, GameEntity* player) {
 }
 
 GameEntity template[MAX_ENTITIES] = { {0, {100, 100}, 0, 0, {0, 0}, {255,0,0,255}, 100}, { 1, {300, 200}, 0, 0, {0, 0}, {0,255,0,255}, 120 } };
-ActiveEntity activeEntityList[MAX_ENTITIES];
+ActiveEntity tempAct = { 0, &template[0], &IdleState };
 StateMachine fsmPool[MAX_ENTITIES];
 static StateMachine fsmList[MAX_ENTITIES];
 void initEnemies() {
 	for (int i = 0; i < MAX_ENTITIES; i++) {
-		activeEntityList[i].unit = &template[i];
-		activeEntityList[i].fsm = &fsmList[i];
-		activeEntityList[i].fsm->currState = IdleState;
+		//activeEntityList[i].unit = &template[i];
+		//activeEntityList[i].fsm = &fsmList[i];
+		//activeEntityList[i].fsm->currState = IdleState;
+		newArr.ActiveEntityArr[i].unit = NULL;
+		newArr.ActiveEntityArr[i].fsm = NULL;
+
+		newArr.ActiveEntityArr[i].unit = &template[i];
+		newArr.ActiveEntityArr[i].fsm = &fsmList[i];
+		newArr.ActiveEntityArr[i].fsm->currState = IdleState;
 	}
 
 }
@@ -76,7 +86,7 @@ void initEnemies() {
 
 void Test_Init(void)
 {
-	initEnemies();
+	//initEnemies();
 	winHeight = CP_System_GetWindowHeight();
 	winWidth = CP_System_GetWindowWidth();
 	players[0] = (GameEntity){ 0, {100.0f, 100.0f}, 0, 1, {0, 0}, Blue, 150 };
@@ -96,10 +106,13 @@ void Test_Init(void)
 	CONTAINERS[1] = (Container){ 1, "Icons", {300.0f,300.0f},797,144,NULL,"Assets/templ1.jpg" };
 
 	Container_Init(&CONTAINERS[0]);
+	newArr = Arr_Init(3);
+	initEnemies();
 
 	//myFont = CP_Font_Load("Assets/Exo2-Regular.ttf");
 }
 
+int count = 0;
 
 
 void Test_Update(void)
@@ -109,11 +122,22 @@ void Test_Update(void)
 	
 	CP_Graphics_ClearBackground(CP_Color_Create(128, 128, 128, 255));
 	Map_Update();
+	 
 	Container_Update(&CONTAINERS[0]);
 	for (int i = 0; i < MAX_ENTITIES; i++) {
-		ActiveEntity entity = activeEntityList[i];
+		ActiveEntity entity = newArr.ActiveEntityArr[i];
 		FSM_Update(entity.fsm, entity.unit, dt);
-		GameEntity* ptr = activeEntityList[i].unit;
+		GameEntity* ptr = entity.unit;
+		//if (ptr->isSel==1) {
+		//	count+=1;
+		//	printf("%d\n", ptr->isSel);
+		//	if (count > 1) {
+		//		printf("HUH2");
+		//		//more than one isSel meaning DESELECT ALL
+		//		deselectEnt();
+		//		count = 0;
+		//	}
+		//}
 		CP_Settings_Fill(CP_Color_Create(ptr->color.red, ptr->color.green, ptr->color.blue, ptr->color.opacity));
 		CP_Graphics_DrawCircle(ptr->centerPos.x, ptr->centerPos.y, ptr->diameter);
 		

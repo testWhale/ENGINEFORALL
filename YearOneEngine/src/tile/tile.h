@@ -14,6 +14,7 @@ typedef struct Tile{
 	int nextTileCheck;
 	Color tcolor;
 	int currHovered;
+	int tsel;
 }Tile;
 
 extern Tile g_TileMap[TILE_ROWS][TILE_COLUMNS]; //declaration of one global instance of TileMap
