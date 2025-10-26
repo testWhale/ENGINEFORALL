@@ -6,9 +6,10 @@ typedef struct TestArr {
 	size_t used;
 	size_t maxLength;
 }TestArr;
-TestArr newArr;
+TestArr enemyArr; //newArr IS OUR ONLY ENTITY ARRAY will change name
+TestArr playerArr; //playerArr is ONLY UNIT ARRAY will change name
 
-TestArr Arr_Init(size_t maxLength);
+TestArr* Arr_Init(size_t maxLength, TestArr* Array);
 
 void Arr_Insert(TestArr* Array, ActiveEntity Entity);
 

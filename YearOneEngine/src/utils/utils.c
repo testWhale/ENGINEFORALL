@@ -4,8 +4,6 @@
 #include "test.h"
 #include "utils.h"
 
-
-
 int IsAreaClicked(float area_center_x, float area_center_y, float area_width, float area_height, float click_x, float click_y)
 {
 	if (click_x >= area_center_x - (area_width / 2) && click_x <= area_center_x + (area_width / 2) &&
@@ -17,6 +15,19 @@ int IsAreaClicked(float area_center_x, float area_center_y, float area_width, fl
 		}
 	}
 	return 0;
+}
+int IsImgHovered(CP_Vector leftTopBound, float area_width, float area_height, CP_Vector mouse)
+{
+	if (CP_Input_MouseClicked()) {
+		if ((mouse.x >= leftTopBound.x) && (mouse.x <= (leftTopBound.x + area_width)) &&
+			(mouse.y >= leftTopBound.y) && (mouse.y <= (leftTopBound.y + area_height))) {
+			return 2;
+		}
+	} else{
+		if ((mouse.x >= leftTopBound.x) && (mouse.x <= (leftTopBound.x + area_width)) &&
+			(mouse.y >= leftTopBound.y) && (mouse.y <= (leftTopBound.y + area_height))) {
+			return 1; }
+		return 0; }
 }
 
 int IsCircleClicked(float circle_center_x, float circle_center_y, float diameter, float click_x, float click_y){

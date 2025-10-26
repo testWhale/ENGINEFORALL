@@ -17,19 +17,14 @@ typedef int EntityID;
 typedef struct GameEntity GameEntity;
 typedef struct StateMachine StateMachine;
 
-//foward declaration
 typedef struct { int red; int green; int blue; int opacity; }Color;
 struct GameEntity {
-	int id;
-	CP_Vector centerPos;
-	float rotation;
-	CP_BOOL isPlayer;
-	CP_Vector forwardVector;
-	Color color;
-	float diameter;
-	float stateTimer;
-	int isItOnMap;
-	int isSel;
+	/*Generic Values*/
+	int id; CP_Vector centerPos; float rotation; CP_BOOL isPlayer; 
+	CP_Vector forwardVector; Color color; float diameter; float stateTimer; 
+	
+	/*Check Values*/
+	int isItOnMap; int isSel; char* label; 
 }; //Base For all Entities
 
 // Step 1: State function pointer type:
@@ -57,10 +52,8 @@ typedef struct ActiveEntity {
 
 }ActiveEntity;
 
-
 StateFunction FSM_SetState(StateMachine* fsm, States newState, GameEntity* data, float dt);
 StateFunction FSM_Update(StateMachine* fsm, GameEntity* data, float dt);
 
-ActiveEntity activeEntityList[MAX_ENTITIES];
 // Init, Set currState, send function pointer to States.init
 #endif

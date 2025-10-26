@@ -3,6 +3,7 @@
 #include "utils/container.h"
 #include "utils/arr.h"
 #include "utils/SM.h"
+#include "utils/readTxt.h"
 //define minWidth of HealthBar
 #define minWidth 0.0f
 #define maxWidth 1400.0f
@@ -49,8 +50,6 @@ int size = 80;
 int i;
 CP_Font myFont;
 
-//TestArr
-
 
 int isInArea(Circle circle, GameEntity* player) {
 	CP_Vector PlayerToCircleDist = CP_Vector_Subtract(circle.centerPos, player->centerPos);
@@ -65,20 +64,20 @@ int isInArea(Circle circle, GameEntity* player) {
 }
 
 GameEntity template[MAX_ENTITIES] = { {0, {100, 100}, 0, 0, {0, 0}, {255,0,0,255}, 100}, { 1, {300, 200}, 0, 0, {0, 0}, {0,255,0,255}, 120 } };
-ActiveEntity tempAct = { 0, &template[0], &IdleState };
-StateMachine fsmPool[MAX_ENTITIES];
 static StateMachine fsmList[MAX_ENTITIES];
-void initEnemies() {
-	for (int i = 0; i < MAX_ENTITIES; i++) {
-		//activeEntityList[i].unit = &template[i];
-		//activeEntityList[i].fsm = &fsmList[i];
-		//activeEntityList[i].fsm->currState = IdleState;
-		newArr.ActiveEntityArr[i].unit = NULL;
-		newArr.ActiveEntityArr[i].fsm = NULL;
 
-		newArr.ActiveEntityArr[i].unit = &template[i];
-		newArr.ActiveEntityArr[i].fsm = &fsmList[i];
-		newArr.ActiveEntityArr[i].fsm->currState = IdleState;
+void initPlayerDemo() {
+	ContArr_Init(MAX_ENTITIES, &containersArr);
+	readFile("Assets/containers");
+
+	Arr_Init(MAX_ENTITIES, &playerArr);
+	Arr_Init(MAX_ENTITIES, &enemyArr);
+	/*FOR PLAYER_UNITS ONLY*/
+	for (int i = 0; i < MAX_ENTITIES; i++) {
+		Arr_Insert(&playerArr, (ActiveEntity){ i ,&template[i], &fsmList[i] });
+		playerArr.ActiveEntityArr[i].fsm->currState = IdleState;
+		playerArr.ActiveEntityArr[i].unit->label = "Fire";
+
 	}
 
 }
@@ -89,9 +88,9 @@ void Test_Init(void)
 	//initEnemies();
 	winHeight = CP_System_GetWindowHeight();
 	winWidth = CP_System_GetWindowWidth();
-	players[0] = (GameEntity){ 0, {100.0f, 100.0f}, 0, 1, {0, 0}, Blue, 150 };
-	circles[0] = (Circle){ 0, {winWidth / 3 * 1, winHeight / 2}, 300, Red };
-	circles[1] = (Circle){ 1, {winWidth / 3 * 2, winHeight / 2}, 300, Green };
+	//players[0] = (GameEntity){ 0, {100.0f, 100.0f}, 0, 1, {0, 0}, Blue, 150 };
+	//circles[0] = (Circle){ 0, {winWidth / 3 * 1, winHeight / 2}, 300, Red };
+	//circles[1] = (Circle){ 1, {winWidth / 3 * 2, winHeight / 2}, 300, Green };
 
 	//_SM.currState = IdleState; //SetState(..., deltaTime)
 
@@ -99,15 +98,18 @@ void Test_Init(void)
 	//_SM_Instance.transitionMap[Damage] = Exit_Damage_State;
 	myFont = CP_Font_Load("Assets/Exo2-Regular.ttf");
 	mySound = CP_Sound_Load("Assets/sound.mp3");
-	
+
 	/*EXTERNAL FUNCTIONS*/
 	Map_Init();
-	CONTAINERS[0] = (Container){ 0, "TEST", {100.0f,100.0f},264,595,NULL,"Assets/templ0.jpg" };
-	CONTAINERS[1] = (Container){ 1, "Icons", {300.0f,300.0f},797,144,NULL,"Assets/templ1.jpg" };
+	//CONTAINERS[0] = (Container){ 0, "TEST", {0.0f,0.0f},264,595,NULL,"Assets/templ0.jpg" };
+	//CONTAINERS[1] = (Container){ 1, "Icons", {300.0f,300.0f},797,144,NULL,"Assets/templ1.jpg" };
+	//CONTAINERS[2] = (Container){ 2, "Troop1", {200.0f,200.0f},98,99,NULL,"Assets/buttons/Troop_1.png",0.2 };
+	//CONTAINERS[3] = (Container){ 3, "Troop2", {300.0f,300.0f},98,99,NULL,"Assets/buttons/Troop_3.png", 0.2 };
 
-	Container_Init(&CONTAINERS[0]);
-	newArr = Arr_Init(3);
-	initEnemies();
+	//Container_Init(&CONTAINERS[0]);
+	//Container_Init(&CONTAINERS[2]);
+	//Container_Init(&CONTAINERS[3]);
+	initPlayerDemo();
 
 	//myFont = CP_Font_Load("Assets/Exo2-Regular.ttf");
 }
@@ -119,25 +121,18 @@ void Test_Update(void)
 {
 	Player = &players[0];
 	float dt = CP_System_GetDt();
-	
+
 	CP_Graphics_ClearBackground(CP_Color_Create(128, 128, 128, 255));
 	Map_Update();
-	 
-	Container_Update(&CONTAINERS[0]);
+	//Container_Draw(&CONTAINERS[0]);
+	//Container_Draw(&CONTAINERS[2]);
+	//Container_Draw(&CONTAINERS[3]);
 	for (int i = 0; i < MAX_ENTITIES; i++) {
-		ActiveEntity entity = newArr.ActiveEntityArr[i];
+		ActiveEntity entity = playerArr.ActiveEntityArr[i];
 		FSM_Update(entity.fsm, entity.unit, dt);
 		GameEntity* ptr = entity.unit;
-		//if (ptr->isSel==1) {
-		//	count+=1;
-		//	printf("%d\n", ptr->isSel);
-		//	if (count > 1) {
-		//		printf("HUH2");
-		//		//more than one isSel meaning DESELECT ALL
-		//		deselectEnt();
-		//		count = 0;
-		//	}
-		//}
+		if (ptr->isSel) { ptr->color.red = 0, ptr->color.green = 0, ptr->color.blue = 255, ptr->color.opacity = 255;  }
+		else{ ptr->color.red = 255, ptr->color.green = 0, ptr->color.blue = 0, ptr->color.opacity = 255; }
 		CP_Settings_Fill(CP_Color_Create(ptr->color.red, ptr->color.green, ptr->color.blue, ptr->color.opacity));
 		CP_Graphics_DrawCircle(ptr->centerPos.x, ptr->centerPos.y, ptr->diameter);
 		
@@ -159,9 +154,10 @@ void Test_Update(void)
 
 void Test_Exit(void)
 {
-	Container_Destroy(&CONTAINERS[0]);
-	Container_Destroy(&CONTAINERS[1]);
-
+	//Container_Destroy(&CONTAINERS[0]);
+	//Container_Destroy(&CONTAINERS[1]);
+	//Container_Destroy(&CONTAINERS[2]);
+	//Container_Destroy(&CONTAINERS[3]);
 	CP_Font_Free(myFont);
 	CP_Sound_Free(mySound);
 }
