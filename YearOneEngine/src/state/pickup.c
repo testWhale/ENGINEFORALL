@@ -10,8 +10,9 @@ int checkForSel() {
 	int count2 = 0;
 	for (int i = 0; i < MAX_ENTITIES; i++) {
 		ActiveEntity entity = playerArr.ActiveEntityArr[i];
-		printf("ID: %d		ISSEL: %d\n", entity.unit->id, entity.unit->isSel);
-		if (entity.unit->isSel) {
+		printf("ID: %d		ISSEL: %d\n", entity.unit.id, entity.unit.isSel);
+		if (entity.unit.isSel) {
+			printf("YES\n");
 			return 1;
 		}
 	}
@@ -19,11 +20,11 @@ int checkForSel() {
 }
 void deselectEnt() {
 		for (int j = 0; j < MAX_ENTITIES; j++) {
-			ActiveEntity entity2 = playerArr.ActiveEntityArr[j];
-			entity2.unit->color.red = 100;
-			entity2.unit->color.green = 0;
-			entity2.unit->color.blue = 0;
-			entity2.unit->isSel = 0;
+			ActiveEntity* entity2 = &playerArr.ActiveEntityArr[j];
+			entity2->unit.color.red = 100;
+			entity2->unit.color.green = 0;
+			entity2->unit.color.blue = 0;
+			entity2->unit.isSel = 0;
 		}
 } 
 
@@ -97,7 +98,6 @@ void Sel_Init(GameEntity* entity, StateMachine* SM, float dt) {
 		deselectEnt();
 	};
 	entity->isSel = 1;
-	checkForSel();
 	
 }
 void Sel_Update(GameEntity* entity, StateMachine* SM, float dt) {

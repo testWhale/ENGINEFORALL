@@ -63,21 +63,31 @@ int isInArea(Circle circle, GameEntity* player) {
 	return 0;
 }
 
-GameEntity template[MAX_ENTITIES] = { {0, {100, 100}, 0, 0, {0, 0}, {255,0,0,255}, 100}, { 1, {300, 200}, 0, 0, {0, 0}, {0,255,0,255}, 120 } };
-static StateMachine fsmList[MAX_ENTITIES];
 
+static StateMachine fsmList[MAX_ENTITIES];
+//, { 1, {300, 200}, 0, 0, {0, 0}, {0,255,0,255}, 120 },
+//{ 2, {500, 300}, 0, 0, {0, 0}, {0,255,0,255}, 120 }
+
+/*LOADS IN PLAYER ARRAY */
 void initPlayerDemo() {
+	/*-------------Template Value--------------*/
+	GameEntity template = (GameEntity){
+	.id = 0, .centerPos = {100, 100}, .rotation = 0, .isPlayer = 0, .forwardVector = {0, 0}, .color = {255,0,0,255},
+	.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "template" };
+
 	ContArr_Init(MAX_ENTITIES, &containersArr);
 	readFile("Assets/containers");
 
 	Arr_Init(MAX_ENTITIES, &playerArr);
-	Arr_Init(MAX_ENTITIES, &enemyArr);
+	//Arr_Init(MAX_ENTITIES, &enemyArr);
 	/*FOR PLAYER_UNITS ONLY*/
 	for (int i = 0; i < MAX_ENTITIES; i++) {
-		Arr_Insert(&playerArr, (ActiveEntity){ i ,&template[i], &fsmList[i] });
-		playerArr.ActiveEntityArr[i].fsm->currState = IdleState;
-		playerArr.ActiveEntityArr[i].unit->label = "Fire";
-
+		Arr_Insert(&playerArr, (ActiveEntity){ i, template, fsmList[i] });
+		playerArr.ActiveEntityArr[i].fsm.currState = IdleState;
+		playerArr.ActiveEntityArr[i].unit.id = i;
+		playerArr.ActiveEntityArr[i].unit.centerPos.x = template.centerPos.x + i * 100;
+		playerArr.ActiveEntityArr[i].unit.label = "Fire";
+		printf("ID: %d\n", playerArr.ActiveEntityArr[i].unit.id);
 	}
 
 }
@@ -101,14 +111,6 @@ void Test_Init(void)
 
 	/*EXTERNAL FUNCTIONS*/
 	Map_Init();
-	//CONTAINERS[0] = (Container){ 0, "TEST", {0.0f,0.0f},264,595,NULL,"Assets/templ0.jpg" };
-	//CONTAINERS[1] = (Container){ 1, "Icons", {300.0f,300.0f},797,144,NULL,"Assets/templ1.jpg" };
-	//CONTAINERS[2] = (Container){ 2, "Troop1", {200.0f,200.0f},98,99,NULL,"Assets/buttons/Troop_1.png",0.2 };
-	//CONTAINERS[3] = (Container){ 3, "Troop2", {300.0f,300.0f},98,99,NULL,"Assets/buttons/Troop_3.png", 0.2 };
-
-	//Container_Init(&CONTAINERS[0]);
-	//Container_Init(&CONTAINERS[2]);
-	//Container_Init(&CONTAINERS[3]);
 	initPlayerDemo();
 
 	//myFont = CP_Font_Load("Assets/Exo2-Regular.ttf");
@@ -124,18 +126,15 @@ void Test_Update(void)
 
 	CP_Graphics_ClearBackground(CP_Color_Create(128, 128, 128, 255));
 	Map_Update();
-	//Container_Draw(&CONTAINERS[0]);
-	//Container_Draw(&CONTAINERS[2]);
-	//Container_Draw(&CONTAINERS[3]);
+
 	for (int i = 0; i < MAX_ENTITIES; i++) {
-		ActiveEntity entity = playerArr.ActiveEntityArr[i];
-		FSM_Update(entity.fsm, entity.unit, dt);
-		GameEntity* ptr = entity.unit;
+		ActiveEntity* entity = &playerArr.ActiveEntityArr[i];
+		FSM_Update(&(entity->fsm), &(entity->unit), dt);
+		GameEntity* ptr = &(entity->unit);
 		if (ptr->isSel) { ptr->color.red = 0, ptr->color.green = 0, ptr->color.blue = 255, ptr->color.opacity = 255;  }
 		else{ ptr->color.red = 255, ptr->color.green = 0, ptr->color.blue = 0, ptr->color.opacity = 255; }
 		CP_Settings_Fill(CP_Color_Create(ptr->color.red, ptr->color.green, ptr->color.blue, ptr->color.opacity));
 		CP_Graphics_DrawCircle(ptr->centerPos.x, ptr->centerPos.y, ptr->diameter);
-		
 		//printf("%s", activeEntityList[i].fsm.currState);
 	}
 

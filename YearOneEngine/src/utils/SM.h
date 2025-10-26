@@ -7,7 +7,7 @@
 #define Left 0.0
 #define Down 270.0
 #define Right 180.0
-#define MAX_ENTITIES 2
+#define MAX_ENTITIES 10
 #define RED   (Color){ 255, 0,   0,   255 }
 #define BLUE  (Color){ 0,   0, 255, 255 }
 #define GREEN (Color){ 0, 255,  0,  255 }
@@ -47,8 +47,8 @@ struct StateMachine {
 
 typedef struct ActiveEntity {
 	int id;
-	GameEntity* unit; //Array
-	StateMachine* fsm;
+	GameEntity unit; //Array
+	StateMachine fsm;
 
 }ActiveEntity;
 
