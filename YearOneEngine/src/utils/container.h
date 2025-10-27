@@ -4,7 +4,7 @@
 
 /*Container H just scales the container to the screen size, draws the container, and frees it.
 The code that activates its specific states is inside of /backend*/
-typedef struct {
+typedef struct Container{
 	int id; char label[100]; CP_Vector leftTopPos; int width; int height;
 	CP_Image bg; char bg_filepath[100]; /*Basic Identifiers*/
 
@@ -33,4 +33,5 @@ void Container_Destroy(Container* container); /*frees Image from Container */
 Container* getContainer(char* label, ContArr* Array);
 
 ContArr containersArr;
+
 #endif

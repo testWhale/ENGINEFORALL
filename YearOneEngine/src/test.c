@@ -64,7 +64,7 @@ int isInArea(Circle circle, GameEntity* player) {
 }
 
 
-static StateMachine fsmList[MAX_ENTITIES];
+//StateMachine fsmList[MAX_ENTITIES];
 //, { 1, {300, 200}, 0, 0, {0, 0}, {0,255,0,255}, 120 },
 //{ 2, {500, 300}, 0, 0, {0, 0}, {0,255,0,255}, 120 }
 
@@ -73,33 +73,36 @@ void initPlayerDemo() {
 	/*-------------Template Value--------------*/
 	GameEntity template = (GameEntity){
 	.id = 0, .centerPos = {100, 100}, .rotation = 0, .isPlayer = 0, .forwardVector = {0, 0}, .color = {255,0,0,255},
-	.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "template" };
+	.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "Fire" };
 
-	ContArr_Init(MAX_ENTITIES, &containersArr);
-	readFile("Assets/containers");
-
-	Arr_Init(MAX_ENTITIES, &playerArr);
+	Arr_Init(2, &playerArr);
 	//Arr_Init(MAX_ENTITIES, &enemyArr);
 	/*FOR PLAYER_UNITS ONLY*/
-	for (int i = 0; i < MAX_ENTITIES; i++) {
-		Arr_Insert(&playerArr, (ActiveEntity){ i, template, fsmList[i] });
-		playerArr.ActiveEntityArr[i].fsm.currState = IdleState;
-		playerArr.ActiveEntityArr[i].unit.id = i;
+	for (int i = 0; i < 4; i++) {
+		Arr_Insert(&playerArr, (ActiveEntity){ 
+			.id = i, 
+			.unit = template, 
+			.fsm = (StateMachine) { .currState = IdleState }});
+		printf("CHECK AFTER INSERT: %d, \n", playerArr.ActiveEntityArr[i].id);
 		playerArr.ActiveEntityArr[i].unit.centerPos.x = template.centerPos.x + i * 100;
-		playerArr.ActiveEntityArr[i].unit.label = "Fire";
-		printf("ID: %d\n", playerArr.ActiveEntityArr[i].unit.id);
-	}
+		playerArr.ActiveEntityArr[i].unit.id = i;
 
+		printf("ID: %d\n", playerArr.ActiveEntityArr[i].id);
+	}
+	ContArr_Init(playerArr.used, &containersArr);
+	readFile("Assets/containers");
 }
+
 
 
 void Test_Init(void)
 {
+	initPlayerDemo();
 	//initEnemies();
 	winHeight = CP_System_GetWindowHeight();
 	winWidth = CP_System_GetWindowWidth();
 	//players[0] = (GameEntity){ 0, {100.0f, 100.0f}, 0, 1, {0, 0}, Blue, 150 };
-	//circles[0] = (Circle){ 0, {winWidth / 3 * 1, winHeight / 2}, 300, Red };
+	circles[0] = (Circle){ 0, {winWidth / 3 * 1, winHeight / 2}, 300, Red };
 	//circles[1] = (Circle){ 1, {winWidth / 3 * 2, winHeight / 2}, 300, Green };
 
 	//_SM.currState = IdleState; //SetState(..., deltaTime)
@@ -111,38 +114,51 @@ void Test_Init(void)
 
 	/*EXTERNAL FUNCTIONS*/
 	Map_Init();
-	initPlayerDemo();
+
 
 	//myFont = CP_Font_Load("Assets/Exo2-Regular.ttf");
 }
 
 int count = 0;
 
-
 void Test_Update(void)
 {
+	Container contTemplate = (Container){ 1, "Fire", (CP_Vector) { 100,100 }, 300, 200, "Assets/buttons/Troop_3.png", 1.0, 255, 0 };
+
+	GameEntity template = (GameEntity){
+	.id = 0, .centerPos = {100, 100}, .rotation = 0, .isPlayer = 0, .forwardVector = {0, 0}, .color = {255,0,0,255},
+	.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "template" };
 	Player = &players[0];
 	float dt = CP_System_GetDt();
-
 	CP_Graphics_ClearBackground(CP_Color_Create(128, 128, 128, 255));
 	Map_Update();
+	
+	if (IsCircleClicked(circles->centerPos.x, circles->centerPos.y, circles->diameter, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
 
-	for (int i = 0; i < MAX_ENTITIES; i++) {
+		Arr_Insert(&playerArr, (ActiveEntity) { playerArr.used, template, (StateMachine) { .currState = IdleState } });
+		//ContArr_Insert(&containersArr,contTemplate);
+
+	}
+	for (int i = 0; i < playerArr.used; i++) {
 		ActiveEntity* entity = &playerArr.ActiveEntityArr[i];
 		FSM_Update(&(entity->fsm), &(entity->unit), dt);
 		GameEntity* ptr = &(entity->unit);
-		if (ptr->isSel) { ptr->color.red = 0, ptr->color.green = 0, ptr->color.blue = 255, ptr->color.opacity = 255;  }
-		else{ ptr->color.red = 255, ptr->color.green = 0, ptr->color.blue = 0, ptr->color.opacity = 255; }
+		if (ptr->isSel) { ptr->color.red = 0, ptr->color.green = 0, ptr->color.blue = 255, ptr->color.opacity = 255; }
+		else { ptr->color.red = 255, ptr->color.green = 0, ptr->color.blue = 0, ptr->color.opacity = 255; }
 		CP_Settings_Fill(CP_Color_Create(ptr->color.red, ptr->color.green, ptr->color.blue, ptr->color.opacity));
 		CP_Graphics_DrawCircle(ptr->centerPos.x, ptr->centerPos.y, ptr->diameter);
 		//printf("%s", activeEntityList[i].fsm.currState);
 	}
+	
+
+	
 
 
-	////Set Circles
-	//CP_Settings_RectMode(CP_POSITION_CENTER);
-	//CP_Settings_Fill(CP_Color_Create(circles[0].color.red, circles[0].color.green, circles[0].color.blue, circles[0].color.opacity));
-	//CP_Graphics_DrawCircle(circles[0].centerPos.x, circles[0].centerPos.y, circles[0].diameter);
+
+	//Set Circles
+	CP_Settings_RectMode(CP_POSITION_CENTER);
+	CP_Settings_Fill(CP_Color_Create(circles[0].color.red, circles[0].color.green, circles[0].color.blue, circles[0].color.opacity));
+	CP_Graphics_DrawCircle(circles[0].centerPos.x, circles[0].centerPos.y, circles[0].diameter);
 
 	//// draw
 	//CP_Settings_RectMode(CP_POSITION_CENTER);

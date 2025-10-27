@@ -18,7 +18,7 @@ ContArr ContArr_Init(size_t maxLength, ContArr* Array) {
 
 void ContArr_Insert(ContArr* Array, Container Entity) {
 	if (Array->used >= Array->maxLength) {
-		Array->maxLength += 1;
+		Array->maxLength *= 2;
 	}
 	//realloc tries preserves old data when it enlarges, if unable it allocates new memory but frees old block 
 	Array->container = realloc(Array->container, Array->maxLength * sizeof(Container)); //so how am I able to pass it itself?

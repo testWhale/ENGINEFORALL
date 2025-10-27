@@ -31,6 +31,7 @@
     <ClCompile Include="src\mainmenu.c" />
     <ClCompile Include="src\test.c" />
     <ClCompile Include="src\tile\tile.c" />
+    <ClCompile Include="src\utils\sound.h" />
     <ClCompile Include="src\utils\utils.c" />
   </ItemGroup>
   <ItemGroup>
@@ -46,7 +47,6 @@
     <ClInclude Include="src\utils\utils.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="src\containers.txt" />
     <Text Include="src\utils\backend\containers.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

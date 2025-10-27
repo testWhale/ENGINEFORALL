@@ -19,15 +19,17 @@ TestArr* Arr_Init(size_t maxLength, TestArr* Array) {
 void Arr_Insert(TestArr* Array, ActiveEntity Entity) {
 	if (Array->used >= Array->maxLength) {
 		Array->maxLength *= 2;
+		Array->ActiveEntityArr = realloc(Array->ActiveEntityArr, Array->maxLength * sizeof(ActiveEntity)); //so how am I able to pass it itself?
+		//i  want to add another element to the array. but doesnt this wipe the first array and realloc(, numofArrElems)
+		if (!Array->ActiveEntityArr) {
+			fprintf(stderr, "Memory reallocation failed!\n");
+		}
 	}
 	//realloc tries preserves old data when it enlarges, if unable it allocates new memory but frees old block 
-	Array->ActiveEntityArr = realloc(Array->ActiveEntityArr, Array->maxLength * sizeof(ActiveEntity)); //so how am I able to pass it itself?
-	//i  want to add another element to the array. but doesnt this wipe the first array and realloc(, numofArrElems)
-	if (!Array->ActiveEntityArr) {
-		fprintf(stderr, "Memory reallocation failed!\n");
-	}
-	Array->ActiveEntityArr[Array->used] = Entity;
-	Array->used++;
+	Entity.unit.id = Array->used;
+	Array->ActiveEntityArr[Array->used++] = Entity;
+
+
 }
 
 void Arr_Del(TestArr* DynArray, int id){

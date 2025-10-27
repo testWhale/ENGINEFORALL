@@ -4,7 +4,7 @@
 #define _countof(arr) (sizeof(arr) / sizeof((arr)[0]))
 
 void readFile(char* filePath) {
-    FILE* f = fopen("C:/Users/uyait/source/GAM100/GAM100_ENGINE/YearOneEngine/src/containers.txt", "r");
+    FILE* f = fopen("./Assets/containers.txt", "r");
     Container c; 
     while (fscanf_s(f, "%d %100s { %f,%f } %d %d %100s %f %f %d",
         &c.id, c.label, (unsigned)_countof(c.label),

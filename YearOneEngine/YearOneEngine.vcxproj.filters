@@ -54,6 +54,9 @@
     <ClCompile Include="src\utils\readTxt.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\utils\sound.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DataTypes.h">
@@ -92,6 +95,5 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="src\utils\backend\containers.txt" />
-    <Text Include="src\containers.txt" />
   </ItemGroup>
 </Project>

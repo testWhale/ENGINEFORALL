@@ -8,7 +8,7 @@ int coun = 0;
 
 int checkForSel() {
 	int count2 = 0;
-	for (int i = 0; i < MAX_ENTITIES; i++) {
+	for (int i = 0; i < playerArr.used; i++) {
 		ActiveEntity entity = playerArr.ActiveEntityArr[i];
 		printf("ID: %d		ISSEL: %d\n", entity.unit.id, entity.unit.isSel);
 		if (entity.unit.isSel) {
@@ -84,7 +84,11 @@ void PickedUp_Update(GameEntity* entity, StateMachine* SM, float dt) {
 void PickedUp_Exit(GameEntity* entity, StateMachine* SM, float dt) {
 	//printf("Player left IDLE state\n");
 	entity->isSel = 0;
-	hoverTileExit();
+	entity->sound.soundPlace = CP_Sound_Load("./Assets/soundeffect/meow.wav");
+	if (entity->sound.soundPlace == NULL) {
+		printf("HELP");
+	}
+	hoverTileExit(); 
 }
 
 /*---------------------------------SELECT FUNCTION-----------------------------*/
@@ -93,6 +97,7 @@ void Sel_Init(GameEntity* entity, StateMachine* SM, float dt) {
 	//SelAfterPlaced(entity, entity->centerPos); //Select Function
 
 	entity->stateTimer = 0.0f;
+	CP_Sound_Play(entity->sound.soundPlace);
 
 	if (checkForSel()) { //check if other unit has been selected. Before Setting New isSel
 		deselectEnt();
@@ -103,7 +108,7 @@ void Sel_Init(GameEntity* entity, StateMachine* SM, float dt) {
 void Sel_Update(GameEntity* entity, StateMachine* SM, float dt) {
 	entity->stateTimer += dt;
 	hoverTileAt(entity, (CP_Vector) { entity->centerPos.x, entity->centerPos.y });
-	Container_Draw( getContainer(entity->label, &containersArr) );
+	//Container_Draw( getContainer(entity->label, &containersArr) );
 	if (0==entity->isSel || IsCircleClicked(entity->centerPos.x, entity->centerPos.y, entity->diameter, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
 		FSM_SetState(SM, IdleState, entity, dt);
 		return;
