@@ -1,3 +1,2 @@
-#id label x y w h bg_filepath scale opacity animate
-1 Fire {100,100} 300 200 Assets/buttons/Troop_3.png 1.0 0 255 0
-2 Electric {500,100} 300 200 Assets/buttons/Troop_1.png 1.0 0 255 0
+1 Fire {100,100} 300 200 Assets/buttons/Troop_3.png 1.0 255 0
+2 Electric {500,100} 300 200 Assets/buttons/Troop_1.png 1.0 255 0

@@ -82,12 +82,12 @@ void PickedUp_Update(GameEntity* entity, StateMachine* SM, float dt) {
 	}
 }
 void PickedUp_Exit(GameEntity* entity, StateMachine* SM, float dt) {
-	//printf("Player left IDLE state\n");
+	//printf("Player left IDLE state\n"); 
 	entity->isSel = 0;
 	entity->sound.soundPlace = CP_Sound_Load("./Assets/soundeffect/meow.wav");
 	if (entity->sound.soundPlace == NULL) {
 		printf("HELP");
-	}
+	} 
 	hoverTileExit(); 
 }
 

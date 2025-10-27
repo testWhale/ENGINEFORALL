@@ -72,11 +72,14 @@ int isInArea(Circle circle, GameEntity* player) {
 void initPlayerDemo() {
 	/*-------------Template Value--------------*/
 	GameEntity template = (GameEntity){
-	.id = 0, .centerPos = {100, 100}, .rotation = 0, .isPlayer = 0, .forwardVector = {0, 0}, .color = {255,0,0,255},
+	.id = 0, .centerPos = {100, 100}, .rotation = 0, .isPlayer = 1, .forwardVector = {0, 0}, .color = {255,0,0,255},
 	.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "Fire" };
+	GameEntity enemy = (GameEntity){
+.id = 0, .centerPos = {100, 400}, .rotation = 0, .isPlayer = 0, .forwardVector = {0, 0}, .color = {255,0,0,255},
+.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "Fire" };
 
 	Arr_Init(2, &playerArr);
-	//Arr_Init(MAX_ENTITIES, &enemyArr);
+	Arr_Init(10, &enemyArr);
 	/*FOR PLAYER_UNITS ONLY*/
 	for (int i = 0; i < 4; i++) {
 		Arr_Insert(&playerArr, (ActiveEntity){ 
@@ -88,6 +91,18 @@ void initPlayerDemo() {
 		playerArr.ActiveEntityArr[i].unit.id = i;
 
 		printf("ID: %d\n", playerArr.ActiveEntityArr[i].id);
+	} /* FOR ENEMY UNITS */
+	for (int i = 0; i < 11; i++) {
+		Arr_Insert(&enemyArr, (ActiveEntity) {
+			.id = i,
+				.unit = enemy,
+				.fsm = (StateMachine){ .currState = IdleState }
+		});
+		printf("CHECK AFTER INSERT: %d, \n", enemyArr.ActiveEntityArr[i].id);
+		enemyArr.ActiveEntityArr[i].unit.centerPos.x = enemy.centerPos.x + i * 100;
+		enemyArr.ActiveEntityArr[i].unit.id = i;
+
+		printf("ID: %d\n", enemyArr.ActiveEntityArr[i].id);
 	}
 	ContArr_Init(playerArr.used, &containersArr);
 	readFile("Assets/containers");
@@ -128,7 +143,7 @@ void Test_Update(void)
 	GameEntity template = (GameEntity){
 	.id = 0, .centerPos = {100, 100}, .rotation = 0, .isPlayer = 0, .forwardVector = {0, 0}, .color = {255,0,0,255},
 	.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "template" };
-	Player = &players[0];
+
 	float dt = CP_System_GetDt();
 	CP_Graphics_ClearBackground(CP_Color_Create(128, 128, 128, 255));
 	Map_Update();
@@ -140,13 +155,21 @@ void Test_Update(void)
 
 	}
 	for (int i = 0; i < playerArr.used; i++) {
-		ActiveEntity* entity = &playerArr.ActiveEntityArr[i];
-		FSM_Update(&(entity->fsm), &(entity->unit), dt);
-		GameEntity* ptr = &(entity->unit);
+		ActiveEntity* UnitEntity = &playerArr.ActiveEntityArr[i];
+		ActiveEntity* EnemyEntity = &enemyArr.ActiveEntityArr[i];
+		FSM_Update(&(UnitEntity->fsm), &(UnitEntity->unit), dt);
+		FSM_Update(&(EnemyEntity->fsm), &(EnemyEntity->unit), dt);
+		GameEntity* ptr = &(UnitEntity->unit);
+		GameEntity* enemyPtr = &(EnemyEntity->unit);
 		if (ptr->isSel) { ptr->color.red = 0, ptr->color.green = 0, ptr->color.blue = 255, ptr->color.opacity = 255; }
 		else { ptr->color.red = 255, ptr->color.green = 0, ptr->color.blue = 0, ptr->color.opacity = 255; }
 		CP_Settings_Fill(CP_Color_Create(ptr->color.red, ptr->color.green, ptr->color.blue, ptr->color.opacity));
 		CP_Graphics_DrawCircle(ptr->centerPos.x, ptr->centerPos.y, ptr->diameter);
+
+		if (enemyPtr->isSel) { enemyPtr->color.red = 255, enemyPtr->color.green = 255, enemyPtr->color.blue = 255, enemyPtr->color.opacity = 255; }
+		else { enemyPtr->color.red = 255, enemyPtr->color.green = 255, enemyPtr->color.blue = 0, enemyPtr->color.opacity = 255; }
+		CP_Settings_Fill(CP_Color_Create(enemyPtr->color.red, enemyPtr->color.green, enemyPtr->color.blue, enemyPtr->color.opacity));
+		CP_Graphics_DrawCircle(enemyPtr->centerPos.x, enemyPtr->centerPos.y, enemyPtr->diameter);
 		//printf("%s", activeEntityList[i].fsm.currState);
 	}
 	
