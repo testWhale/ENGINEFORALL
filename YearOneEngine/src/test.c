@@ -156,24 +156,26 @@ void Test_Update(void)
 	}
 	for (int i = 0; i < playerArr.used; i++) {
 		ActiveEntity* UnitEntity = &playerArr.ActiveEntityArr[i];
-		ActiveEntity* EnemyEntity = &enemyArr.ActiveEntityArr[i];
 		FSM_Update(&(UnitEntity->fsm), &(UnitEntity->unit), dt);
-		FSM_Update(&(EnemyEntity->fsm), &(EnemyEntity->unit), dt);
+
 		GameEntity* ptr = &(UnitEntity->unit);
-		GameEntity* enemyPtr = &(EnemyEntity->unit);
+
 		if (ptr->isSel) { ptr->color.red = 0, ptr->color.green = 0, ptr->color.blue = 255, ptr->color.opacity = 255; }
 		else { ptr->color.red = 255, ptr->color.green = 0, ptr->color.blue = 0, ptr->color.opacity = 255; }
 		CP_Settings_Fill(CP_Color_Create(ptr->color.red, ptr->color.green, ptr->color.blue, ptr->color.opacity));
 		CP_Graphics_DrawCircle(ptr->centerPos.x, ptr->centerPos.y, ptr->diameter);
-
+		//printf("%s", activeEntityList[i].fsm.currState);
+	}
+	for (int i = 0; i < enemyArr.used; i++) {
+		ActiveEntity* EnemyEntity = &enemyArr.ActiveEntityArr[i];
+		FSM_Update(&(EnemyEntity->fsm), &(EnemyEntity->unit), dt);
+		GameEntity* enemyPtr = &(EnemyEntity->unit);
 		if (enemyPtr->isSel) { enemyPtr->color.red = 255, enemyPtr->color.green = 255, enemyPtr->color.blue = 255, enemyPtr->color.opacity = 255; }
 		else { enemyPtr->color.red = 255, enemyPtr->color.green = 255, enemyPtr->color.blue = 0, enemyPtr->color.opacity = 255; }
 		CP_Settings_Fill(CP_Color_Create(enemyPtr->color.red, enemyPtr->color.green, enemyPtr->color.blue, enemyPtr->color.opacity));
 		CP_Graphics_DrawCircle(enemyPtr->centerPos.x, enemyPtr->centerPos.y, enemyPtr->diameter);
-		//printf("%s", activeEntityList[i].fsm.currState);
-	}
-	
 
+	}
 	
 
 
