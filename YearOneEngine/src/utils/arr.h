@@ -13,4 +13,6 @@ TestArr* Arr_Init(size_t maxLength, TestArr* Array);
 
 void Arr_Insert(TestArr* Array, ActiveEntity Entity);
 
+void Arr_Del(TestArr* DynArray, int id);
+
 void Arr_Free(TestArr* Array);

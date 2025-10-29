@@ -24,15 +24,20 @@
     <ClCompile Include="src\utils\arr.c" />
     <ClCompile Include="src\utils\backend\containerStates.c" />
     <ClCompile Include="src\utils\container.c" />
+    <ClCompile Include="src\utils\health\health.c" />
     <ClCompile Include="src\utils\readTxt.c" />
+    <ClCompile Include="src\utils\arr\sample.c" />
     <ClCompile Include="src\utils\SM.c" />
+    <ClCompile Include="src\utils\wave\wave.c" />
     <ClInclude Include="src\test.h" />
     <ClCompile Include="src\main.c" />
     <ClCompile Include="src\mainmenu.c" />
     <ClCompile Include="src\test.c" />
     <ClCompile Include="src\tile\tile.c" />
     <ClCompile Include="src\utils\sound.h" />
+    <ClCompile Include="src\utils\arr\State.h" />
     <ClCompile Include="src\utils\utils.c" />
+    <ClInclude Include="src\utils\wave\wave.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DataTypes.h" />

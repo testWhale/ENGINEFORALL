@@ -37,23 +37,24 @@ typedef void (*StateFunction)(float deltaTime);
 
 //eg: Idle State
 typedef struct {
-	void (*init)(GameEntity* data,  StateMachine* SM, float dt);
+	void (*init)(GameEntity* data,  StateMachine* SM, float dt); //replace with T
 	void (*update)(GameEntity* data,  StateMachine* SM, float dt);
 	void (*exit)(GameEntity* data,  StateMachine* SM, float dt);
 } States;
 
 struct StateMachine {
 	States currState;
-}; 
+};  
 
 typedef struct ActiveEntity {
 	int id;
-	GameEntity unit; //Array
+	GameEntity unit; //Array //Replace this with T
 	StateMachine fsm; //Array
-
 }ActiveEntity;
 
-StateFunction FSM_SetState(StateMachine* fsm, States newState, GameEntity* data, float dt);
+
+
+StateFunction FSM_SetState(StateMachine* fsm, States newState, GameEntity* data, float dt); //Replace with T
 StateFunction FSM_Update(StateMachine* fsm, GameEntity* data, float dt);
 
 

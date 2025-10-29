@@ -4,6 +4,9 @@
 #include "utils/arr.h"
 #include "utils/SM.h"
 #include "utils/readTxt.h"
+#include "utils/wave/wave.h"
+#include <stdlib.h>
+#include <time.h>
 //define minWidth of HealthBar
 #define minWidth 0.0f
 #define maxWidth 1400.0f
@@ -91,17 +94,21 @@ void initPlayerDemo() {
 		playerArr.ActiveEntityArr[i].unit.id = i;
 
 		printf("ID: %d\n", playerArr.ActiveEntityArr[i].id);
-	} /* FOR ENEMY UNITS */
+	} 
+	/* FOR ENEMY UNITS */
+
+
 	for (int i = 0; i < 11; i++) {
 		Arr_Insert(&enemyArr, (ActiveEntity) {
 			.id = i,
-				.unit = enemy,
-				.fsm = (StateMachine){ .currState = IdleState }
+			.unit = enemy,
+			.fsm = (StateMachine){ .currState = IdleState }
 		});
 		printf("CHECK AFTER INSERT: %d, \n", enemyArr.ActiveEntityArr[i].id);
-		enemyArr.ActiveEntityArr[i].unit.centerPos.x = enemy.centerPos.x + i * 100;
+		enemyArr.ActiveEntityArr[i].unit.centerPos.x = 1600;
 		enemyArr.ActiveEntityArr[i].unit.id = i;
 
+		startWave(&enemyArr.ActiveEntityArr[i].unit, (int)(2));
 		printf("ID: %d\n", enemyArr.ActiveEntityArr[i].id);
 	}
 	ContArr_Init(playerArr.used, &containersArr);
@@ -112,6 +119,9 @@ void initPlayerDemo() {
 
 void Test_Init(void)
 {
+	float dt = CP_System_GetDt();
+	srand(time((int)dt));
+	Map_Init();
 	initPlayerDemo();
 	//initEnemies();
 	winHeight = CP_System_GetWindowHeight();
@@ -128,7 +138,7 @@ void Test_Init(void)
 	mySound = CP_Sound_Load("Assets/sound.mp3");
 
 	/*EXTERNAL FUNCTIONS*/
-	Map_Init();
+
 
 
 	//myFont = CP_Font_Load("Assets/Exo2-Regular.ttf");
@@ -170,6 +180,7 @@ void Test_Update(void)
 		ActiveEntity* EnemyEntity = &enemyArr.ActiveEntityArr[i];
 		FSM_Update(&(EnemyEntity->fsm), &(EnemyEntity->unit), dt);
 		GameEntity* enemyPtr = &(EnemyEntity->unit);
+		moveWave(enemyPtr, dt);
 		if (enemyPtr->isSel) { enemyPtr->color.red = 255, enemyPtr->color.green = 255, enemyPtr->color.blue = 255, enemyPtr->color.opacity = 255; }
 		else { enemyPtr->color.red = 255, enemyPtr->color.green = 255, enemyPtr->color.blue = 0, enemyPtr->color.opacity = 255; }
 		CP_Settings_Fill(CP_Color_Create(enemyPtr->color.red, enemyPtr->color.green, enemyPtr->color.blue, enemyPtr->color.opacity));
