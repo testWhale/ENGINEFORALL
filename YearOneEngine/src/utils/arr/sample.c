@@ -9,10 +9,10 @@
 //	CP_Vector leftTCornerPos;
 //}UI;
 //
-//int i = 0;
 //NewEntity(UI)
 //int Box_Init()
 //{
+//	static int i = 0;
 //	UI box = (UI){.id= i++, .label="placeHolder", .img=NULL, .filepath="Assets/"};
 //	UIActiveEntity* boxItems;
 //	StateMachine boxSM;

@@ -162,7 +162,6 @@ void Test_Update(void)
 
 		Arr_Insert(&playerArr, (ActiveEntity) { playerArr.used, template, (StateMachine) { .currState = IdleState } });
 		//ContArr_Insert(&containersArr,contTemplate);
-
 	}
 	for (int i = 0; i < playerArr.used; i++) {
 		ActiveEntity* UnitEntity = &playerArr.ActiveEntityArr[i];

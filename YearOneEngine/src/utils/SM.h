@@ -22,8 +22,8 @@ typedef struct { int red; int green; int blue; int opacity; }Color;
 struct GameEntity {
 	/*Generic Values*/
 	int id; CP_Vector centerPos; float rotation; CP_BOOL isPlayer; 
-	CP_Vector forwardVector; Color color; float diameter; float stateTimer; 
-	
+	CP_Vector forwardVector, velocity; Color color; float diameter; float stateTimer; 
+
 	/*Check Values*/
 	int isItOnMap; int isSel; char* label; entSound sound;
 }; //Base For all Entities
