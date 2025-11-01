@@ -26,3 +26,5 @@ int DealTouchDamageIfColliding(Entity* player, Entity* enemy,
     float dt);
 
 int CirclesOverlap(const Entity* a, const Entity* b);
+
+ffff
