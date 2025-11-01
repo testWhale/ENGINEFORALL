@@ -7,207 +7,260 @@
 #include "utils/wave/wave.h"
 #include <stdlib.h>
 #include <time.h>
-//define minWidth of HealthBar
-#define minWidth 0.0f
-#define maxWidth 1400.0f
+#include "utils/health/health.h"
+
+/* Health bar sizing */
+#define minWidth  0.0f
+#define maxWidth  1400.0f
 #define extraBars 10
 
+/* Sound */
+CP_Sound mySound = 0;
 
-
-//defined Sound
-CP_Sound mySound = NULL;
-
- 
-
+/* Window size cache */
 float winWidth;
 float winHeight;
 
-//Array of Players
-GameEntity players[1];
+/* Example globals already used in your project */
+GameEntity  players[1];
 GameEntity* Player;
-GameEntity _player;
+GameEntity  _player;
 StateMachine* _SM;
 
-Color Blue = { 0, 0, 255, 255 };
-Color Green = { 0, 255, 0, 255 };
-Color Red = { 255, 0, 0, 255 };
-Color White = { 0, 0, 0, 255};
+/* Simple colors (your Color struct) */
+Color Blue = { 0,   0, 255, 255 };
+Color Green = { 0, 255,   0, 255 };
+Color Red = { 255, 0,   0, 255 };
+Color White = { 0,   0,   0, 255 };
+
 void inArea(CP_Vector, CP_Vector);
 typedef void (*funcArea)(CP_Vector, CP_Vector);
 
 typedef struct {
-	int id;
-	CP_Vector centerPos;
-	float diameter;
-	Color color;
-	funcArea inArea;
-}Circle;
+    int       id;
+    CP_Vector centerPos;
+    float     diameter;
+    Color     color;
+    funcArea  inArea;
+} Circle;
 
 Circle circles[2];
-float width = maxWidth;
-float startPoint = 100.0f;
-int maxed;
-int minimum;
-int indent = 146;
-int size = 80;
-int i;
+float  width = maxWidth;
+float  startPoint = 100.0f;
+int    maxed;
+int    minimum;
+int    indent = 146;
+int    size = 80;
+int    i;
 CP_Font myFont;
 
-
-int isInArea(Circle circle, GameEntity* player) {
-	CP_Vector PlayerToCircleDist = CP_Vector_Subtract(circle.centerPos, player->centerPos);
-	float distLength = CP_Vector_Length(PlayerToCircleDist);
-
-	if (distLength - (player->diameter / 2) <= circle.diameter / 2) {
-		//printf("%f\n", distLength);
-		//printf("In contact\n");
-		return 1;
-	}
-	return 0;
+/* Utility: click in circle */
+int isInArea(Circle circle, GameEntity* player)
+{
+    CP_Vector v = CP_Vector_Subtract(circle.centerPos, player->centerPos);
+    float dist = CP_Vector_Length(v);
+    return (dist - (player->diameter * 0.5f) <= circle.diameter * 0.5f);
 }
 
+/* -------------------------------------------------------------------------- */
+/*                               Init players                                  */
+/* -------------------------------------------------------------------------- */
+void initPlayerDemo(void)
+{
+    /* ---- Templates (match your GameEntity member order) ---- */
+    GameEntity playerTemplate;
+    playerTemplate.id = 0;
+    playerTemplate.centerPos.x = 100.0f;
+    playerTemplate.centerPos.y = 100.0f;
+    playerTemplate.rotation = 0.0f;
+    playerTemplate.isPlayer = 1;
+    playerTemplate.forwardVector.x = 0.0f;
+    playerTemplate.forwardVector.y = 0.0f;
+    playerTemplate.color = (Color){ 255, 0, 0, 255 };
+    playerTemplate.diameter = 100.0f;
+    playerTemplate.stateTimer = 0.0f;
+    playerTemplate.isItOnMap = 0;
+    playerTemplate.isSel = 0;
+    playerTemplate.label = "Fire";
 
-//StateMachine fsmList[MAX_ENTITIES];
-//, { 1, {300, 200}, 0, 0, {0, 0}, {0,255,0,255}, 120 },
-//{ 2, {500, 300}, 0, 0, {0, 0}, {0,255,0,255}, 120 }
+    GameEntity enemyTemplate = playerTemplate;
+    enemyTemplate.centerPos.y = 400.0f;
+    enemyTemplate.isPlayer = 0;
 
-/*LOADS IN PLAYER ARRAY */
-void initPlayerDemo() {
-	/*-------------Template Value--------------*/
-	GameEntity template = (GameEntity){
-	.id = 0, .centerPos = {100, 100}, .rotation = 0, .isPlayer = 1, .forwardVector = {0, 0}, .color = {255,0,0,255},
-	.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "Fire" };
-	GameEntity enemy = (GameEntity){
-.id = 0, .centerPos = {100, 400}, .rotation = 0, .isPlayer = 0, .forwardVector = {0, 0}, .color = {255,0,0,255},
-.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "Fire" };
+    Arr_Init(2, &playerArr);
+    Arr_Init(10, &enemyArr);
 
-	Arr_Init(2, &playerArr);
-	Arr_Init(10, &enemyArr);
-	/*FOR PLAYER_UNITS ONLY*/
-	for (int i = 0; i < 4; i++) {
-		Arr_Insert(&playerArr, (ActiveEntity){ 
-			.id = i, 
-			.unit = template, 
-			.fsm = (StateMachine) { .currState = IdleState }});
-		printf("CHECK AFTER INSERT: %d, \n", playerArr.ActiveEntityArr[i].id);
-		playerArr.ActiveEntityArr[i].unit.centerPos.x = template.centerPos.x + i * 100;
-		playerArr.ActiveEntityArr[i].unit.id = i;
+    /* ---- Spawn 4 player units ---- */
+    for (int k = 0; k < 4; ++k) {
+        ActiveEntity ae;
+        ae.id = k;
+        ae.unit = playerTemplate;
+        ae.unit.centerPos.x = playerTemplate.centerPos.x + k * 100.0f;
+        ae.unit.id = k;
+        ae.fsm.currState = IdleState;
+        ae.health = 100;
+        ae.maxHealth = 100;
+        ae.alive = 1;
 
-		printf("ID: %d\n", playerArr.ActiveEntityArr[i].id);
-	} 
-	/* FOR ENEMY UNITS */
+        Arr_Insert(&playerArr, ae);
+    }
+
+    /* ---- Spawn 11 enemies (start on right, move by wave) ---- */
+    for (int k = 0; k < 11; ++k) {
+        ActiveEntity ae = { 0 };
+        ae.id = k;
+        ae.unit = enemyTemplate;        // enemyTemplate.isPlayer == 0
+        ae.fsm.currState = IdleState;
+        ae.maxHealth = 100;
+        ae.health = 100;
+        ae.alive = 1;
+
+        Arr_Insert(&enemyArr, ae);
+
+        ActiveEntity* e = &enemyArr.ActiveEntityArr[enemyArr.used - 1];
+
+        startWave(&e->unit, 2);                 
+
+        e->unit.centerPos.x = 1600.0f;          
+        e->hasScored = 0;
+        e->lastLeftmostX = e->unit.centerPos.x - 0.5f * e->unit.diameter;
+    }
 
 
-	for (int i = 0; i < 11; i++) {
-		Arr_Insert(&enemyArr, (ActiveEntity) {
-			.id = i,
-			.unit = enemy,
-			.fsm = (StateMachine){ .currState = IdleState }
-		});
-		printf("CHECK AFTER INSERT: %d, \n", enemyArr.ActiveEntityArr[i].id);
-		enemyArr.ActiveEntityArr[i].unit.centerPos.x = 1600;
-		enemyArr.ActiveEntityArr[i].unit.id = i;
 
-		startWave(&enemyArr.ActiveEntityArr[i].unit, (int)(2));
-		printf("ID: %d\n", enemyArr.ActiveEntityArr[i].id);
-	}
-	ContArr_Init(playerArr.used, &containersArr);
-	readFile("Assets/containers");
+    /* Containers UI + data */
+    ContArr_Init(playerArr.used, &containersArr);
+    readFile("Assets/containers");
 }
 
-
-
+/* -------------------------------------------------------------------------- */
+/*                                 Test_Init                                   */
+/* -------------------------------------------------------------------------- */
 void Test_Init(void)
 {
-	float dt = CP_System_GetDt();
-	srand(time((int)dt));
-	Map_Init();
-	initPlayerDemo();
-	//initEnemies();
-	winHeight = CP_System_GetWindowHeight();
-	winWidth = CP_System_GetWindowWidth();
-	//players[0] = (GameEntity){ 0, {100.0f, 100.0f}, 0, 1, {0, 0}, Blue, 150 };
-	circles[0] = (Circle){ 0, {winWidth / 3 * 1, winHeight / 2}, 300, Red };
-	//circles[1] = (Circle){ 1, {winWidth / 3 * 2, winHeight / 2}, 300, Green };
+    srand((unsigned)time(NULL));   //
 
-	//_SM.currState = IdleState; //SetState(..., deltaTime)
+    Map_Init();
+    initPlayerDemo();
 
-	// ExitDamageState
-	//_SM_Instance.transitionMap[Damage] = Exit_Damage_State;
-	myFont = CP_Font_Load("Assets/Exo2-Regular.ttf");
-	mySound = CP_Sound_Load("Assets/sound.mp3");
+    winHeight = (float)CP_System_GetWindowHeight();
+    winWidth = (float)CP_System_GetWindowWidth();
 
-	/*EXTERNAL FUNCTIONS*/
+    /* Setup one red circle button */
+    circles[0].id = 0;
+    circles[0].centerPos.x = winWidth / 3.0f;
+    circles[0].centerPos.y = winHeight / 2.0f;
+    circles[0].diameter = 300.0f;
+    circles[0].color = Red;
+    circles[0].inArea = NULL;
 
+    myFont = CP_Font_Load("Assets/Exo2-Regular.ttf");
+    mySound = CP_Sound_Load("Assets/sound.mp3");
 
+    /* Health / audio / GO binding */
+    Hearts_Init(3);
+    HealthAudio_Load("Assets/Metal Ping by timgormly Id-170957.wav",
+        "Assets/Glass Break by unfa Id-221528.wav");
 
-	//myFont = CP_Font_Load("Assets/Exo2-Regular.ttf");
+    extern void GameOver_SetData(float, int);
+    extern void GameOver_Init(void);
+    extern void GameOver_Update(void);
+    extern void GameOver_Exit(void);
+    Health_BindGameOver(GameOver_SetData, GameOver_Init, GameOver_Update, GameOver_Exit);
+
+    HealthTimer_Reset();
 }
 
-int count = 0;
-
+/* -------------------------------------------------------------------------- */
+/*                                Test_Update                                  */
+/* -------------------------------------------------------------------------- */
 void Test_Update(void)
 {
-	Container contTemplate = (Container){ 1, "Fire", (CP_Vector) { 100,100 }, 300, 200, "Assets/buttons/Troop_3.png", 1.0, 255, 0 };
+    float dt = CP_System_GetDt();
 
-	GameEntity template = (GameEntity){
-	.id = 0, .centerPos = {100, 100}, .rotation = 0, .isPlayer = 0, .forwardVector = {0, 0}, .color = {255,0,0,255},
-	.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "template" };
+    CP_Graphics_ClearBackground(CP_Color_Create(128, 128, 128, 255));
+    Map_Update();
 
-	float dt = CP_System_GetDt();
-	CP_Graphics_ClearBackground(CP_Color_Create(128, 128, 128, 255));
-	Map_Update();
-	
-	if (IsCircleClicked(circles->centerPos.x, circles->centerPos.y, circles->diameter, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
+    HealthTimer_Update(dt);
+    Hearts_Update(dt);
 
-		Arr_Insert(&playerArr, (ActiveEntity) { playerArr.used, template, (StateMachine) { .currState = IdleState } });
-		//ContArr_Insert(&containersArr,contTemplate);
-	}
-	for (int i = 0; i < playerArr.used; i++) {
-		ActiveEntity* UnitEntity = &playerArr.ActiveEntityArr[i];
-		FSM_Update(&(UnitEntity->fsm), &(UnitEntity->unit), dt);
+    /* Click to add a player unit using a simple template */
+    if (IsCircleClicked(circles[0].centerPos.x, circles[0].centerPos.y, circles[0].diameter,
+        CP_Input_GetMouseX(), CP_Input_GetMouseY()))
+    {
+        GameEntity unitTemplate;
+        unitTemplate.id = 0;
+        unitTemplate.centerPos.x = 100.0f;
+        unitTemplate.centerPos.y = 100.0f;
+        unitTemplate.rotation = 0.0f;
+        unitTemplate.isPlayer = 0;
+        unitTemplate.forwardVector.x = 0.0f;
+        unitTemplate.forwardVector.y = 0.0f;
+        unitTemplate.color = (Color){ 255, 0, 0, 255 };
+        unitTemplate.diameter = 100.0f;
+        unitTemplate.stateTimer = 0.0f;
+        unitTemplate.isItOnMap = 0;
+        unitTemplate.isSel = 0;
+        unitTemplate.label = "template";
 
-		GameEntity* ptr = &(UnitEntity->unit);
+        ActiveEntity ae;
+        ae.id = (int)playerArr.used;
+        ae.unit = unitTemplate;
+        ae.fsm.currState = IdleState;
+        ae.health = 100;
+        ae.maxHealth = 100;
+        ae.alive = 1;
 
-		if (ptr->isSel) { ptr->color.red = 0, ptr->color.green = 0, ptr->color.blue = 255, ptr->color.opacity = 255; }
-		else { ptr->color.red = 255, ptr->color.green = 0, ptr->color.blue = 0, ptr->color.opacity = 255; }
-		CP_Settings_Fill(CP_Color_Create(ptr->color.red, ptr->color.green, ptr->color.blue, ptr->color.opacity));
-		CP_Graphics_DrawCircle(ptr->centerPos.x, ptr->centerPos.y, ptr->diameter);
-		//printf("%s", activeEntityList[i].fsm.currState);
-	}
-	for (int i = 0; i < enemyArr.used; i++) {
-		ActiveEntity* EnemyEntity = &enemyArr.ActiveEntityArr[i];
-		FSM_Update(&(EnemyEntity->fsm), &(EnemyEntity->unit), dt);
-		GameEntity* enemyPtr = &(EnemyEntity->unit);
-		moveWave(enemyPtr, dt);
-		if (enemyPtr->isSel) { enemyPtr->color.red = 255, enemyPtr->color.green = 255, enemyPtr->color.blue = 255, enemyPtr->color.opacity = 255; }
-		else { enemyPtr->color.red = 255, enemyPtr->color.green = 255, enemyPtr->color.blue = 0, enemyPtr->color.opacity = 255; }
-		CP_Settings_Fill(CP_Color_Create(enemyPtr->color.red, enemyPtr->color.green, enemyPtr->color.blue, enemyPtr->color.opacity));
-		CP_Graphics_DrawCircle(enemyPtr->centerPos.x, enemyPtr->centerPos.y, enemyPtr->diameter);
+        Arr_Insert(&playerArr, ae);
+    }
 
-	}
-	
+    /* ---- Players ---- */
+    for (int k = 0; k < (int)playerArr.used; ++k) {
+        ActiveEntity* ent = &playerArr.ActiveEntityArr[k];
+        FSM_Update(&ent->fsm, &ent->unit, dt);
 
+        GameEntity* p = &ent->unit;
+        if (p->isSel) { p->color.red = 0;   p->color.green = 0;   p->color.blue = 255; p->color.opacity = 255; }
+        else { p->color.red = 255; p->color.green = 0;   p->color.blue = 0;   p->color.opacity = 255; }
 
+        CP_Settings_Fill(CP_Color_Create(p->color.red, p->color.green, p->color.blue, p->color.opacity));
+        CP_Graphics_DrawCircle(p->centerPos.x, p->centerPos.y, p->diameter);
+    }
 
-	//Set Circles
-	CP_Settings_RectMode(CP_POSITION_CENTER);
-	CP_Settings_Fill(CP_Color_Create(circles[0].color.red, circles[0].color.green, circles[0].color.blue, circles[0].color.opacity));
-	CP_Graphics_DrawCircle(circles[0].centerPos.x, circles[0].centerPos.y, circles[0].diameter);
+    /* ---- Enemies ---- */
+    for (int k = 0; k < (int)enemyArr.used; ++k) {
+        ActiveEntity* ent = &enemyArr.ActiveEntityArr[k];
+        FSM_Update(&ent->fsm, &ent->unit, dt);
+        moveWave(&ent->unit, dt);
 
-	//// draw
-	//CP_Settings_RectMode(CP_POSITION_CENTER);
-	//CP_Settings_Fill(CP_Color_Create(circles[1].color.red, circles[1].color.green, circles[1].color.blue, circles[1].color.opacity));
-	//CP_Graphics_DrawCircle(circles[1].centerPos.x, circles[1].centerPos.y, circles[1].diameter);
-	
+        GameEntity* e = &ent->unit;
+        if (e->isSel) { e->color.red = 255; e->color.green = 255; e->color.blue = 255; e->color.opacity = 255; }
+        else { e->color.red = 255; e->color.green = 255; e->color.blue = 0; e->color.opacity = 255; }
+
+        CP_Settings_Fill(CP_Color_Create(e->color.red, e->color.green, e->color.blue, e->color.opacity));
+        CP_Graphics_DrawCircle(e->centerPos.x, e->centerPos.y, e->diameter);
+
+        /* Enemy HP bar */
+        Health_DrawEnemyBar(ent, 80.0f, 10.0f, 20.0f);
+    }
+
+    /* If any enemy reaches the leftmost column, lose a heart and remove it */
+    Health_ProcessLeftGoal(&enemyArr, startPoint);
+
+    /* UI circle button */
+    CP_Settings_RectMode(CP_POSITION_CENTER);
+    CP_Settings_Fill(CP_Color_Create(circles[0].color.red, circles[0].color.green, circles[0].color.blue, circles[0].color.opacity));
+    CP_Graphics_DrawCircle(circles[0].centerPos.x, circles[0].centerPos.y, circles[0].diameter);
+
+    /* Hearts HUD on top */
+    Hearts_Draw();
 }
 
+/* -------------------------------------------------------------------------- */
+/*                                 Test_Exit                                   */
+/* -------------------------------------------------------------------------- */
 void Test_Exit(void)
 {
-	//Container_Destroy(&CONTAINERS[0]);
-	//Container_Destroy(&CONTAINERS[1]);
-	//Container_Destroy(&CONTAINERS[2]);
-	//Container_Destroy(&CONTAINERS[3]);
-	CP_Font_Free(myFont);
-	CP_Sound_Free(mySound);
+    CP_Font_Free(myFont);
+    CP_Sound_Free(mySound);
 }

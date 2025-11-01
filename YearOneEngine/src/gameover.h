@@ -1,16 +1,7 @@
-
-#ifndef TEST_H
-#define TEST_H
-// Init, Set currState, send function pointer to States.init
- // forward declarations
-
- // Pass data you want to show on the screen.
+#ifndef GAMEOVER_H
+#define GAMEOVER_H
 void GameOver_SetData(float finalTime, int goals);
-
-void Test_Init(void);
-
-void Test_Update(void);
-
-void Test_Exit(void);
-
+void GameOver_Init(void);
+void GameOver_Update(void);
+void GameOver_Exit(void);
 #endif

@@ -46,11 +46,7 @@ struct StateMachine {
 	States currState;
 };  
 
-typedef struct ActiveEntity {
-	int id;
-	GameEntity unit; //Array //Replace this with T
-	StateMachine fsm; //Array
-}ActiveEntity;
+typedef struct ActiveEntity ActiveEntity;
 
 
 

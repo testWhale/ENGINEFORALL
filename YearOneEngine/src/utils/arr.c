@@ -1,63 +1,59 @@
-#include <stdio.h>
 #include <stdlib.h>
-#include "arr.h"
+#include <string.h>
+#include <stdio.h>
+#include "utils/arr.h"
 
-TestArr* Arr_Init(size_t maxLength, TestArr* Array) {
-	Array->maxLength = maxLength;
-	Array->entitySize = 0;
-	Array->used = 0;
-	Array->ActiveEntityArr = (ActiveEntity*)
-		malloc(maxLength * sizeof(ActiveEntity));
-	for (int i = 0; i < maxLength; i++) {
-		*(Array->ActiveEntityArr + i) = (ActiveEntity){
-		.id = i, .fsm = NULL, .unit = NULL };
-	}
+TestArr enemyArr;
+TestArr playerArr;
 
-	return Array;
+void Arr_Init(size_t maxLength, TestArr* A) {
+    if (!A) return;
+    if (maxLength == 0) maxLength = 1;
+    A->ActiveEntityArr = (ActiveEntity*)calloc(maxLength, sizeof(ActiveEntity));
+    if (!A->ActiveEntityArr) {
+        fprintf(stderr, "Arr_Init: allocation failed\n");
+        A->maxLength = A->used = A->entitySize = 0;
+        return;
+    }
+    A->maxLength = maxLength;
+    A->used = 0;
+    A->entitySize = sizeof(ActiveEntity);
 }
 
-void Arr_Insert(TestArr* Array, ActiveEntity Entity) {
-	if (Array->used >= Array->maxLength) {
-		Array->maxLength *= 2;
-		Array->ActiveEntityArr = realloc(Array->ActiveEntityArr, Array->maxLength * sizeof(ActiveEntity)); //so how am I able to pass it itself?
-		//i  want to add another element to the array. but doesnt this wipe the first array and realloc(, numofArrElems)
-		if (!Array->ActiveEntityArr) {
-			fprintf(stderr, "Memory reallocation failed!\n");
-		}
-	}
-	//realloc tries preserves old data when it enlarges, if unable it allocates new memory but frees old block 
-	Entity.unit.id = Array->used;
-	Array->ActiveEntityArr[Array->used++] = Entity;
+void Arr_Insert(TestArr* A, ActiveEntity e) {
+    if (!A) return;
 
+    if (A->used >= A->maxLength) {
+        size_t newCap = (A->maxLength ? A->maxLength * 2 : 1);
+        ActiveEntity* tmp = (ActiveEntity*)realloc(A->ActiveEntityArr, newCap * sizeof(ActiveEntity));
+        if (!tmp) { fprintf(stderr, "Arr_Insert: realloc failed\n"); return; }
+        memset(tmp + A->maxLength, 0, (newCap - A->maxLength) * sizeof(ActiveEntity));
+        A->ActiveEntityArr = tmp;
+        A->maxLength = newCap;
+    }
 
+    if (e.maxHealth <= 0) e.maxHealth = 100;
+    if (e.health <= 0) e.health = e.maxHealth;
+    if (e.alive != 0 && e.alive != 1) e.alive = 1;
+
+    A->ActiveEntityArr[A->used++] = e;
 }
 
-void Arr_Del(TestArr* DynArray, int id){
-	int check = 0;
-	for (int i = 0; i < DynArray->maxLength-1; i++) {
-		if (1 == check || DynArray->ActiveEntityArr->id == id ) 
-		{ DynArray->ActiveEntityArr[i] = DynArray->ActiveEntityArr[i + 1]; check = 1; } 
-	}
-	check = 0;
-	DynArray->maxLength -= 1;
-	DynArray->used--;
-	//realloc tries preserves old data when it enlarges, if unable it allocates new memory but frees old block 
-	DynArray->ActiveEntityArr = realloc(DynArray->ActiveEntityArr, DynArray->maxLength * sizeof(ActiveEntity)); //so how am I able to pass it itself?
-	//i  want to add another element to the array. but doesnt this wipe the first array and realloc(, numofArrElems)
-	if (!DynArray->ActiveEntityArr) {
-		fprintf(stderr, "Memory reallocation failed!\n");
-	}
+void Arr_Del(TestArr* A, int id) {
+    if (!A || A->used == 0) return;
+    size_t idx = A->used;
+    for (size_t i = 0; i < A->used; ++i)
+        if (A->ActiveEntityArr[i].id == id) { idx = i; break; }
+    if (idx == A->used) return;
+    A->ActiveEntityArr[idx] = A->ActiveEntityArr[A->used - 1];
+    --A->used;
 }
 
-void Arr_Free(TestArr* Array) {
-	free(Array->ActiveEntityArr);
-	Array->ActiveEntityArr = NULL;
-	Array->entitySize = 0;
-	Array->maxLength = 0;
-	Array->used = 0;
+void Arr_Free(TestArr* A) {
+    if (!A) return;
+    free(A->ActiveEntityArr);
+    A->ActiveEntityArr = NULL;
+    A->entitySize = 0;
+    A->used = 0;
+    A->maxLength = 0;
 }
-
-//void Arr_Render(TestArr* Array) {
-//
-//}
-
