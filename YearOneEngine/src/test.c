@@ -13,20 +13,24 @@
 #include <math.h>
 #include <stdio.h>
 
-/* ---------------- config (kept from your file) ---------------- */
+/* -------------------------------------------------------------------------- */
+/* Config kept from your file                                                 */
+/* -------------------------------------------------------------------------- */
 #define minWidth  0.0f
 #define maxWidth  1400.0f
 #define extraBars 10
 
-/* ---------------- globals (kept) ---------------- */
+/* -------------------------------------------------------------------------- */
+/* Globals                                                                    */
+/* -------------------------------------------------------------------------- */
 CP_Sound mySound = NULL;
 
 float winWidth;
 float winHeight;
 
-GameEntity players[1];
+GameEntity  players[1];
 GameEntity* Player;
-GameEntity _player;
+GameEntity  _player;
 StateMachine* _SM;
 
 Color Blue = { 0,   0, 255, 255 };
@@ -54,21 +58,23 @@ static int    size = 80;
 static int    i_g;
 static CP_Font myFont;
 
-/* ---------------- goal circles (one per row) ---------------- */
+/* -------------------------------------------------------------------------- */
+/* Left goal circles (one per row)                                            */
+/* -------------------------------------------------------------------------- */
 static CP_Vector g_goalCenters[TILE_ROWS];
-static float     g_goalRadius = 40.0f;   /* set in Test_Init */
+static float     g_goalRadius = 0.0f;
+/* 0 = invisible in play (default), 1 = draw for debugging */
+static int       g_drawGoals = 1;
 
 /* small per-enemy hit cooldown so they do not melt in one frame */
 static float     g_enemyHitCD[1024];
 
-/* ---------------- helpers ---------------- */
+/* provided elsewhere in your codebase */
+extern int IsCircleClicked(float cx, float cy, float diameter, float mx, float my);
 
-static int IsInArea(Circle circle, GameEntity* player) {
-    CP_Vector d = CP_Vector_Subtract(circle.centerPos, player->centerPos);
-    float dist = CP_Vector_Length(d);
-    return (dist - (player->diameter * 0.5f) <= circle.diameter * 0.5f);
-}
-
+/* -------------------------------------------------------------------------- */
+/* Helpers                                                                    */
+/* -------------------------------------------------------------------------- */
 static int CirclesOverlap(float x1, float y1, float r1, float x2, float y2, float r2)
 {
     float dx = x1 - x2, dy = y1 - y2;
@@ -114,8 +120,7 @@ static void DamageEnemiesOnPlayerCollisions(int dmgPerHit, float cd, float dt)
                 {
                     e->health -= dmgPerHit;
                     if (e->health <= 0) {
-                        /* kill this enemy */
-                        Arr_Del(&enemyArr, id);
+                        Arr_Del(&enemyArr, id);   /* array shifts; keep i */
                         removed = 1;
                     }
                     else {
@@ -126,7 +131,7 @@ static void DamageEnemiesOnPlayerCollisions(int dmgPerHit, float cd, float dt)
             }
         }
 
-        if (!removed) ++i; /* if removed, do not advance (array shifted) */
+        if (!removed) ++i;
     }
 }
 
@@ -137,7 +142,7 @@ static void ProcessGoalHits(void)
         ActiveEntity* e = &enemyArr.ActiveEntityArr[i];
         if (!e->alive || e->unit.isPlayer) { ++i; continue; }
 
-        /* find closest row center (by y) */
+        /* closest row by Y */
         int row = 0;
         float best = 1e9f;
         for (int r = 0; r < TILE_ROWS; ++r) {
@@ -145,7 +150,6 @@ static void ProcessGoalHits(void)
             if (dy < best) { best = dy; row = r; }
         }
 
-        /* check overlap with that row's goal circle */
         float ex = e->unit.centerPos.x;
         float ey = e->unit.centerPos.y;
         float er = 0.5f * e->unit.diameter;
@@ -160,18 +164,19 @@ static void ProcessGoalHits(void)
     }
 }
 
-/* ---------------- your original init of arrays ---------------- */
-
+/* -------------------------------------------------------------------------- */
+/* Spawning                                                                    */
+/* -------------------------------------------------------------------------- */
 void initPlayerDemo(void)
 {
     GameEntity template = (GameEntity){
-        .id = 0, .centerPos = {100, 100}, .rotation = 0, .isPlayer = 1,
-        .forwardVector = {0, 0}, .color = {255, 0, 0, 255},
+        .id = 0, .centerPos = (CP_Vector){100, 100}, .rotation = 0, .isPlayer = 1,
+        .forwardVector = (CP_Vector){0, 0}, .color = (Color){255, 0, 0, 255},
         .diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "Fire"
     };
     GameEntity enemy = (GameEntity){
-        .id = 0, .centerPos = {100, 400}, .rotation = 0, .isPlayer = 0,
-        .forwardVector = {0, 0}, .color = {255, 255, 0, 255},
+        .id = 0, .centerPos = (CP_Vector){100, 400}, .rotation = 0, .isPlayer = 0,
+        .forwardVector = (CP_Vector){0, 0}, .color = (Color){255, 255, 0, 255},
         .diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "Enemy"
     };
 
@@ -195,7 +200,7 @@ void initPlayerDemo(void)
         playerArr.ActiveEntityArr[i].unit.id = i;
     }
 
-    /* enemies (use your wave spawner + set health) */
+    /* enemies using your wave spawner */
     for (int i = 0; i < 11; i++) {
         ActiveEntity ae;
         ae.id = i;
@@ -210,9 +215,9 @@ void initPlayerDemo(void)
         Arr_Insert(&enemyArr, ae);
         enemyArr.ActiveEntityArr[i].unit.id = i;
 
-        /* position and path from your wave system */
         startWave(&enemyArr.ActiveEntityArr[i].unit, (int)2);
-        /* nudge a bit to the right so they never spawn inside the goal circle */
+
+        /* make sure they do not start inside the goal circles */
         enemyArr.ActiveEntityArr[i].unit.centerPos.x += 200.0f;
     }
 
@@ -220,11 +225,11 @@ void initPlayerDemo(void)
     readFile("Assets/containers");
 }
 
-/* ---------------- lifecycle ---------------- */
-
+/* -------------------------------------------------------------------------- */
+/* Lifecycle                                                                   */
+/* -------------------------------------------------------------------------- */
 void Test_Init(void)
 {
-    float dt = CP_System_GetDt();
     srand((unsigned)time(NULL));
 
     Map_Init();
@@ -250,24 +255,46 @@ void Test_Init(void)
     Health_BindGameOver(GameOver_SetData, GameOver_Init, GameOver_Update, GameOver_Exit);
     HealthTimer_Reset();
 
-    /* build left goal circles from tile grid */
-    float cellX;
-    if (TILE_COLUMNS > 1)
-        cellX = g_TileMap[0][1].centerPos.x - g_TileMap[0][0].centerPos.x;
-    else if (g_TileMap[0][0].dim.x > 0.0f)
-        cellX = g_TileMap[0][0].dim.x;
-    else
-        cellX = 96.0f;
+    /* --- Exact goal layout from tile grid --- */
+    float colW, rowH;
 
-    /* place goal circles slightly left of the first column */
-    float leftX = g_TileMap[0][0].centerPos.x - 0.8f * cellX;
+    /* column width */
+    if (TILE_COLUMNS > 1)
+        colW = g_TileMap[0][1].centerPos.x - g_TileMap[0][0].centerPos.x;
+    else if (g_TileMap[0][0].dim.x > 0.0f)
+        colW = g_TileMap[0][0].dim.x;
+    else
+        colW = 96.0f;
+
+    /* row height */
+    if (TILE_ROWS > 1)
+        rowH = g_TileMap[1][0].centerPos.y - g_TileMap[0][0].centerPos.y;
+    else if (g_TileMap[0][0].dim.y > 0.0f)
+        rowH = g_TileMap[0][0].dim.y;
+    else
+        rowH = colW;
+
+    /* use smaller side so circle fits row */
+    float cell = (colW < rowH) ? colW : rowH;
+
+    g_goalRadius = 0.45f * cell; /* fits comfortably inside row height */
+
+    /* left boundary of column 0 */
+    float leftEdgeX = g_TileMap[0][0].centerPos.x - 0.5f * colW;
+
+    /* space between the grid and circle */
+    float goalMargin = 0.25f * cell;
+
+    /* center each circle on the row (Y), offset left of col 0 (X) */
     for (int r = 0; r < TILE_ROWS; ++r) {
-        g_goalCenters[r].x = leftX;
+        g_goalCenters[r].x = leftEdgeX - (g_goalRadius + goalMargin);
         g_goalCenters[r].y = g_TileMap[r][0].centerPos.y;
     }
-    g_goalRadius = 0.45f * cellX;
 
-    /* clear cooldowns */
+    /* invisible by default; set to 1 to debug */
+    g_drawGoals = 1;
+
+    /* clear collision cooldowns */
     for (int k = 0; k < (int)(sizeof(g_enemyHitCD) / sizeof(g_enemyHitCD[0])); ++k)
         g_enemyHitCD[k] = 0.0f;
 }
@@ -282,13 +309,13 @@ void Test_Update(void)
     HealthTimer_Update(dt);
     Hearts_Update(dt);
 
-    /* click to spawn another player unit (your pattern) */
+    /* click to spawn another player unit */
     if (IsCircleClicked(circles[0].centerPos.x, circles[0].centerPos.y, circles[0].diameter,
         CP_Input_GetMouseX(), CP_Input_GetMouseY()))
     {
         GameEntity t = (GameEntity){
-            .id = 0, .centerPos = {100, 100}, .rotation = 0, .isPlayer = 1,
-            .forwardVector = {0, 0}, .color = {255, 0, 0, 255},
+            .id = 0, .centerPos = (CP_Vector){100, 100}, .rotation = 0, .isPlayer = 1,
+            .forwardVector = (CP_Vector){0, 0}, .color = (Color){255, 0, 0, 255},
             .diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "template"
         };
         ActiveEntity ae;
@@ -320,7 +347,7 @@ void Test_Update(void)
     for (size_t i = 0; i < enemyArr.used; ++i) {
         ActiveEntity* ent = &enemyArr.ActiveEntityArr[i];
         FSM_Update(&ent->fsm, &ent->unit, dt);
-        moveWave(&ent->unit, dt); /* your motion */
+        moveWave(&ent->unit, dt); /* your wave motion */
 
         GameEntity* e = &ent->unit;
         if (e->isSel) { e->color.red = 255; e->color.green = 255; e->color.blue = 255; e->color.opacity = 255; }
@@ -333,29 +360,41 @@ void Test_Update(void)
         Health_DrawEnemyBar(ent, 80.0f, 10.0f, 20.0f);
     }
 
-    /* contact damage and goal checking (after at least 1 draw) */
+    /* apply effects */
     DamageEnemiesOnPlayerCollisions(34, 0.30f, dt);
     ProcessGoalHits();
 
-    /* draw goal circles on the left (visual target) */
-    CP_Settings_Fill(CP_Color_Create(0, 0, 0, 0));
-    CP_Settings_Stroke(CP_Color_Create(255, 0, 0, 160));
-    CP_Settings_StrokeWeight(3.0f);
-    for (int r = 0; r < TILE_ROWS; ++r) {
-        CP_Graphics_DrawCircle(g_goalCenters[r].x, g_goalCenters[r].y, g_goalRadius * 2.0f);
+    /* draw goal circles only if debugging */
+    if (g_drawGoals) {
+        CP_Settings_Fill(CP_Color_Create(0, 0, 0, 0));
+        CP_Settings_Stroke(CP_Color_Create(255, 0, 0, 160));
+        CP_Settings_StrokeWeight(3.0f);
+        for (int r = 0; r < TILE_ROWS; ++r)
+            CP_Graphics_DrawCircle(g_goalCenters[r].x, g_goalCenters[r].y, g_goalRadius * 2.0f);
     }
 
-    /* your UI circle */
+    /* UI circle button */
     CP_Settings_RectMode(CP_POSITION_CENTER);
     CP_Settings_Fill(CP_Color_Create(circles[0].color.red, circles[0].color.green, circles[0].color.blue, circles[0].color.opacity));
     CP_Graphics_DrawCircle(circles[0].centerPos.x, circles[0].centerPos.y, circles[0].diameter);
 
     /* hearts HUD */
     Hearts_Draw();
+
+    CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));     // black text
+    CP_Settings_TextSize(28.0f);
+    CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_RIGHT, CP_TEXT_ALIGN_V_TOP);
+
+    char tbuf[48];
+    snprintf(tbuf, sizeof(tbuf), "Time: %.1fs", HealthTimer_Seconds()); // or HealthTimer_Get()
+
+    float pad = 12.0f;
+    float tx = (float)CP_System_GetWindowWidth() - pad; // right edge with padding
+    CP_Font_DrawText(tbuf, tx, pad);
 }
 
 void Test_Exit(void)
 {
-    CP_Font_Free(myFont);
-    CP_Sound_Free(mySound);
+    if (myFont)  CP_Font_Free(myFont);
+    if (mySound) CP_Sound_Free(mySound);
 }
