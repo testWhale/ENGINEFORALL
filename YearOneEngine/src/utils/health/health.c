@@ -1,25 +1,36 @@
+#include "cprocessing.h"
+#include "utils/arr.h"
 #include "health.h"
 
-/* Hearts */
-#define MAX_HEARTS_CAP   6
-#define HEART_FLASH_TIME 1.5f
+/* ----------------------------- Hearts and Timer ----------------------------- */
+
+#define MAX_HEARTS_CAP    6
+#define HEART_FLASH_TIME  1.5f
+
 static float g_elapsed = 0.0f;
 
 void HealthTimer_Reset(void) { g_elapsed = 0.0f; }
 void HealthTimer_Update(float dt) { g_elapsed += dt; }
-float HealthTimer_Seconds(void) { return g_elapsed; }
+float HealthTimer_Get(void) { return g_elapsed; }
 
+/* Hearts HUD state */
 static int   s_maxHearts = 3;
 static int   s_curHearts = 3;
 static float s_hx[MAX_HEARTS_CAP], s_hy[MAX_HEARTS_CAP];
 static float s_alpha[MAX_HEARTS_CAP], s_timer[MAX_HEARTS_CAP];
 
+/* Audio */
 static CP_Sound s_sndHit = 0;
 static CP_Sound s_sndLose = 0;
 
+/* Game Over bindings */
 static GO_SetDataFn s_goSetData = 0;
 static StateFn      s_goInit = 0, s_goUpd = 0, s_goExit = 0;
-static float        s_gameTime = 0.0f;
+
+/* Cooldown so multiple enemies touching at once does not burn many hearts */
+static float s_lossLockUntilSec = 0.0f;   /* wall clock in seconds */
+
+/* ------------------------------- HUD helpers -------------------------------- */
 
 static void drawHeart(float x, float y, float a) {
     CP_Color c = CP_Color_Create(255, 0, 0, (int)(a * 255));
@@ -27,12 +38,16 @@ static void drawHeart(float x, float y, float a) {
     CP_Settings_Fill(c);
     CP_Graphics_DrawCircle(x - 7, y, 10);
     CP_Graphics_DrawCircle(x + 7, y, 10);
-    float x1 = x - 14, y1 = y, x2 = x + 14, y2 = y, x3 = x, y3 = y + 20;
+    float x1 = x - 14, y1 = y;
+    float x2 = x + 14, y2 = y;
+    float x3 = x, y3 = y + 20;
     CP_Graphics_DrawTriangleAdvanced(x1, y1, x2, y2, x3, y3, 0.0f);
 }
 
+/* ------------------------------- Hearts API --------------------------------- */
+
 void Hearts_Init(int max_hearts) {
-    if (max_hearts < 1) max_hearts = 1;
+    if (max_hearts < 1)              max_hearts = 1;
     if (max_hearts > MAX_HEARTS_CAP) max_hearts = MAX_HEARTS_CAP;
     s_maxHearts = max_hearts;
     s_curHearts = s_maxHearts;
@@ -42,16 +57,24 @@ void Hearts_Init(int max_hearts) {
         s_alpha[i] = 0.0f;
         s_timer[i] = 0.0f;
     }
+    s_lossLockUntilSec = 0.0f;
 }
 
 void Hearts_TakeDamage(void) {
     if (s_curHearts <= 0) return;
+
     s_curHearts--;
-    for (int i = 0; i < s_maxHearts; ++i) { s_alpha[i] = 1.0f; s_timer[i] = HEART_FLASH_TIME; }
-    CP_Sound_Play(s_sndHit);
+
+    for (int i = 0; i < s_maxHearts; ++i) {
+        s_alpha[i] = 1.0f;
+        s_timer[i] = HEART_FLASH_TIME;
+    }
+
+    if (s_sndHit) CP_Sound_Play(s_sndHit);
+
     if (s_curHearts <= 0) {
-        CP_Sound_Play(s_sndLose);
-        if (s_goSetData) s_goSetData(s_gameTime, 0);
+        if (s_sndLose) CP_Sound_Play(s_sndLose);
+        if (s_goSetData) s_goSetData(HealthTimer_Get(), 0);
         if (s_goInit && s_goUpd && s_goExit)
             CP_Engine_SetNextGameState(s_goInit, s_goUpd, s_goExit);
     }
@@ -61,7 +84,10 @@ void Hearts_Update(float dt) {
     for (int i = 0; i < s_maxHearts; ++i) {
         if (s_alpha[i] > 0.0f) {
             s_timer[i] -= dt;
-            if (s_timer[i] <= 0.0f) { s_timer[i] = 0.0f; s_alpha[i] = 0.0f; }
+            if (s_timer[i] <= 0.0f) {
+                s_timer[i] = 0.0f;
+                s_alpha[i] = 0.0f;
+            }
         }
     }
 }
@@ -77,34 +103,45 @@ void Hearts_Draw(void) {
 
 int Hearts_Get(void) { return s_curHearts; }
 
+/* ------------------------------- Audio hooks -------------------------------- */
+
 void HealthAudio_Load(const char* hitSfxPath, const char* loseSfxPath) {
-    if (hitSfxPath)  s_sndHit = CP_Sound_Load(hitSfxPath);
-    if (loseSfxPath) s_sndLose = CP_Sound_Load(loseSfxPath);
+    if (hitSfxPath && *hitSfxPath)  s_sndHit = CP_Sound_Load(hitSfxPath);
+    if (loseSfxPath && *loseSfxPath) s_sndLose = CP_Sound_Load(loseSfxPath);
 }
 void HealthAudio_Free(void) {
-    CP_Sound_Free(s_sndHit);
-    CP_Sound_Free(s_sndLose);
+    if (s_sndHit) { CP_Sound_Free(s_sndHit);  s_sndHit = 0; }
+    if (s_sndLose) { CP_Sound_Free(s_sndLose); s_sndLose = 0; }
 }
+
+/* ---------------------------- Game Over binding ----------------------------- */
 
 void Health_BindGameOver(GO_SetDataFn setData, StateFn init, StateFn update, StateFn exit) {
     s_goSetData = setData;
-    s_goInit = init; s_goUpd = update; s_goExit = exit;
+    s_goInit = init;
+    s_goUpd = update;
+    s_goExit = exit;
 }
 
-
-
+/* -------------------------- Enemy HP bar rendering -------------------------- */
 
 void Health_DrawEnemyBar(const ActiveEntity* e, float barW, float barH, float yOffset) {
     if (!e || !e->alive || e->maxHealth <= 0) return;
-    int hp = e->health; if (hp < 0) hp = 0; if (hp > e->maxHealth) hp = e->maxHealth;
+
+    int hp = e->health;
+    if (hp < 0) hp = 0;
+    if (hp > e->maxHealth) hp = e->maxHealth;
+
     float pct = (float)hp / (float)e->maxHealth;
     float r = e->unit.diameter * 0.5f;
     float x = e->unit.centerPos.x - barW * 0.5f;
     float y = e->unit.centerPos.y - r - yOffset;
 
     CP_Settings_RectMode(CP_POSITION_CORNER);
+
     CP_Settings_Fill(CP_Color_Create(80, 80, 80, 255));
     CP_Graphics_DrawRect(x, y, barW, barH);
+
     CP_Settings_Fill(CP_Color_Create(0, 200, 0, 255));
     CP_Graphics_DrawRect(x, y, barW * pct, barH);
 }
@@ -115,29 +152,37 @@ void Health_DrawAllEnemyBars(const TestArr* A, float barW, float barH, float yOf
         Health_DrawEnemyBar(&A->ActiveEntityArr[i], barW, barH, yOffset);
 }
 
+/* --------------------- Goal circle based heart loss check ------------------- */
 
-float HealthTimer_Seconds(void);   
-
-void Health_ProcessLeftGoal(TestArr* A, float goalX)
+void Health_ProcessGoalCircle(TestArr* enemies, CP_Vector goalCenter, float goalRadius)
 {
-    if (!A || !A->ActiveEntityArr) return;
+    if (!enemies || enemies->used == 0) return;
 
-    if (HealthTimer_Seconds() < 0.50f)   // grace: first 0.5s never deduct
-        return;
+    const float now = HealthTimer_Get();
+    if (now < s_lossLockUntilSec) return;
 
-    for (size_t i = 0; i < A->used; ++i) {
-        ActiveEntity* e = &A->ActiveEntityArr[i];
+    const float R = goalRadius;
 
-        if (!e->alive)              continue;       // not active
-        if (e->unit.isPlayer)       continue;       // skip UI/player pieces
-        if (e->maxHealth <= 0)      continue;       // malformed
+    for (size_t i = 0; i < enemies->used; /* advance inside */) {
+        ActiveEntity* e = &enemies->ActiveEntityArr[i];
 
-        const float leftmost = e->unit.centerPos.x - 0.5f * e->unit.diameter;
-        if (leftmost <= goalX) {
-            e->alive = 0;                             // despawn
+        if (!e->alive || e->unit.isPlayer) { ++i; continue; }
+
+        const float ex = e->unit.centerPos.x;
+        const float ey = e->unit.centerPos.y;
+        const float er = 0.5f * e->unit.diameter;
+
+        const float dx = ex - goalCenter.x;
+        const float dy = ey - goalCenter.y;
+        const float rr = er + R;
+
+        if (dx * dx + dy * dy <= rr * rr) {
             Hearts_TakeDamage();
-            Arr_Del(A, (int)i);                       // keep array compact (optional)
-            break;
+            Arr_Del(enemies, e->id);       /* array shifts; do not ++i */
+            s_lossLockUntilSec = now + 0.35f;
+            return;
         }
+
+        ++i;
     }
 }
