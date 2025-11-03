@@ -7,23 +7,20 @@
 #include "utils/wave/wave.h"
 #include "tile/tile.h"
 #include "utils/health/health.h"
-
+#include "utils/UI/Pause.h"
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
 #include <stdio.h>
 
-/* -------------------------------------------------------------------------- */
-/* Config kept from your file                                                 */
-/* -------------------------------------------------------------------------- */
+
 #define minWidth  0.0f
 #define maxWidth  1400.0f
 #define extraBars 10
 
-/* -------------------------------------------------------------------------- */
-/* Globals                                                                    */
-/* -------------------------------------------------------------------------- */
+
 CP_Sound mySound = NULL;
+
 
 float winWidth;
 float winHeight;
@@ -58,23 +55,19 @@ static int    size = 80;
 static int    i_g;
 static CP_Font myFont;
 
-/* -------------------------------------------------------------------------- */
-/* Left goal circles (one per row)                                            */
-/* -------------------------------------------------------------------------- */
+
 static CP_Vector g_goalCenters[TILE_ROWS];
 static float     g_goalRadius = 0.0f;
-/* 0 = invisible in play (default), 1 = draw for debugging */
+
 static int       g_drawGoals = 1;
 
-/* small per-enemy hit cooldown so they do not melt in one frame */
+
 static float     g_enemyHitCD[1024];
 
-/* provided elsewhere in your codebase */
+
 extern int IsCircleClicked(float cx, float cy, float diameter, float mx, float my);
 
-/* -------------------------------------------------------------------------- */
-/* Helpers                                                                    */
-/* -------------------------------------------------------------------------- */
+
 static int CirclesOverlap(float x1, float y1, float r1, float x2, float y2, float r2)
 {
     float dx = x1 - x2, dy = y1 - y2;
@@ -82,8 +75,7 @@ static int CirclesOverlap(float x1, float y1, float r1, float x2, float y2, floa
     return (dx * dx + dy * dy) <= (rr * rr);
 }
 
-/* Damage enemies when they touch any player unit.
-   dmgPerHit: HP to subtract, cd: seconds until same enemy can be hit again. */
+
 static void DamageEnemiesOnPlayerCollisions(int dmgPerHit, float cd, float dt)
 {
     for (size_t i = 0; i < enemyArr.used; ++i) {
@@ -95,7 +87,7 @@ static void DamageEnemiesOnPlayerCollisions(int dmgPerHit, float cd, float dt)
         }
     }
 
-    for (size_t i = 0; i < enemyArr.used; /* advance inside */) {
+    for (size_t i = 0; i < enemyArr.used;) {
         ActiveEntity* e = &enemyArr.ActiveEntityArr[i];
         if (!e->alive || e->unit.isPlayer) { ++i; continue; }
 
@@ -120,7 +112,7 @@ static void DamageEnemiesOnPlayerCollisions(int dmgPerHit, float cd, float dt)
                 {
                     e->health -= dmgPerHit;
                     if (e->health <= 0) {
-                        Arr_Del(&enemyArr, id);   /* array shifts; keep i */
+                        Arr_Del(&enemyArr, id);   
                         removed = 1;
                     }
                     else {
@@ -135,14 +127,14 @@ static void DamageEnemiesOnPlayerCollisions(int dmgPerHit, float cd, float dt)
     }
 }
 
-/* Lose one heart and remove enemy if it touches the left goal circle of its row. */
+
 static void ProcessGoalHits(void)
 {
-    for (size_t i = 0; i < enemyArr.used; /* advance inside */) {
+    for (size_t i = 0; i < enemyArr.used; ) {
         ActiveEntity* e = &enemyArr.ActiveEntityArr[i];
         if (!e->alive || e->unit.isPlayer) { ++i; continue; }
 
-        /* closest row by Y */
+        
         int row = 0;
         float best = 1e9f;
         for (int r = 0; r < TILE_ROWS; ++r) {
@@ -155,18 +147,16 @@ static void ProcessGoalHits(void)
         float er = 0.5f * e->unit.diameter;
 
         if (CirclesOverlap(ex, ey, er, g_goalCenters[row].x, g_goalCenters[row].y, g_goalRadius)) {
-            Hearts_TakeDamage();        /* lose one heart */
-            Arr_Del(&enemyArr, e->id);  /* remove enemy */
-            continue;                   /* array shifted, stay on same i */
+            Hearts_TakeDamage();        
+            Arr_Del(&enemyArr, e->id);  
+            continue;                  
         }
 
         ++i;
     }
 }
 
-/* -------------------------------------------------------------------------- */
-/* Spawning                                                                    */
-/* -------------------------------------------------------------------------- */
+
 void initPlayerDemo(void)
 {
     GameEntity template = (GameEntity){
@@ -217,7 +207,7 @@ void initPlayerDemo(void)
 
         startWave(&enemyArr.ActiveEntityArr[i].unit, (int)2);
 
-        /* make sure they do not start inside the goal circles */
+       
         enemyArr.ActiveEntityArr[i].unit.centerPos.x += 200.0f;
     }
 
@@ -243,7 +233,7 @@ void Test_Init(void)
     myFont = CP_Font_Load("Assets/Exo2-Regular.ttf");
     mySound = CP_Sound_Load("Assets/sound.mp3");
 
-    /* Hearts + audio + GO binding */
+   
     Hearts_Init(3);
     HealthAudio_Load("Assets/Metal Ping by timgormly Id-170957.wav",
         "Assets/Glass Break by unfa Id-221528.wav");
@@ -255,7 +245,7 @@ void Test_Init(void)
     Health_BindGameOver(GameOver_SetData, GameOver_Init, GameOver_Update, GameOver_Exit);
     HealthTimer_Reset();
 
-    /* --- Exact goal layout from tile grid --- */
+  
     float colW, rowH;
 
     /* column width */
@@ -274,27 +264,27 @@ void Test_Init(void)
     else
         rowH = colW;
 
-    /* use smaller side so circle fits row */
+  
     float cell = (colW < rowH) ? colW : rowH;
 
-    g_goalRadius = 0.45f * cell; /* fits comfortably inside row height */
+    g_goalRadius = 0.45f * cell; 
 
-    /* left boundary of column 0 */
+    
     float leftEdgeX = g_TileMap[0][0].centerPos.x - 0.5f * colW;
 
-    /* space between the grid and circle */
+  
     float goalMargin = 0.25f * cell;
 
-    /* center each circle on the row (Y), offset left of col 0 (X) */
+    
     for (int r = 0; r < TILE_ROWS; ++r) {
         g_goalCenters[r].x = leftEdgeX - (g_goalRadius + goalMargin);
         g_goalCenters[r].y = g_TileMap[r][0].centerPos.y;
     }
 
-    /* invisible by default; set to 1 to debug */
+    
     g_drawGoals = 1;
 
-    /* clear collision cooldowns */
+    
     for (int k = 0; k < (int)(sizeof(g_enemyHitCD) / sizeof(g_enemyHitCD[0])); ++k)
         g_enemyHitCD[k] = 0.0f;
 }
@@ -309,7 +299,7 @@ void Test_Update(void)
     HealthTimer_Update(dt);
     Hearts_Update(dt);
 
-    /* click to spawn another player unit */
+    
     if (IsCircleClicked(circles[0].centerPos.x, circles[0].centerPos.y, circles[0].diameter,
         CP_Input_GetMouseX(), CP_Input_GetMouseY()))
     {
@@ -343,11 +333,11 @@ void Test_Update(void)
         CP_Graphics_DrawCircle(p->centerPos.x, p->centerPos.y, p->diameter);
     }
 
-    /* enemies update + draw + HP bars */
+    
     for (size_t i = 0; i < enemyArr.used; ++i) {
         ActiveEntity* ent = &enemyArr.ActiveEntityArr[i];
         FSM_Update(&ent->fsm, &ent->unit, dt);
-        moveWave(&ent->unit, dt); /* your wave motion */
+        moveWave(&ent->unit, dt); 
 
         GameEntity* e = &ent->unit;
         if (e->isSel) { e->color.red = 255; e->color.green = 255; e->color.blue = 255; e->color.opacity = 255; }
@@ -356,15 +346,15 @@ void Test_Update(void)
         CP_Settings_Fill(CP_Color_Create(e->color.red, e->color.green, e->color.blue, e->color.opacity));
         CP_Graphics_DrawCircle(e->centerPos.x, e->centerPos.y, e->diameter);
 
-        /* HP bar above enemy */
+        
         Health_DrawEnemyBar(ent, 80.0f, 10.0f, 20.0f);
     }
 
-    /* apply effects */
+    
     DamageEnemiesOnPlayerCollisions(34, 0.30f, dt);
     ProcessGoalHits();
 
-    /* draw goal circles only if debugging */
+    
     if (g_drawGoals) {
         CP_Settings_Fill(CP_Color_Create(0, 0, 0, 0));
         CP_Settings_Stroke(CP_Color_Create(255, 0, 0, 160));
@@ -373,23 +363,23 @@ void Test_Update(void)
             CP_Graphics_DrawCircle(g_goalCenters[r].x, g_goalCenters[r].y, g_goalRadius * 2.0f);
     }
 
-    /* UI circle button */
+   
     CP_Settings_RectMode(CP_POSITION_CENTER);
     CP_Settings_Fill(CP_Color_Create(circles[0].color.red, circles[0].color.green, circles[0].color.blue, circles[0].color.opacity));
     CP_Graphics_DrawCircle(circles[0].centerPos.x, circles[0].centerPos.y, circles[0].diameter);
 
-    /* hearts HUD */
+    
     Hearts_Draw();
 
-    CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));     // black text
+    CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));    
     CP_Settings_TextSize(28.0f);
     CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_RIGHT, CP_TEXT_ALIGN_V_TOP);
 
     char tbuf[48];
-    snprintf(tbuf, sizeof(tbuf), "Time: %.1fs", HealthTimer_Seconds()); // or HealthTimer_Get()
+    snprintf(tbuf, sizeof(tbuf), "Time: %.1fs", HealthTimer_Seconds()); 
 
     float pad = 12.0f;
-    float tx = (float)CP_System_GetWindowWidth() - pad; // right edge with padding
+    float tx = (float)CP_System_GetWindowWidth() - pad; 
     CP_Font_DrawText(tbuf, tx, pad);
 }
 

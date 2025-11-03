@@ -29,6 +29,7 @@
     <ClCompile Include="src\utils\readTxt.c" />
     <ClCompile Include="src\utils\arr\sample.c" />
     <ClCompile Include="src\utils\SM.c" />
+    <ClCompile Include="src\utils\UI\Pause.c" />
     <ClCompile Include="src\utils\wave\wave.c" />
     <ClInclude Include="src\gameover.h" />
     <ClInclude Include="src\test.h" />
@@ -39,6 +40,7 @@
     <ClCompile Include="src\utils\sound.h" />
     <ClCompile Include="src\utils\arr\State.h" />
     <ClCompile Include="src\utils\utils.c" />
+    <ClInclude Include="src\utils\UI\Pause.h" />
     <ClInclude Include="src\utils\wave\wave.h" />
   </ItemGroup>
   <ItemGroup>

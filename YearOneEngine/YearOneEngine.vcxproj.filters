@@ -69,6 +69,12 @@
     <ClCompile Include="src\utils\health\health.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\gameover.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils\UI\Pause.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DataTypes.h">
@@ -105,6 +111,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\utils\wave\wave.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gameover.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils\UI\Pause.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

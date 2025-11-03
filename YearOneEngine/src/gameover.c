@@ -1,6 +1,6 @@
 #include "cprocessing.h"
 #include "gameover.h"
-#include "test.h"       // for Test_Init/Update/Exit or replace with Game_* if you want
+#include "test.h"       
 #include "mainmenu.h"
 #include <math.h>
 #include <stdio.h>
@@ -38,8 +38,9 @@ void GameOver_Update(void) {
     CP_Font_DrawText("GAME OVER", W * 0.5f, H * 0.35f);
 
     char line[64]; CP_Settings_TextSize(36.0f);
-    (void)snprintf(line, sizeof(line), "Time: %.0f s", GO_finalTime);    CP_Font_DrawText(line, W * 0.5f, H * 0.48f);
-    (void)snprintf(line, sizeof(line), "Money earn: %d", GO_goals);     CP_Font_DrawText(line, W * 0.5f, H * 0.55f);
+    (void)snprintf(line, sizeof(line), "Wave survived: %d");     CP_Font_DrawText(line, W * 0.5f, H * 0.45f);
+    (void)snprintf(line, sizeof(line), "Time: %.0f s", GO_finalTime);    CP_Font_DrawText(line, W * 0.5f, H * 0.52f);
+    (void)snprintf(line, sizeof(line), "Money earn: %d", GO_goals);     CP_Font_DrawText(line, W * 0.5f, H * 0.59f);
 
     float blink = 0.5f + 0.5f * sinf(6.0f * GO_timer);
     int alpha = (int)(130 + 100 * blink);
@@ -49,7 +50,7 @@ void GameOver_Update(void) {
 
     if (GO_timer > 0.6f) {
         if (CP_Input_KeyTriggered(KEY_R) || CP_Input_KeyTriggered('R')) {
-            /* If your scene is Test_*, keep this. If it’s Game_*, swap the names. */
+           
             CP_Engine_SetNextGameState(Test_Init, Test_Update, Test_Exit);
             return;
         }
