@@ -190,7 +190,7 @@ void initPlayerDemo(void)
         playerArr.ActiveEntityArr[i].unit.id = i;
     }
 
-    /* enemies using your wave spawner */
+  
     for (int i = 0; i < 11; i++) {
         ActiveEntity ae;
         ae.id = i;

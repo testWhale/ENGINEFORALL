@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Button\button.c" />
     <ClCompile Include="src\gameover.c" />
     <ClCompile Include="src\state\pickup.c" />
     <ClCompile Include="src\tile\layout.c" />
@@ -31,6 +32,7 @@
     <ClCompile Include="src\utils\SM.c" />
     <ClCompile Include="src\utils\UI\Pause.c" />
     <ClCompile Include="src\utils\wave\wave.c" />
+    <ClInclude Include="src\Button\button.h" />
     <ClInclude Include="src\gameover.h" />
     <ClInclude Include="src\test.h" />
     <ClCompile Include="src\main.c" />
