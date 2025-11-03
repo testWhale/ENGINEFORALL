@@ -22,13 +22,16 @@
     <ClCompile Include="src\state\pickup.c" />
     <ClCompile Include="src\tile\layout.c" />
     <ClCompile Include="src\utils\arr.c" />
+    <ClCompile Include="src\utils\backend\containerStates.c" />
     <ClCompile Include="src\utils\container.c" />
+    <ClCompile Include="src\utils\readTxt.c" />
     <ClCompile Include="src\utils\SM.c" />
     <ClInclude Include="src\test.h" />
     <ClCompile Include="src\main.c" />
     <ClCompile Include="src\mainmenu.c" />
     <ClCompile Include="src\test.c" />
     <ClCompile Include="src\tile\tile.c" />
+    <ClCompile Include="src\utils\sound.h" />
     <ClCompile Include="src\utils\utils.c" />
   </ItemGroup>
   <ItemGroup>
@@ -36,10 +39,15 @@
     <ClInclude Include="src\mainmenu.h" />
     <ClInclude Include="src\state\pickup.h" />
     <ClInclude Include="src\utils\arr.h" />
+    <ClInclude Include="src\utils\backend\containerStates.h" />
     <ClInclude Include="src\utils\container.h" />
+    <ClInclude Include="src\utils\readTxt.h" />
     <ClInclude Include="src\utils\SM.h" />
     <ClInclude Include="src\tile\tile.h" />
     <ClInclude Include="src\utils\utils.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="src\utils\backend\containers.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

@@ -48,6 +48,15 @@
     <ClCompile Include="src\utils\arr.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\utils\backend\containerStates.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils\readTxt.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils\sound.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DataTypes.h">
@@ -77,5 +86,14 @@
     <ClInclude Include="src\utils\arr.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\utils\backend\containerStates.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils\readTxt.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="src\utils\backend\containers.txt" />
   </ItemGroup>
 </Project>

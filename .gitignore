@@ -2,3 +2,5 @@
 .vs
 .bin
 .bin\Debug-x64
+.bin\*
+./Assets/soundEffects/*
