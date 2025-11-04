@@ -75,6 +75,18 @@
     <ClCompile Include="src\utils\UI\Pause.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\buttons\buttonCode.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\clicker\clickCode.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\clicker\testscene.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\economy\economyCode.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DataTypes.h">
@@ -117,6 +129,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\utils\UI\Pause.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\buttons\buttonCode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\clicker\clickCode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\clicker\testscene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\economy\economyCode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
