@@ -98,6 +98,7 @@ void initPlayerDemo() {
 		GameEntity* unit = &playerArr.ActiveEntityArr[i].unit;
 		printf("CHECK AFTER INSERT: %d, \n", playerArr.ActiveEntityArr[i].id);
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 		GameEntity* unit = &playerArr.ActiveEntityArr[i].unit;
 		unit->centerPos.x = template.centerPos.x + i * 100;
 		unit->id = i;
@@ -120,6 +121,13 @@ void initPlayerDemo() {
 		B_Arr_Init(2, &unit->bullets);
 		
 
+=======
+		unit->centerPos.x = template.centerPos.x + i * 100;
+		unit->id = i;
+		B_Arr_Init(2, &unit->bullets);
+		
+
+>>>>>>> Stashed changes
 		//memset(&unit->bullets, 0, sizeof(unit->bullets));
 		
 		Bullet b = { .id=1, .centerPos = unit->centerPos, .velocity = {1,0}, .color = {0,255,0,255}, .diameter = 5 };
@@ -128,6 +136,9 @@ void initPlayerDemo() {
 	} 
 	
 	/* FOR ENEMY UNITS */
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 	for (int i = 0; i < 11; i++) {
 		Arr_Insert(&enemyArr, (ActiveEntity) {

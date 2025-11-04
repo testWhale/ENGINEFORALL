@@ -6,6 +6,7 @@
 
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 void Shoot_Init( GameEntity* turret, StateMachine* SM, float dt) {
 	printf("SHoort");
 }
@@ -56,6 +57,21 @@ void Shoot_Exit( GameEntity* turret, StateMachine* SM, float dt) {
 //	PickedUp_Exit
 //};
 //
+=======
+void Shoot_Init(GameEntity* entity, StateMachine* SM, float dt) {
+	printf("SHoot Init");
+
+}
+void Shoot_Update(GameEntity* entity, StateMachine* SM, float dt) {
+	printf("SHoot Init");
+
+}
+void Shoot_Exit(GameEntity* entity, StateMachine* SM, float dt) {
+	printf("SHoot Init");
+
+}
+
+>>>>>>> Stashed changes
 =======
 void Shoot_Init(GameEntity* entity, StateMachine* SM, float dt) {
 	printf("SHoot Init");
