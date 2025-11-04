@@ -20,12 +20,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\state\pickup.c" />
+    <ClCompile Include="src\state\shoot.c" />
     <ClCompile Include="src\tile\layout.c" />
     <ClCompile Include="src\utils\arr.c" />
     <ClCompile Include="src\utils\backend\containerStates.c" />
+    <ClCompile Include="src\utils\bullet.c" />
     <ClCompile Include="src\utils\container.c" />
     <ClCompile Include="src\utils\readTxt.c" />
     <ClCompile Include="src\utils\SM.c" />
+    <ClInclude Include="src\state\shoot.h" />
     <ClInclude Include="src\test.h" />
     <ClCompile Include="src\main.c" />
     <ClCompile Include="src\mainmenu.c" />
@@ -40,6 +43,7 @@
     <ClInclude Include="src\state\pickup.h" />
     <ClInclude Include="src\utils\arr.h" />
     <ClInclude Include="src\utils\backend\containerStates.h" />
+    <ClInclude Include="src\utils\bullet.h" />
     <ClInclude Include="src\utils\container.h" />
     <ClInclude Include="src\utils\readTxt.h" />
     <ClInclude Include="src\utils\SM.h" />

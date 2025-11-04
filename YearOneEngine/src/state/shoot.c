@@ -12,7 +12,7 @@ void Shoot_Init(GameEntity* turret, Bullet* bullet, float dt) {
 void Shoot_Update(GameEntity* turret, Bullet* bullet, float dt) {
 	bullet->isActive = TRUE;
 
-	if (bullet->isActive) {
+	if (bullet->isActive) { 
 		//spawn bullet
 		bullet->centerPos = turret->centerPos;
 
