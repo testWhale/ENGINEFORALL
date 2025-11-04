@@ -71,22 +71,34 @@ int isInArea(Circle circle, GameEntity* player) {
 /*LOADS IN PLAYER ARRAY */
 void initPlayerDemo() {
 	/*-------------Template Value--------------*/
+	Bullet tem = (Bullet) { 
+		.id = (int)i,
+		.centerPos = { 100, 100 },
+		.velocity = { 0, 0 },
+		.color = { 255, 0, 0, 255 },
+		.diameter = 100,
+		.stateTimer = 0
+	};
 	GameEntity template = (GameEntity){
 	.id = 0, .centerPos = {100, 100}, .rotation = 0, .isPlayer = 1, .forwardVector = {0, 0}, .color = {255,0,0,255},
-	.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "Fire" };
+	.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "Fire", .bullets = {0 } };
 	GameEntity enemy = (GameEntity){
 .id = 0, .centerPos = {100, 400}, .rotation = 0, .isPlayer = 0, .forwardVector = {0, 0}, .color = {255,0,0,255},
 .diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "Fire" };
 
 	Arr_Init(2, &playerArr);
 	Arr_Init(10, &enemyArr);
+
 	/*FOR PLAYER_UNITS ONLY*/
 	for (int i = 0; i < 4; i++) {
 		Arr_Insert(&playerArr, (ActiveEntity){ 
 			.id = i, 
 			.unit = template, 
 			.fsm = (StateMachine) { .currState = IdleState }});
+		GameEntity* unit = &playerArr.ActiveEntityArr[i].unit;
 		printf("CHECK AFTER INSERT: %d, \n", playerArr.ActiveEntityArr[i].id);
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
 		GameEntity* unit = &playerArr.ActiveEntityArr[i].unit;
 		unit->centerPos.x = template.centerPos.x + i * 100;
 		unit->id = i;
@@ -103,6 +115,31 @@ void initPlayerDemo() {
 
 		printf("ID: %d\n", playerArr.ActiveEntityArr[i].id);
 	} /* FOR ENEMY UNITS */
+=======
+		unit->centerPos.x = template.centerPos.x + i * 100;
+		unit->id = i;
+		B_Arr_Init(2, &unit->bullets);
+		
+
+=======
+		unit->centerPos.x = template.centerPos.x + i * 100;
+		unit->id = i;
+		B_Arr_Init(2, &unit->bullets);
+		
+
+>>>>>>> Stashed changes
+		//memset(&unit->bullets, 0, sizeof(unit->bullets));
+		
+		Bullet b = { .id=1, .centerPos = unit->centerPos, .velocity = {1,0}, .color = {0,255,0,255}, .diameter = 5 };
+		B_Arr_Insert(&unit->bullets, b);
+		printf("ID: %d\n", unit->bullets.bulletArr->id);
+	} 
+	
+	/* FOR ENEMY UNITS */
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 	for (int i = 0; i < 11; i++) {
 		Arr_Insert(&enemyArr, (ActiveEntity) {
 			.id = i,

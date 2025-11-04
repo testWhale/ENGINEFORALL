@@ -3,8 +3,16 @@
 #include "utils/arr.h"
 #include "utils/container.h"
 #include "tile/tile.h"
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
 #include "state/shoot.h"
 
+=======
+#include "shoot.h"
+>>>>>>> Stashed changes
+=======
+#include "shoot.h"
+>>>>>>> Stashed changes
 int coun = 0;
 
 int checkForSel() {
