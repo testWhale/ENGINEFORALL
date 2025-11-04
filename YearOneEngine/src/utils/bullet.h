@@ -9,16 +9,16 @@ typedef struct Bullet {
 	CP_Vector centerPos;
 	CP_Vector velocity; Color color;
 	float diameter; float stateTimer;
+	CP_BOOL isActive;
 }Bullet;
 
 typedef struct BulletArr {
-	Bullet* bulletElems;
+	Bullet* bulletArr;
 	size_t entitySize; //why not pointer? cause i want my array to actually own these structs and be able to use and delete them as and when.
 	size_t used; //used = curr empty entry
 	size_t maxLength;
 }BulletArr;
 
-BulletArr bullet_Store_Arr;
 
 BulletArr* B_Arr_Init(size_t maxLength, BulletArr* Array);
 

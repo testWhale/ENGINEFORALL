@@ -28,6 +28,7 @@
     <ClCompile Include="src\utils\container.c" />
     <ClCompile Include="src\utils\readTxt.c" />
     <ClCompile Include="src\utils\SM.c" />
+    <ClInclude Include="src\mainmenu.h" />
     <ClInclude Include="src\state\shoot.h" />
     <ClInclude Include="src\test.h" />
     <ClCompile Include="src\main.c" />
@@ -39,7 +40,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DataTypes.h" />
-    <ClInclude Include="src\mainmenu.h" />
     <ClInclude Include="src\state\pickup.h" />
     <ClInclude Include="src\utils\arr.h" />
     <ClInclude Include="src\utils\backend\containerStates.h" />
