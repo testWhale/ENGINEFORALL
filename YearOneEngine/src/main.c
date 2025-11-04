@@ -19,7 +19,7 @@
 int main(void)
 {
 	CP_Engine_SetNextGameState(Test_Scene_Init, Test_Scene_Update, Test_Scene_Exit);
-	CP_System_SetWindowSize(1600, 900);
+	CP_System_SetWindowSize(1920, 1080);
 	CP_Engine_Run(1);
 	return 0;
 }

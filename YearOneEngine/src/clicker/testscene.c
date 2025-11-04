@@ -7,15 +7,22 @@
 #include "buttons/buttonCode.h"
 #include "utils/arr.h"
 
+CP_Image Overlay;
+
 ButtonInfo testbutton, purchaseButton, purchaseButton2, arrayButton;
 ButtonSound defaultSound;
 CP_Font myFont;
 float winWidth;
 float winHeight;
+float unit;
 
 
 void Test_Scene_Init(void)
-{
+{   
+    Overlay = CP_Image_Load("Assets/ConceptArt.jpg");
+    winHeight = CP_System_GetWindowHeight();
+    winWidth = CP_System_GetWindowWidth();
+    unit = CP_System_GetWindowHeight() / 108;
     myFont = CP_Font_Load("Assets/Exo2-Regular.ttf");
 
     Button_Sound_Load(&defaultSound, "Assets/soundTesters/ClickSound.wav", "Assets/soundTesters/HoverSound.wav", "Assets/soundTesters/ReleaseSound.wav");
@@ -30,8 +37,7 @@ void Test_Scene_Init(void)
 void Test_Scene_Update(void)
 {
 
-    winHeight = CP_System_GetWindowHeight();
-    winWidth = CP_System_GetWindowWidth();
+
     CP_Graphics_ClearBackground(CP_Color_Create(255, 128, 128, 255));
     CP_Settings_TextSize(20.0f);
 
@@ -73,7 +79,9 @@ void Test_Scene_Update(void)
             Passive_Upgrade();
         }
     }
-
+    CP_Settings_ImageMode(CP_POSITION_CORNER);
+    CP_Image_Draw(Overlay, 0, 0, 192 * unit, 108 * unit, 51);
+    if (CP_Input_KeyDown(KEY_Q))CP_Engine_Terminate();
 }
 
 void Test_Scene_Exit(void)
