@@ -5,8 +5,6 @@
 #include "tile/tile.h"
 
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 void Shoot_Init( GameEntity* turret, StateMachine* SM, float dt) {
 	printf("SHoort");
 }
@@ -15,7 +13,7 @@ void Shoot_Update(GameEntity* turret, StateMachine* SM, float dt) {
 	printf("ID: %d\n", turret->id);
 	for (int i = 0; i < turret->bullets.used; i++) {
 		Bullet* bullet = &turret->bullets.bulletArr[i];
-		bullet->isActive = TRUE;
+		bullet->isActive = TRUE; 
 
 		if (bullet->isActive) {
 			//spawn bullet
@@ -57,36 +55,6 @@ void Shoot_Exit( GameEntity* turret, StateMachine* SM, float dt) {
 //	PickedUp_Exit
 //};
 //
-=======
-void Shoot_Init(GameEntity* entity, StateMachine* SM, float dt) {
-	printf("SHoot Init");
-
-}
-void Shoot_Update(GameEntity* entity, StateMachine* SM, float dt) {
-	printf("SHoot Init");
-
-}
-void Shoot_Exit(GameEntity* entity, StateMachine* SM, float dt) {
-	printf("SHoot Init");
-
-}
-
->>>>>>> Stashed changes
-=======
-void Shoot_Init(GameEntity* entity, StateMachine* SM, float dt) {
-	printf("SHoot Init");
-
-}
-void Shoot_Update(GameEntity* entity, StateMachine* SM, float dt) {
-	printf("SHoot Init");
-
-}
-void Shoot_Exit(GameEntity* entity, StateMachine* SM, float dt) {
-	printf("SHoot Init");
-
-}
-
->>>>>>> Stashed changes
 States ShootState = {
 	Shoot_Init,
 	Shoot_Update,
