@@ -1,16 +1,18 @@
 #include "bullet.h"
 #include <stdio.h>
 #include <stdlib.h>
+
 BulletArr* B_Arr_Init(size_t maxLength, BulletArr* Array) {
 	Array->bulletArr = malloc(maxLength * sizeof(Bullet));
 	if (!Array->bulletArr) {
 		fprintf(stderr, "Bullet array malloc failed!\n");
 		exit(1);
 	}
+	memset(Array->bulletArr, 0, maxLength * sizeof(Bullet));
 	Array->maxLength = maxLength;
 	Array->entitySize = 0;
 	Array->used = 0;
-	memset(Array->bulletArr, 0, maxLength * sizeof(Bullet));
+	
 
 	//for (int i = 0; i < maxLength; i++) { 
 	//	(Array->bulletArr[i]) = (Bullet){

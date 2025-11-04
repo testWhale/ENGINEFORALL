@@ -9,6 +9,7 @@ typedef struct Bullet {
 	CP_Vector centerPos;
 	CP_Vector velocity; Color color;
 	float diameter; float stateTimer;
+	CP_BOOL isActive;
 }Bullet;
 
 typedef struct BulletArr {

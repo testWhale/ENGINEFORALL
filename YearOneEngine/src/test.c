@@ -87,8 +87,19 @@ void initPlayerDemo() {
 			.unit = template, 
 			.fsm = (StateMachine) { .currState = IdleState }});
 		printf("CHECK AFTER INSERT: %d, \n", playerArr.ActiveEntityArr[i].id);
+		GameEntity* unit = &playerArr.ActiveEntityArr[i].unit;
+		unit->centerPos.x = template.centerPos.x + i * 100;
+		unit->id = i;
+		B_Arr_Init(2, &unit->bullets);
+
+		//memset(&unit->bullets, 0, sizeof(unit->bullets));
+		Bullet b = { .id = 1, .centerPos = unit->centerPos, .velocity = {1,0}, .color = {0,255,0,255}, .diameter = 5 };
+		B_Arr_Insert(&unit->bullets, b);
+		printf("ID: %d\n", unit->bullets.bulletArr->id);
+	
 		playerArr.ActiveEntityArr[i].unit.centerPos.x = template.centerPos.x + i * 100;
 		playerArr.ActiveEntityArr[i].unit.id = i;
+
 
 		printf("ID: %d\n", playerArr.ActiveEntityArr[i].id);
 	} /* FOR ENEMY UNITS */
@@ -164,6 +175,13 @@ void Test_Update(void)
 		else { ptr->color.red = 255, ptr->color.green = 0, ptr->color.blue = 0, ptr->color.opacity = 255; }
 		CP_Settings_Fill(CP_Color_Create(ptr->color.red, ptr->color.green, ptr->color.blue, ptr->color.opacity));
 		CP_Graphics_DrawCircle(ptr->centerPos.x, ptr->centerPos.y, ptr->diameter);
+
+
+		for (int j = 0; j < ptr->bullets.used; j++) {
+			Bullet* pew = &ptr->bullets.bulletArr[j];
+			CP_Settings_Fill(CP_Color_Create(pew->color.red, pew->color.green, pew->color.blue, pew->color.opacity));
+			CP_Graphics_DrawCircle(pew->centerPos.x, pew->centerPos.y, pew->diameter);
+		}
 		//printf("%s", activeEntityList[i].fsm.currState);
 	}
 	for (int i = 0; i < enemyArr.used; i++) {

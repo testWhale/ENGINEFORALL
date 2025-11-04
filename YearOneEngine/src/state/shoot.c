@@ -5,33 +5,38 @@
 #include "tile/tile.h"
 
 
-void Shoot_Init(GameEntity* turret, Bullet* bullet, float dt) {
-
+void Shoot_Init( GameEntity* turret, StateMachine* SM, float dt) {
+	printf("SHoort");
 }
 
-void Shoot_Update(GameEntity* turret, Bullet* bullet, float dt) {
-	bullet->isActive = TRUE;
+void Shoot_Update(GameEntity* turret, StateMachine* SM, float dt) {
+	printf("ID: %d\n", turret->id);
+	for (int i = 0; i < turret->bullets.used; i++) {
+		Bullet* bullet = &turret->bullets.bulletArr[i];
+		bullet->isActive = TRUE;
 
-	if (bullet->isActive) {
-		//spawn bullet
-		bullet->centerPos = turret->centerPos;
+		if (bullet->isActive) {
+			//spawn bullet
+			bullet->centerPos = turret->centerPos;
 
-		//Move bullet
-		bullet->centerPos.x += 10.0f * dt;
+			//Move bullet
+			bullet->centerPos.x += 1000.0f * dt;
 
-		//// Check for collision with green circle
-		//if (AreCirclesIntersecting(bullet_coord[0].x, bullet_coord[0].y, 40.0f,
-		//	enemy_coord[0].x, enemy_coord[0].y, 80.0f) && length <= max_length && length >= min_length)
-		//{
-		//	//Deactivate bullet
-		//	bullet->isActive = FALSE;
-		//	//reduce health bar
-		//	bullet_spawn = 0.0f;
-		//}
+			//// Check for collision with green circle
+			//if (AreCirclesIntersecting(bullet_coord[0].x, bullet_coord[0].y, 40.0f,
+			//	enemy_coord[0].x, enemy_coord[0].y, 80.0f) && length <= max_length && length >= min_length)
+			//{
+			//	//Deactivate bullet
+			//	bullet->isActive = FALSE;
+			//	//reduce health bar
+			//	bullet_spawn = 0.0f;
+			//}
+		}
 	}
+	
 }
 
-void Shoot_Exit(GameEntity* turret, Bullet* bullet, float dt) {
+void Shoot_Exit( GameEntity* turret, StateMachine* SM, float dt) {
 
 }
 
