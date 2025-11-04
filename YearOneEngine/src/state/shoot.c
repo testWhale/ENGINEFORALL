@@ -17,10 +17,12 @@ void Shoot_Update(GameEntity* turret, StateMachine* SM, float dt) {
 
 		if (bullet->isActive) {
 			//spawn bullet
+			bullet->velocity.x = 100.0f * dt;
 			bullet->centerPos = turret->centerPos;
 
 			//Move bullet
-			bullet->centerPos.x += 1000.0f * dt;
+			/*bullet->velocity = CP_Vector_Add(bullet->velocity, acc);
+			entity->centerPos = CP_Vector_Add(entity->centerPos, CP_Vector_Scale(entity->velocity, dt));*/
 
 			//// Check for collision with green circle
 			//if (AreCirclesIntersecting(bullet_coord[0].x, bullet_coord[0].y, 40.0f,
