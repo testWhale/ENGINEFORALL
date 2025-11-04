@@ -21,7 +21,10 @@
   <ItemGroup>
     <ClCompile Include="src\buttons\buttonCode.c" />
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
     <ClCompile Include="src\clicker\clickCode.c" />
     <ClCompile Include="src\clicker\testscene.c" />
     <ClCompile Include="src\economy\economyCode.c" />

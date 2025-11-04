@@ -19,7 +19,11 @@
 // CP_Engine_Run() is the core function that starts the simulation
 int main(void)
 {
+<<<<<<< Updated upstream
 	CP_Engine_SetNextGameState(Test_Scene_Init, Test_Scene_Update, Test_Scene_Exit);
+=======
+	CP_Engine_SetNextGameState(Main_Menu_Init, Main_Menu_Init, Main_Menu_Init);
+>>>>>>> Stashed changes
 	CP_System_SetWindowSize(1600, 900);
 	CP_Engine_Run(1);
 	return 0;

@@ -11,6 +11,7 @@
 
 #include "cprocessing.h"
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
 typedef struct buttonInfo {
     CP_Vector buttonPos;
@@ -35,6 +36,8 @@ int isButtonReleased(buttonInfo* btnname, int isHovered);
 
 void buttonBehavior(buttonInfo* btnname);
 =======
+=======
+>>>>>>> Stashed changes
 typedef struct ButtonSound {
     CP_Sound onHover, onClick, onRelease;
 }ButtonSound;
@@ -71,4 +74,7 @@ int Is_Button_Pressed(ButtonInfo* btnname, int isHovered);
 int Is_Button_Released(ButtonInfo* btnname, int isHovered);
 
 void Button_Behavior(ButtonInfo* btnname);
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

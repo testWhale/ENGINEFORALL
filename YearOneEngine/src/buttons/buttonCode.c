@@ -14,6 +14,7 @@
 #include <math.h>
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 /*
 This function loads all your button after you declare it in your struct.
 It assigns all the data to its equivalent struct data
@@ -28,6 +29,8 @@ void buttonLoad(buttonInfo* newbtn, float posX, float posY, float width, float h
 	newbtn -> buttonHighlight = CP_Image_Load(buttonHighlightPath);
 }
 =======
+=======
+>>>>>>> Stashed changes
 
 /// <summary>
 /// This function loads the button with all the data you pass into it.
@@ -71,6 +74,9 @@ void Button_Sound_Load
 	soundPreset->onHover = CP_Sound_Load(soundHoverPath);
 	soundPreset->onRelease = CP_Sound_Load(soundReleasePath);
 	}
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 //void drawSquareButtonNormal(buttonInfo*btnname) {
@@ -92,6 +98,7 @@ This function pulls your data and draws the normal frame where nothing is happen
 In order to make it function please insert a valid image or else it will turn transparent
 */
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 void drawButtonNormal(buttonInfo* btnname) {
 	CP_Settings_ImageMode(CP_POSITION_CENTER);
 	CP_Image_Draw(btnname->buttonNormal, btnname->buttonPos.x, btnname->buttonPos.y, btnname->buttonWidth, btnname->buttonHeight, 255);
@@ -105,6 +112,8 @@ void drawButtonFeedback(buttonInfo* btnname) {
 	CP_Settings_ImageMode(CP_POSITION_CENTER);
 	CP_Image_Draw(btnname->buttonFeedback, btnname->buttonPos.x, btnname->buttonPos.y, btnname->buttonWidth, btnname->buttonHeight, 255);
 =======
+=======
+>>>>>>> Stashed changes
 void Draw_Button_Normal(ButtonInfo* btnName) {
 	CP_Settings_ImageMode(CP_POSITION_CENTER);
 	CP_Image_Draw(	btnName->buttonNormal, 
@@ -121,6 +130,9 @@ void Draw_Button_Feedback(ButtonInfo* btnName) {
 	CP_Image_Draw(	btnName->buttonFeedback, 
 					btnName->buttonPos.x, btnName->buttonPos.y, 
 					btnName->buttonWidth, btnName->buttonHeight, 255);
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 }
 
@@ -129,7 +141,11 @@ This function pulls your data and draws the Highlight frame when you hover over 
 In order to make it function please insert a valid image or else it will turn transparent
 */
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 void drawButtonHighlight(buttonInfo* btnname) {
+=======
+void Draw_Button_Highlight(ButtonInfo* btnname) {
+>>>>>>> Stashed changes
 =======
 void Draw_Button_Highlight(ButtonInfo* btnname) {
 >>>>>>> Stashed changes
@@ -154,6 +170,7 @@ void Draw_Button_Highlight(ButtonInfo* btnname) {
 //}
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 /*
 This function checks if your mouse is hovering over the area. It accounts for both circles and rectangles and squares (if its a square input no diameter input please)
 */
@@ -167,6 +184,8 @@ int isAnyButtonHovered(buttonInfo* btnname, float mousex, float mousey) {
 			&& (mousey <= (btnname->buttonPos.y + (btnname->buttonHeight / 2.0)))
 			&& (mousex >= (btnname->buttonPos.y - (btnname->buttonHeight / 2.0))))
 =======
+=======
+>>>>>>> Stashed changes
 /// <summary>
 /// This function checks if you're hovering over the button
 /// </summary>
@@ -184,6 +203,9 @@ int Is_Any_Button_Hovered(ButtonInfo* btnName, float mouseX, float mouseY) {
 			&& (mouseX >= (btnName->buttonPos.x - (btnName->buttonWidth / 2.0)))
 			&& (mouseY <= (btnName->buttonPos.y + (btnName->buttonHeight / 2.0)))
 			&& (mouseY >= (btnName->buttonPos.y - (btnName->buttonHeight / 2.0))))
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 		{
 			return 1;
@@ -197,7 +219,11 @@ int Is_Any_Button_Hovered(ButtonInfo* btnName, float mouseX, float mouseY) {
 This function checks if your mouse is pressing the area. It will trigger constantly while your mouse is down.
 */
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 int isButtonPressed(buttonInfo* btnname, int isHovered) {
+=======
+int Is_Button_Pressed(ButtonInfo* btnName, int isHovered) {
+>>>>>>> Stashed changes
 =======
 int Is_Button_Pressed(ButtonInfo* btnName, int isHovered) {
 >>>>>>> Stashed changes
@@ -213,9 +239,14 @@ int Is_Button_Pressed(ButtonInfo* btnName, int isHovered) {
 This function checks if your mouse has lifted up. Your mouse must still be hovering over the area when it releases to return a positive input)
 */
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 int isButtonReleased(buttonInfo* btnname, int isHovered) {
 	if (CP_Input_MouseClicked() && isHovered == 1) {
 		printf("Released");
+=======
+int Is_Button_Released(ButtonInfo* btnName, int isHovered) {
+	if (CP_Input_MouseClicked() && isHovered == 1) {
+>>>>>>> Stashed changes
 =======
 int Is_Button_Released(ButtonInfo* btnName, int isHovered) {
 	if (CP_Input_MouseClicked() && isHovered == 1) {
@@ -229,7 +260,11 @@ int Is_Button_Released(ButtonInfo* btnName, int isHovered) {
 This whole function accounts for button behavior. It will draw and return outputs based on if nothing is happening.its hovering or you clicked it.
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 In order to code button behavior. Use the isHovered variable if behavior happens if it happens when you hover like this.
+=======
+In order to code button behavior. Use the isSel to return output when you hover like this.
+>>>>>>> Stashed changes
 =======
 In order to code button behavior. Use the isSel to return output when you hover like this.
 >>>>>>> Stashed changes
@@ -238,7 +273,11 @@ desired behavior;
 }
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 In order to code button behavior. Use the isClicked variable if behavior happens if it happens when you click AND THEN RELEASE
+=======
+In order to code button behavior. Use the isClicked variable to return output when you click AND THEN RELEASE
+>>>>>>> Stashed changes
 =======
 In order to code button behavior. Use the isClicked variable to return output when you click AND THEN RELEASE
 >>>>>>> Stashed changes
@@ -247,6 +286,7 @@ desired behavior;
 }
 
 */
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 void buttonBehavior(buttonInfo* btnname) {
 
@@ -269,6 +309,10 @@ void buttonBehavior(buttonInfo* btnname) {
 				drawButtonNormal(btnname);
 =======
 void Button_Behavior(ButtonInfo* btnname) {
+=======
+void Button_Behavior(ButtonInfo* btnname) {
+	Draw_Button_Normal(btnname);
+>>>>>>> Stashed changes
 	if (Is_Button_Pressed(btnname, Is_Any_Button_Hovered(btnname, CP_Input_GetMouseX(), CP_Input_GetMouseY()))) { //draw the clicked frame if you press down
 		Draw_Button_Feedback(btnname);
 		if (CP_Input_MouseTriggered(MOUSE_BUTTON_LEFT)) {
@@ -279,7 +323,10 @@ void Button_Behavior(ButtonInfo* btnname) {
 	}
 
 	else {
+<<<<<<< Updated upstream
 		Draw_Button_Normal(btnname);
+=======
+>>>>>>> Stashed changes
 		if (Is_Button_Released(btnname, Is_Any_Button_Hovered(btnname, CP_Input_GetMouseX(), CP_Input_GetMouseY()))) 
 		{ //only return isClicked =1 on release
 			CP_Sound_Play(btnname->soundEffect->onRelease);
@@ -304,6 +351,9 @@ void Button_Behavior(ButtonInfo* btnname) {
 				if (btnname->wasHovered) {
 					CP_Sound_StopAll();
 				}
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 				btnname->isSel = 0;
 				btnname->isClicked = 0;
@@ -311,6 +361,11 @@ void Button_Behavior(ButtonInfo* btnname) {
 			}
 		}
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+	btnname->wasHovered = (Is_Any_Button_Hovered(btnname, CP_Input_GetMouseX(), CP_Input_GetMouseY()));
+	
+>>>>>>> Stashed changes
 =======
 	btnname->wasHovered = (Is_Any_Button_Hovered(btnname, CP_Input_GetMouseX(), CP_Input_GetMouseY()));
 	
