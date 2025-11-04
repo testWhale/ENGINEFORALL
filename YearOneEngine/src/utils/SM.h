@@ -3,7 +3,7 @@
 
 #include "cprocessing.h"
 #include "sound.h"
-
+#include "bullet.h"
 #define Up 90.0
 #define Left 0.0
 #define Down 270.0
@@ -18,7 +18,7 @@ typedef int EntityID;
 typedef struct GameEntity GameEntity;
 typedef struct StateMachine StateMachine;
 
-typedef struct { int red; int green; int blue; int opacity; }Color;
+
 struct GameEntity {
 	/*Generic Values*/
 	int id; CP_Vector centerPos; float rotation; CP_BOOL isPlayer; 
@@ -26,6 +26,8 @@ struct GameEntity {
 	
 	/*Check Values*/
 	int isItOnMap; int isSel; char* label; entSound sound;
+
+	BulletArr bullets;
 }; //Base For all Entities
 
 // Step 1: State function pointer type:
@@ -56,6 +58,8 @@ typedef struct ActiveEntity {
 StateFunction FSM_SetState(StateMachine* fsm, States newState, GameEntity* data, float dt);
 StateFunction FSM_Update(StateMachine* fsm, GameEntity* data, float dt);
 
+GameEntity MakePlayerTemplate();
+void PrintBulletInfo(GameEntity* entity);
 
 // Init, Set currState, send function pointer to States.init
 #endif
