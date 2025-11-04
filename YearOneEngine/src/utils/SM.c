@@ -16,7 +16,6 @@ StateFunction FSM_Update(StateMachine* fsm, GameEntity* data, float dt) {
 }
 GameEntity MakePlayerTemplate() {
     GameEntity e = {
-        .id = 0,
         .centerPos = {100, 100},
         .rotation = 0,
         .isPlayer = 1,
@@ -35,7 +34,7 @@ GameEntity MakePlayerTemplate() {
 }
 
 void PrintBulletInfo(GameEntity* entity) {
-    printf("Entity %d bullets:\n", entity->id);
+
     for (size_t i = 0; i < entity->bullets.used; i++) {
         Bullet* b = &entity->bullets.bulletArr[i];
         printf("  Bullet %d at (%.1f, %.1f)\n", b->id, b->centerPos.x, b->centerPos.y);

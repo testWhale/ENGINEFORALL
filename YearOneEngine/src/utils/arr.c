@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "arr.h"
-
+#include "SM.h"
 TestArr* Arr_Init(size_t maxLength, TestArr* Array) {
 	Array->maxLength = maxLength;
 	Array->entitySize = 0;
@@ -10,7 +10,7 @@ TestArr* Arr_Init(size_t maxLength, TestArr* Array) {
 		malloc(maxLength * sizeof(ActiveEntity));
 	for (int i = 0; i < maxLength; i++) {
 		*(Array->ActiveEntityArr + i) = (ActiveEntity){
-		.id = i, .fsm = NULL, .unit = NULL };
+		.id = i, .unit = 0, .fsm = NULL  };
 	}
 
 	return Array;
@@ -26,9 +26,20 @@ void Arr_Insert(TestArr* Array, ActiveEntity Entity) {
 		}
 	}
 	//realloc tries preserves old data when it enlarges, if unable it allocates new memory but frees old block 
-	Entity.unit.id = Array->used;
-	Array->ActiveEntityArr[Array->used++] = Entity;
+	Entity.id = Array->used;
+	Array->ActiveEntityArr[Array->used] = Entity;
 
+	GameEntity* unit = &Array->ActiveEntityArr[Array->used].unit ;
+
+	B_Arr_Init(2, &unit->bullets);
+	for (int j = 0; j < 4; j++) {
+		//memset(&unit->bullets, 0, sizeof(unit->bullets));
+		Bullet b = { .id = j, .centerPos = unit->centerPos, .velocity = {1,0}, .color = {0,255,0,255}, .diameter = 5 };
+		B_Arr_Insert(&unit->bullets, b);
+		unit->bullets.bulletArr[j].opacity = 0;
+		printf("Turret %d,  Bullet ID: %d \n", Array->ActiveEntityArr[Array->used].id, unit->bullets.bulletArr[j].id);
+	}
+	Array->ActiveEntityArr[Array->used++];
 
 }
 
