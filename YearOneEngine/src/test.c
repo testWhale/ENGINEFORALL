@@ -5,6 +5,7 @@
 #include "utils/SM.h"
 #include "utils/readTxt.h"
 #include "./tile/tile.h"
+#include "./state/enemy.h"
 //define minWidth of HealthBar
 #define minWidth 0.0f
 #define maxWidth 1400.0f
@@ -76,13 +77,13 @@ void initPlayerDemo() {
 	GameEntity template = (GameEntity){
 		.centerPos = {100, 100}, .rotation = 0, .isPlayer = 1, .forwardVector = {0, 0}, .color = {255,0,0,255},
 	.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "Fire", .bullets = {0 } };
-	GameEntity enemy = (GameEntity){ 
+	GameEntity enemy = (GameEntity){
 		.centerPos = {100, 400}, .rotation = 0, .isPlayer = 0, .forwardVector = {0, 0}, .color = {255,0,0,255},
-	.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "Fire" };
+	.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "Fire" , .bullets = {0} };
 	/*-------------Template Value--------------*/
 
 	Arr_Init(2, &playerArr); 
-	Arr_Init(10, &enemyArr);
+	Arr_Init(11, &enemyArr);
 
 	/*FOR PLAYER_UNITS ONLY*/
 	for (int i = 0; i < 4; i++) {
@@ -107,11 +108,12 @@ void initPlayerDemo() {
 	
 	
 	/* FOR ENEMY UNITS */
-	for (int i = 0; i < 11; i++) {
-		Arr_Insert(&enemyArr, (ActiveEntity) {
+	for (int i = 0; i < 5; i++) {
+		Arr_Insert(&enemyArr, (ActiveEntity) 
+		{
 			.id = i,
-				.unit = enemy,
-				.fsm = (StateMachine){ .currState = IdleState }
+			.unit = enemy,
+			.fsm = (StateMachine){ .currState = Enemy_IdleState }
 		});
 		printf("CHECK AFTER INSERT: %d, \n", enemyArr.ActiveEntityArr[i].id);
 		enemyArr.ActiveEntityArr[i].unit.centerPos.x = enemy.centerPos.x + i * 100;
@@ -196,13 +198,24 @@ void Test_Update(void)
 	for (int i = 0; i < enemyArr.used; i++) 
 	{
 		ActiveEntity* EnemyEntity = &enemyArr.ActiveEntityArr[i];
+		//printf("ID: %d\n", EnemyEntity->id);
 		FSM_Update(&(EnemyEntity->fsm), &(EnemyEntity->unit), dt);
 		GameEntity* enemyPtr = &(EnemyEntity->unit);
 		if (enemyPtr->isSel) { enemyPtr->color.red = 255, enemyPtr->color.green = 255, enemyPtr->color.blue = 255, enemyPtr->color.opacity = 255; }
 		else { enemyPtr->color.red = 255, enemyPtr->color.green = 255, enemyPtr->color.blue = 0, enemyPtr->color.opacity = 255; }
 		CP_Settings_Fill(CP_Color_Create(enemyPtr->color.red, enemyPtr->color.green, enemyPtr->color.blue, enemyPtr->color.opacity));
 		CP_Graphics_DrawCircle(enemyPtr->centerPos.x, enemyPtr->centerPos.y, enemyPtr->diameter);
+		
+		for (int j = 0; j < EnemyEntity->unit.bullets.used; j++)
+		{
+			Bullet* pew = &EnemyEntity->unit.bullets.bulletArr[j];
 
+			if (pew->opacity == 255)
+			{
+				CP_Settings_Fill(CP_Color_Create(pew->color.red, pew->color.green, pew->color.blue, pew->opacity));
+				CP_Graphics_DrawCircle(pew->centerPos.x, pew->centerPos.y, pew->diameter);
+			}
+		}
 	}
 	
 

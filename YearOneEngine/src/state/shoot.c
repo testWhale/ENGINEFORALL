@@ -62,14 +62,14 @@ void Shoot_Update(GameEntity* turret, StateMachine* SM, float dt) {
 
 			//loop through all enemies and check if they are being hit
 			for (int j = 0; j < enemyArr.used; j++) {
-				ActiveEntity* enemy = &enemyArr.ActiveEntityArr[i];
+				GameEntity* enemy = &enemyArr.ActiveEntityArr[j].unit;
 
 				//enemy->unit.centerPos = 
-				printf("ID %f\n", enemy->unit.centerPos.x);
+				//printf("ID %d CenterPos %f\n", enemy->id,enemy->unit.centerPos.x);
 				/* Check if enemy is intersecting with bullet*/
 				if (AreCirclesIntersecting(bullet, enemy)) {
 					//Deactivate bullet
-					printf("lelelllel");
+					printf("\nARGHH\n");
 					B_Arr_Del(&(turret->bullets), bullet->id);
 
 				}

@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\state\enemy.c" />
     <ClCompile Include="src\state\pickup.c" />
     <ClCompile Include="src\state\shoot.c" />
     <ClCompile Include="src\tile\layout.c" />
@@ -29,6 +30,7 @@
     <ClCompile Include="src\utils\readTxt.c" />
     <ClCompile Include="src\utils\SM.c" />
     <ClInclude Include="src\mainmenu.h" />
+    <ClInclude Include="src\state\enemy.h" />
     <ClInclude Include="src\state\shoot.h" />
     <ClInclude Include="src\test.h" />
     <ClCompile Include="src\main.c" />

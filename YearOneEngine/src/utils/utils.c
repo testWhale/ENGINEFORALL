@@ -45,7 +45,7 @@ int IsCircleClicked(float circle_center_x, float circle_center_y, float diameter
 	return 0;
 }
 
-int AreCirclesIntersecting(GameEntity* bullet, GameEntity* enemy) {
+int AreCirclesIntersecting(Bullet* bullet, GameEntity* enemy) {
 	CP_Vector vec_c1 = CP_Vector_Set(bullet->centerPos.x, bullet->centerPos.y);
 	CP_Vector vec_c2 = CP_Vector_Set(enemy->centerPos.x, enemy->centerPos.y);
 	
