@@ -72,15 +72,7 @@ int isInArea(Circle circle, GameEntity* player) {
 /*LOADS IN PLAYER ARRAY */
 void initPlayerDemo() {
 	/*-------------Template Value--------------*/
-	Bullet tem = (Bullet) { 
-		.id = (int)i,
-		.centerPos = { 100, 100 },
-		.velocity = { 0, 0 },
-		.color = { 255, 0, 0, 255 },
-		.diameter = 100,
-		.stateTimer = 0,
-		.opacity = 0
-	};
+	
 	GameEntity template = (GameEntity){
 		.centerPos = {100, 100}, .rotation = 0, .isPlayer = 1, .forwardVector = {0, 0}, .color = {255,0,0,255},
 	.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "Fire", .bullets = {0 } };

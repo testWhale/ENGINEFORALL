@@ -13,11 +13,12 @@ void B_Arr_Refresh(BulletArr* array, GameEntity* turret) {
 		array->bulletArr[i].centerPos.x = turret->centerPos.x;
 		array->bulletArr[i].centerPos.y = turret->centerPos.y;
 		array->bulletArr[i].opacity = 255;
-
+		printf("%d %f", turret->bullets.bulletArr[i].id, turret->bullets.bulletArr[i].opacity);
 	}
 }
 
-void Shoot_Init( GameEntity* turret, StateMachine* SM, float dt) {
+void Shoot_Init( GameEntity* turret, StateMachine* SM, float dt) 
+{
 	
 
 	B_Arr_Refresh(&(turret->bullets.bulletArr), turret);
