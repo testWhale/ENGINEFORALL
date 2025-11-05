@@ -3,6 +3,11 @@
 #define BULLET_H
 
 #include "cprocessing.h"
+
+
+
+
+
 typedef struct { int red; int green; int blue; int opacity; }Color;
 typedef struct Bullet {
 	int id;
@@ -10,7 +15,7 @@ typedef struct Bullet {
 	CP_Vector velocity; Color color;
 	float diameter; float stateTimer;
 	int opacity;
-	CP_BOOL isActive;
+	CP_BOOL isActive; char* type;
 }Bullet;
 
 typedef struct BulletArr {
@@ -20,6 +25,7 @@ typedef struct BulletArr {
 	size_t maxLength;
 }BulletArr;
 
+Bullet BulletTemplate(char* name);
 
 BulletArr* B_Arr_Init(size_t maxLength, BulletArr* Array);
 

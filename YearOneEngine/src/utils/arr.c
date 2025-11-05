@@ -34,7 +34,7 @@ void Arr_Insert(TestArr* Array, ActiveEntity Entity) {
 	B_Arr_Init(2, &unit->bullets);
 	for (int j = 0; j < 4; j++) {
 		//memset(&unit->bullets, 0, sizeof(unit->bullets));
-		Bullet b = { .id = j, .centerPos = unit->centerPos, .velocity = {1,0}, .color = {0,255,0,255}, .diameter = 5 };
+		Bullet b = { .id = j, .centerPos = unit->centerPos, .velocity = {1,0}, .color = {0,255,0,255}, .diameter = 50 };
 		B_Arr_Insert(&unit->bullets, b);
 		unit->bullets.bulletArr[j].opacity = 0;
 		printf("Turret %d,  Bullet ID: %d \n", Array->ActiveEntityArr[Array->used].id, unit->bullets.bulletArr[j].id);

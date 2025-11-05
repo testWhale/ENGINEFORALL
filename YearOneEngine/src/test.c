@@ -87,8 +87,9 @@ void initPlayerDemo() {
 	GameEntity enemy = (GameEntity){ 
 		.centerPos = {100, 400}, .rotation = 0, .isPlayer = 0, .forwardVector = {0, 0}, .color = {255,0,0,255},
 	.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "Fire" };
+	/*-------------Template Value--------------*/
 
-	Arr_Init(2, &playerArr);
+	Arr_Init(2, &playerArr); 
 	Arr_Init(10, &enemyArr);
 
 	/*FOR PLAYER_UNITS ONLY*/
