@@ -21,9 +21,6 @@
     <ClCompile Include="src\main.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\mainmenu.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\utils\utils.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -69,9 +66,6 @@
     <ClCompile Include="src\utils\health\health.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\gameover.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\utils\UI\Pause.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -81,18 +75,21 @@
     <ClCompile Include="src\clicker\clickCode.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\clicker\testscene.c">
+    <ClCompile Include="src\economy\economyCode.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\economy\economyCode.c">
+    <ClCompile Include="src\scenes\mainmenu.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scenes\mainscene.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scenes\gameover.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DataTypes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\mainmenu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\utils\utils.h">
@@ -125,9 +122,6 @@
     <ClInclude Include="src\utils\wave\wave.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\gameover.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\utils\UI\Pause.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -137,10 +131,16 @@
     <ClInclude Include="src\clicker\clickCode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\clicker\testscene.h">
+    <ClInclude Include="src\economy\economyCode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\economy\economyCode.h">
+    <ClInclude Include="src\scenes\mainmenu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scenes\mainscene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scenes\gameover.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
