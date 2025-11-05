@@ -50,13 +50,13 @@ BulletArr* B_Arr_Init(size_t initialCapacity, BulletArr* Array) {
         fprintf(stderr, "Bullet array malloc failed!\n");
         exit(EXIT_FAILURE);
     }
-
-    memset(Array->bulletArr, 0, initialCapacity * sizeof(Bullet));
+    // memset (starting address to be filled, value to fill, num of bytes to fill)      initialCapacity= num of []
+    memset(Array->bulletArr, 0, initialCapacity * sizeof(Bullet)); // [Bullet] [Bullet] [Bullet] [Bullet] 
     Array->maxLength = initialCapacity;
     Array->used = 0;
     Array->entitySize = sizeof(Bullet);
 
-    return Array;
+    return Array; 
 }
 
 /* ---------------- INSERT ---------------- */
@@ -71,7 +71,7 @@ void B_Arr_Insert(BulletArr* Array, Bullet Entity) {
 
         Array->bulletArr = temp;
         Array->maxLength = newCapacity;
-        printf("Bullet array expanded to %zu\n", Array->maxLength);
+        printf("Bullet array expanded to %zu\n", Array->used);
     }
 
     Entity.id = Array->used;
@@ -84,7 +84,7 @@ void B_Arr_Del(BulletArr* DynArray, int id) {
     if (DynArray->used == 0) return;
 
     int foundIndex = -1;
-
+    // loop through until id is found. if [3and 4]
     for (int i = 0; i < DynArray->used; i++) {
         if (DynArray->bulletArr[i].id == id) {
             foundIndex = i;
@@ -92,9 +92,10 @@ void B_Arr_Del(BulletArr* DynArray, int id) {
         }
     }
 
-    if (foundIndex == -1) return; // Not found
+    if (foundIndex == -1) return;  // if not found return not found
 
-    // Shift everything left
+    // Shift everything left -> Why do we seperate thz 2 loops?
+    // Cleaner, let's us set the flag alr. leaving only the copy code to handle.
     for (int i = foundIndex; i < DynArray->used - 1; i++) {
         DynArray->bulletArr[i] = DynArray->bulletArr[i + 1];
         DynArray->bulletArr[i].id = i; // keep IDs consistent
@@ -102,7 +103,7 @@ void B_Arr_Del(BulletArr* DynArray, int id) {
 
     DynArray->used--;
 
-    // Optional: shrink only if under 1/4 capacity
+    // shrink only if under 1/4 capacity
     if (DynArray->used > 0 && DynArray->used < DynArray->maxLength / 4) {
         size_t newCapacity = DynArray->maxLength / 2;
         Bullet* temp = realloc(DynArray->bulletArr, newCapacity * sizeof(Bullet));
@@ -112,6 +113,11 @@ void B_Arr_Del(BulletArr* DynArray, int id) {
             printf("Bullet array shrunk to %zu\n", newCapacity);
         }
     }
+    //Edge case to teammates: what happens when buffer shrinks to 1 elem?
+    /* If after deleting 1 bullet, maxLength =1, used = 1, 
+    -> if delete another bullet, -> the maxLength = 0 -> realloc(0). UNDEFINED BREAKS */
+    /*SO sort based on used if arr has 2 elems, -> delete 1 -> used =1 BUT maxlength still stays 2
+    when insert again, it still has space! no nd undefined realloc(0)*/
 }
 
 /* ---------------- FREE ---------------- */
