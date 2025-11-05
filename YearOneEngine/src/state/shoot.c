@@ -30,24 +30,52 @@ void Shoot_Update(GameEntity* turret, StateMachine* SM, float dt) {
 
 	if (turret->stateTimer >= shootSpan) {
 		turret->stateTimer = 0;
-		Bullet b = { .id = 0, .centerPos = turret->centerPos, .velocity = {1,0}, .color = {0,255,0,255}, .diameter = 5 };
+		Bullet b = { .id = 0, .centerPos = turret->centerPos, .velocity = {1,0}, .color = {0,255,0,255}, .diameter = 50 };
 		B_Arr_Insert(&(turret->bullets), b);
 	}
-	for (int i = 0; i < turret->bullets.used; i++) {
+	for (int i = 0; i < turret->bullets.used; i++) 
+	{ /* Bullets that are currently being shot */
 		Bullet* bullet = &turret->bullets.bulletArr[i];
-		bullet->isActive = TRUE; 
 		CP_Vector acc = { 10,0 };
 		
 			//spawn bullet
 			bullet->velocity = CP_Vector_Add(bullet->velocity, acc);
 			bullet->centerPos = CP_Vector_Add(bullet->centerPos, CP_Vector_Scale(bullet->velocity, dt));
 			//Move bullet
+
+			/*if (bullet->type == "poison") {
+
+			}
+			if (bullet->type == "normal") {
+
+			}
+			if (bullet->type == "stun") {
+
+			}*/
+
 			/*bullet->velocity = CP_Vector_Add(bullet->velocity, acc);
 			entity->centerPos = CP_Vector_Add(entity->centerPos, CP_Vector_Scale(entity->velocity, dt));*/
 			if (bullet->centerPos.x >= CP_System_GetWindowWidth()) {
 				B_Arr_Del(&(turret->bullets), bullet->id);
 			}
-			//// Check for collision with green circle
+			//// Check for collision with green circle 
+
+			//loop through all enemies and check if they are being hit
+			for (int j = 0; j < enemyArr.used; j++) {
+				ActiveEntity* enemy = &enemyArr.ActiveEntityArr[i];
+
+				//enemy->unit.centerPos = 
+				printf("ID %f\n", enemy->unit.centerPos.x);
+				/* Check if enemy is intersecting with bullet*/
+				if (AreCirclesIntersecting(bullet, enemy)) {
+					//Deactivate bullet
+					printf("lelelllel");
+					B_Arr_Del(&(turret->bullets), bullet->id);
+
+				}
+
+			}
+				
 			//if (AreCirclesIntersecting(bullet_coord[0].x, bullet_coord[0].y, 40.0f,
 			//	enemy_coord[0].x, enemy_coord[0].y, 80.0f) && length <= max_length && length >= min_length)
 			//{

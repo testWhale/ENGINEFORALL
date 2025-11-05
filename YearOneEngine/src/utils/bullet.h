@@ -3,6 +3,11 @@
 #define BULLET_H
 
 #include "cprocessing.h"
+
+
+
+
+
 typedef struct { int red; int green; int blue; int opacity; }Color;
 typedef struct Bullet {
 	int id;

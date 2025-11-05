@@ -2,38 +2,39 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
 Bullet BulletTemplate(char* name) {
 	Bullet posTem = (Bullet){
-		.id = (int)0,
-		.centerPos = { 100, 100 },
-		.velocity = { 0, 0 },
-		.color = { 0, 255, 0, 255 },
-		.diameter = 300,
-		.stateTimer = 0,
-		.opacity = 0,
-		.type = "poison"
+	  .id = (int)0,
+	  .centerPos = { 100, 100 },
+	  .velocity = { 0, 0 },
+	  .color = { 0, 255, 0, 255 },
+	  .diameter = 300,
+	  .stateTimer = 0,
+	  .opacity = 0,
+	  .type = "poison"
 	};
 	Bullet tem = (Bullet){
-		.id = (int)0,
-		.centerPos = { 100, 100 },
-		.velocity = { 0, 0 },
-		.color = { 255, 0, 0, 255 },
-		.diameter = 100,
-		.stateTimer = 0,
-		.opacity = 0,
-		.type = "normal"
+	  .id = (int)0,
+	  .centerPos = { 100, 100 },
+	  .velocity = { 0, 0 },
+	  .color = { 255, 0, 0, 255 },
+	  .diameter = 100,
+	  .stateTimer = 0,
+	  .opacity = 0,
+	  .type = "normal"
 	};
 	Bullet stunTem = (Bullet){
-		.id = (int)0,
-		.centerPos = { 100, 100 },
-		.velocity = { 0, 0 },
-		.color = { 255, 255, 0, 255 },
-		.diameter = 300,
-		.stateTimer = 0,
-		.opacity = 0,
-		.type = "stun"
+	  .id = (int)0,
+	  .centerPos = { 100, 100 },
+	  .velocity = { 0, 0 },
+	  .color = { 255, 255, 0, 255 },
+	  .diameter = 300,
+	  .stateTimer = 0,
+	  .opacity = 0,
+	  .type = "stun"
 	};
-	
+
 	if (name == "poison") {
 		return posTem;
 	}
@@ -44,6 +45,7 @@ Bullet BulletTemplate(char* name) {
 		return stunTem;
 	}
 }
+
 
 BulletArr* B_Arr_Init(size_t maxLength, BulletArr* Array) {
 	Array->bulletArr = malloc(maxLength * sizeof(Bullet));
@@ -64,9 +66,20 @@ BulletArr* B_Arr_Init(size_t maxLength, BulletArr* Array) {
 				.diameter = 100,
 				.stateTimer = 0,
 				.opacity = 0,
-				.type = "normal"
+				.type="normal"
 			};
 	}
+
+	//for (int i = 0; i < maxLength; i++) { 
+	//	(Array->bulletArr[i]) = (Bullet){
+	//		.id = (int)i,
+	//		.centerPos = {100, 100},
+	//		.velocity = {0, 0},
+	//		.color = {255, 0, 0, 255},
+	//		.diameter = 100,
+	//		.stateTimer = 0
+	//	};
+	//}
 
 	return Array;
 }
