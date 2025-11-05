@@ -3,23 +3,14 @@
 #include "utils/arr.h"
 #include "utils/container.h"
 #include "tile/tile.h"
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 #include "state/shoot.h"
-
-=======
-#include "shoot.h"
->>>>>>> Stashed changes
-=======
-#include "shoot.h"
->>>>>>> Stashed changes
 int coun = 0;
 
 int checkForSel() {
 	int count2 = 0;
 	for (int i = 0; i < playerArr.used; i++) {
 		ActiveEntity entity = playerArr.ActiveEntityArr[i];
-		printf("ID: %d		ISSEL: %d\n", entity.unit.id, entity.unit.isSel);
+		
 		if (entity.unit.isSel) {
 			printf("YES\n");
 			return 1;
@@ -50,10 +41,11 @@ void Idle_Update(GameEntity* entity, StateMachine* SM, float dt) {
 	entity->stateTimer += dt;
 	// Example: Transition to Attack if "attack" input detected
 	// In real game, check input here
-	if (CP_Input_KeyDown(KEY_P)) {
-		FSM_SetState(SM, PickUpState, entity, dt);
-		return;
+	if (entity->isItOnMap == 1) {
+		FSM_SetState(SM, ShootState, entity, dt);
+
 	}
+
 	if (IsCircleClicked(entity->centerPos.x, entity->centerPos.y, entity->diameter, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
 		//printf("STARTED ATTACK STATE FROM IDLE\n");
 		/*deselectEnt();*/
@@ -86,7 +78,7 @@ void PickedUp_Update(GameEntity* entity, StateMachine* SM, float dt) {
 	hoverTileAt(entity, (CP_Vector) { CP_Input_GetMouseX(), CP_Input_GetMouseY() });
 	if (IsCircleClicked(entity->centerPos.x, entity->centerPos.y, entity->diameter, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
 		setOnTile(entity, (CP_Vector) { CP_Input_GetMouseX(), CP_Input_GetMouseY() });
-		FSM_SetState(SM, ShootState, entity, dt);
+		FSM_SetState(SM, IdleState, entity, dt);
 		return;
 	}
 }

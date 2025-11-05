@@ -12,7 +12,17 @@ BulletArr* B_Arr_Init(size_t maxLength, BulletArr* Array) {
 	Array->maxLength = maxLength;
 	Array->entitySize = 0;
 	Array->used = 0;
-	
+	for (int i = 0; i < maxLength; i++) {
+		*(Array->bulletArr + i) = (Bullet){
+		.id = (int)i,
+				.centerPos = {100, 100},
+				.velocity = {0, 0},
+				.color = {255, 0, 0, 255},
+				.diameter = 100,
+				.stateTimer = 0,
+				.opacity = 0
+			};
+	}
 
 	//for (int i = 0; i < maxLength; i++) { 
 	//	(Array->bulletArr[i]) = (Bullet){
@@ -29,7 +39,7 @@ BulletArr* B_Arr_Init(size_t maxLength, BulletArr* Array) {
 }
 
 void B_Arr_Insert(BulletArr* Array, Bullet Entity) {
-	printf("%d",Array->used);
+	//printf("%d",Array->used);
 	if (Array->used >= Array->maxLength) {
 		Array->maxLength *= 2;
 		Array->bulletArr = realloc(Array->bulletArr, Array->maxLength * sizeof(Bullet)); //so how am I able to pass it itself?
@@ -40,13 +50,16 @@ void B_Arr_Insert(BulletArr* Array, Bullet Entity) {
 	}
 	//realloc tries preserves old data when it enlarges, if unable it allocates new memory but frees old block 
 	Entity.id = Array->used;
+	Entity.opacity = 255;
 	Array->bulletArr[Array->used++] = Entity;
+
 }
 
 void B_Arr_Del(BulletArr* DynArray, int id) {
+	printf("Dele");
 	int check = 0;
 	for (int i = 0; i < DynArray->maxLength - 1; i++) {
-		if (1 == check || DynArray->bulletArr->id == id)
+		if (1 == check || DynArray->bulletArr[i].id == id)
 		{
 			DynArray->bulletArr[i] = DynArray->bulletArr[i + 1]; check = 1;
 		}
@@ -69,3 +82,4 @@ void B_Arr_Free(BulletArr* Array) {
 	Array->maxLength = 0;
 	Array->used = 0;
 }
+

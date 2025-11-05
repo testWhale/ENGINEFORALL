@@ -4,6 +4,7 @@
 #include "cprocessing.h"
 #include "sound.h"
 #include "bullet.h"
+
 #define Up 90.0
 #define Left 0.0
 #define Down 270.0
@@ -21,7 +22,7 @@ typedef struct StateMachine StateMachine;
 
 struct GameEntity {
 	/*Generic Values*/
-	int id; CP_Vector centerPos; float rotation; CP_BOOL isPlayer; 
+	CP_Vector centerPos; float rotation; CP_BOOL isPlayer; 
 	CP_Vector forwardVector; Color color; float diameter; float stateTimer; 
 	
 	/*Check Values*/
@@ -52,7 +53,6 @@ typedef struct ActiveEntity {
 	int id;
 	GameEntity unit; //Array
 	StateMachine fsm; //Array
-
 }ActiveEntity;
 
 StateFunction FSM_SetState(StateMachine* fsm, States newState, GameEntity* data, float dt);

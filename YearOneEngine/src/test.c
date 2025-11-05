@@ -4,6 +4,7 @@
 #include "utils/arr.h"
 #include "utils/SM.h"
 #include "utils/readTxt.h"
+#include "./tile/tile.h"
 //define minWidth of HealthBar
 #define minWidth 0.0f
 #define maxWidth 1400.0f
@@ -77,14 +78,15 @@ void initPlayerDemo() {
 		.velocity = { 0, 0 },
 		.color = { 255, 0, 0, 255 },
 		.diameter = 100,
-		.stateTimer = 0
+		.stateTimer = 0,
+		.opacity = 0
 	};
 	GameEntity template = (GameEntity){
-	.id = 0, .centerPos = {100, 100}, .rotation = 0, .isPlayer = 1, .forwardVector = {0, 0}, .color = {255,0,0,255},
+		.centerPos = {100, 100}, .rotation = 0, .isPlayer = 1, .forwardVector = {0, 0}, .color = {255,0,0,255},
 	.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "Fire", .bullets = {0 } };
-	GameEntity enemy = (GameEntity){
-.id = 0, .centerPos = {100, 400}, .rotation = 0, .isPlayer = 0, .forwardVector = {0, 0}, .color = {255,0,0,255},
-.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "Fire" };
+	GameEntity enemy = (GameEntity){ 
+		.centerPos = {100, 400}, .rotation = 0, .isPlayer = 0, .forwardVector = {0, 0}, .color = {255,0,0,255},
+	.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "Fire" };
 
 	Arr_Init(2, &playerArr);
 	Arr_Init(10, &enemyArr);
@@ -97,49 +99,21 @@ void initPlayerDemo() {
 			.fsm = (StateMachine) { .currState = IdleState }});
 		GameEntity* unit = &playerArr.ActiveEntityArr[i].unit;
 		printf("CHECK AFTER INSERT: %d, \n", playerArr.ActiveEntityArr[i].id);
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-		GameEntity* unit = &playerArr.ActiveEntityArr[i].unit;
 		unit->centerPos.x = template.centerPos.x + i * 100;
-		unit->id = i;
-		B_Arr_Init(2, &unit->bullets);
 
-		//memset(&unit->bullets, 0, sizeof(unit->bullets));
-		Bullet b = { .id = 1, .centerPos = unit->centerPos, .velocity = {1,0}, .color = {0,255,0,255}, .diameter = 5 };
-		B_Arr_Insert(&unit->bullets, b);
-		printf("ID: %d\n", unit->bullets.bulletArr->id);
-	
-		playerArr.ActiveEntityArr[i].unit.centerPos.x = template.centerPos.x + i * 100;
-		playerArr.ActiveEntityArr[i].unit.id = i;
+		//B_Arr_Init(2, &unit->bullets);
 
-
-		printf("ID: %d\n", playerArr.ActiveEntityArr[i].id);
-	} /* FOR ENEMY UNITS */
-=======
-		unit->centerPos.x = template.centerPos.x + i * 100;
-		unit->id = i;
-		B_Arr_Init(2, &unit->bullets);
+		//for (int j = 0; j < 4; j++) {
+		//	//memset(&unit->bullets, 0, sizeof(unit->bullets));
+		//	Bullet b = { .id = j, .centerPos = unit->centerPos, .velocity = {1,0}, .color = {0,255,0,255}, .diameter = 5 };
+		//	B_Arr_Insert(&unit->bullets, b);
+		//	printf("Turret %d,  Bullet ID: %d \n", playerArr.ActiveEntityArr->id, unit->bullets.bulletArr[j].id);
+		//}
 		
-
-=======
-		unit->centerPos.x = template.centerPos.x + i * 100;
-		unit->id = i;
-		B_Arr_Init(2, &unit->bullets);
-		
-
->>>>>>> Stashed changes
-		//memset(&unit->bullets, 0, sizeof(unit->bullets));
-		
-		Bullet b = { .id=1, .centerPos = unit->centerPos, .velocity = {1,0}, .color = {0,255,0,255}, .diameter = 5 };
-		B_Arr_Insert(&unit->bullets, b);
-		printf("ID: %d\n", unit->bullets.bulletArr->id);
 	} 
 	
+	
 	/* FOR ENEMY UNITS */
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 	for (int i = 0; i < 11; i++) {
 		Arr_Insert(&enemyArr, (ActiveEntity) {
 			.id = i,
@@ -148,12 +122,11 @@ void initPlayerDemo() {
 		});
 		printf("CHECK AFTER INSERT: %d, \n", enemyArr.ActiveEntityArr[i].id);
 		enemyArr.ActiveEntityArr[i].unit.centerPos.x = enemy.centerPos.x + i * 100;
-		enemyArr.ActiveEntityArr[i].unit.id = i;
 
 		printf("ID: %d\n", enemyArr.ActiveEntityArr[i].id);
 	}
-	ContArr_Init(playerArr.used, &containersArr);
-	readFile("Assets/containers");
+	//ContArr_Init(playerArr.used, &containersArr);
+	//readFile("Assets/containers");
 }
 
 
@@ -186,10 +159,9 @@ int count = 0;
 
 void Test_Update(void)
 {
-	Container contTemplate = (Container){ 1, "Fire", (CP_Vector) { 100,100 }, 300, 200, "Assets/buttons/Troop_3.png", 1.0, 255, 0 };
+	//Container contTemplate = (Container){ 1, "Fire", (CP_Vector) { 100,100 }, 300, 200, "Assets/buttons/Troop_3.png", 1.0, 255, 0 };
 
-	GameEntity template = (GameEntity){
-	.id = 0, .centerPos = {100, 100}, .rotation = 0, .isPlayer = 0, .forwardVector = {0, 0}, .color = {255,0,0,255},
+	GameEntity template = (GameEntity){ .centerPos = {100, 100}, .rotation = 0, .isPlayer = 0, .forwardVector = {0, 0}, .color = {255,0,0,255},
 	.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "template" };
 
 	float dt = CP_System_GetDt();
@@ -199,10 +171,12 @@ void Test_Update(void)
 	if (IsCircleClicked(circles->centerPos.x, circles->centerPos.y, circles->diameter, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
 
 		Arr_Insert(&playerArr, (ActiveEntity) { playerArr.used, template, (StateMachine) { .currState = IdleState } });
+
 		//ContArr_Insert(&containersArr,contTemplate);
 
 	}
-	for (int i = 0; i < playerArr.used; i++) {
+	for (int i = 0; i < playerArr.used; i++) 
+	{
 		ActiveEntity* UnitEntity = &playerArr.ActiveEntityArr[i];
 		FSM_Update(&(UnitEntity->fsm), &(UnitEntity->unit), dt);
 
@@ -213,15 +187,21 @@ void Test_Update(void)
 		CP_Settings_Fill(CP_Color_Create(ptr->color.red, ptr->color.green, ptr->color.blue, ptr->color.opacity));
 		CP_Graphics_DrawCircle(ptr->centerPos.x, ptr->centerPos.y, ptr->diameter);
 
-
-		for (int j = 0; j < ptr->bullets.used; j++) {
+		
+		for (int j = 0; j < ptr->bullets.used; j++) 
+		{
 			Bullet* pew = &ptr->bullets.bulletArr[j];
-			CP_Settings_Fill(CP_Color_Create(pew->color.red, pew->color.green, pew->color.blue, pew->color.opacity));
-			CP_Graphics_DrawCircle(pew->centerPos.x, pew->centerPos.y, pew->diameter);
+
+			if(pew->opacity == 255)
+			{
+				CP_Settings_Fill(CP_Color_Create(pew->color.red, pew->color.green, pew->color.blue, pew->opacity));
+				CP_Graphics_DrawCircle(pew->centerPos.x, pew->centerPos.y, pew->diameter);
+			}
 		}
 		//printf("%s", activeEntityList[i].fsm.currState);
 	}
-	for (int i = 0; i < enemyArr.used; i++) {
+	for (int i = 0; i < enemyArr.used; i++) 
+	{
 		ActiveEntity* EnemyEntity = &enemyArr.ActiveEntityArr[i];
 		FSM_Update(&(EnemyEntity->fsm), &(EnemyEntity->unit), dt);
 		GameEntity* enemyPtr = &(EnemyEntity->unit);
