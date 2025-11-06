@@ -21,6 +21,7 @@ typedef struct ButtonInfo
     CP_Image buttonNormal, buttonFeedback, buttonHighlight;
     int isSel, isClicked, wasHovered;
     ButtonSound *soundEffect;
+    int isDisplayingText;
     }ButtonInfo;
 
 void Button_Load(ButtonInfo* newbtn, 
