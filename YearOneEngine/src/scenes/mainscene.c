@@ -117,20 +117,39 @@ void Main_Scene_Update(void)
 
     CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
     CP_Settings_TextSize(12*unit);
+    sprintf_s(moneyString, 10, "%.0f", currentMoney);
 
     CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
-    CP_Font_DrawText("1000000",25*unit, 10*unit);
+    CP_Font_DrawText(moneyString,25*unit, 10*unit);
 
     CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_BOTTOM);
+    CP_Settings_TextSize(3 * unit);
+    sprintf_s(statisticString, 100, "Click Power : %d Passive Income : %.0f ", clickPower,passiveIncome);
+    CP_Font_DrawText(statisticString, 24 * unit, 65 * unit);
+
     CP_Settings_TextSize(4 * unit);
-    CP_Font_DrawText("Cost 1", 10 * unit, 70 * unit);
+    CP_Font_DrawText("50", 10 * unit, 70 * unit);
     CP_Font_DrawText("Cost 2", 25 * unit, 70 * unit);
     CP_Font_DrawText("Cost 3", 40 * unit, 70 * unit);
     CP_Font_DrawText("Cost 4", 10 * unit, 90 * unit);
     CP_Font_DrawText("Cost 5", 25 * unit, 90 * unit);
     CP_Font_DrawText("Cost 6", 40 * unit, 90 * unit);
-    /*CP_Settings_ImageMode(CP_POSITION_CORNER);
-    CP_Image_Draw(Overlay, 0, 0, 192 * unit, 108 * unit, 51);*/
+
+    if (ClickerButton.isClicked == 1) {
+        One_Click(&currentMoney);
+    }
+
+    if (ClickerUpgrade1.isClicked == 1)
+    {
+        if (Purchase_System(&currentMoney, 50))
+        {
+            Click_Upgrade();
+        }
+        else
+        {
+        }
+    }
+
     if (CP_Input_KeyDown(KEY_Q))CP_Engine_Terminate();
 
 }
@@ -138,4 +157,12 @@ void Main_Scene_Update(void)
 void Main_Scene_Exit(void)
 {
 	CP_Font_Free(myFont);
+    Button_Free(&ClickerButton);
+    Button_Free(&SettingButton);
+    Button_Free(&ClickerUpgrade1);
+    Button_Free(&ClickerUpgrade2);
+    Button_Free(&ClickerUpgrade3);
+    Button_Free(&TroopButton1);
+    Button_Free(&TroopButton2);
+    Button_Free(&TroopButton3);
 }
