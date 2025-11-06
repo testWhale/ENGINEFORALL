@@ -1,5 +1,7 @@
-char moneyString[100];
+char moneyString[10];
+char statisticString[100];
 extern float currentMoney, passiveIncome;
-currentMoney = 15;
+
 
 int Purchase_System(float* currentMoney, float itemCost);
+void Poor_Feedback(float fontsize, float PosX, float PosY);

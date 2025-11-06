@@ -46,6 +46,16 @@ void Button_Load(ButtonInfo* newBtn,
 	newBtn->soundEffect = soundPreset;
 	}
 
+void Button_Free(ButtonInfo* newBtn)
+{
+	CP_Image_Free(newBtn->buttonNormal);
+	CP_Image_Free(newBtn->buttonFeedback);
+	CP_Image_Free(newBtn->buttonHighlight);
+	CP_Sound_Free(newBtn->soundEffect->onClick);
+	CP_Sound_Free(newBtn->soundEffect->onHover);
+	CP_Sound_Free(newBtn->soundEffect->onRelease);
+}
+
 void Button_Sound_Load
 	(ButtonSound* soundPreset, 
 	const char* soundClickPath, 
@@ -56,6 +66,14 @@ void Button_Sound_Load
 	soundPreset->onHover = CP_Sound_Load(soundHoverPath);
 	soundPreset->onRelease = CP_Sound_Load(soundReleasePath);
 	}
+
+void Button_Sound_Free
+(ButtonSound* soundPreset)
+{
+	CP_Sound_Free(soundPreset->onClick);
+	CP_Sound_Free(soundPreset->onHover);
+	CP_Sound_Free(soundPreset->onRelease);
+}
 
 //void drawSquareButtonNormal(buttonInfo*btnname) {
 //CP_Settings_ImageMode(CP_POSITION_CENTER);
@@ -180,7 +198,7 @@ desired behavior;
 
 */
 void Button_Behavior(ButtonInfo* btnname) {
-	Draw_Button_Normal(btnname);
+	Draw_Button_Highlight(btnname);
 	if (Is_Button_Pressed(btnname, Is_Any_Button_Hovered(btnname, CP_Input_GetMouseX(), CP_Input_GetMouseY()))) { //draw the clicked frame if you press down
 		Draw_Button_Feedback(btnname);
 		if (CP_Input_MouseTriggered(MOUSE_BUTTON_LEFT)) {
