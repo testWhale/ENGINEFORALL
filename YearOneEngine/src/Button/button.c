@@ -84,7 +84,7 @@ int isAnyButtonHovered(buttonInfo* btnname, float mousex, float mousey) {
 		if ((mousex <= (btnname->buttonPos.x + (btnname->buttonWidth / 2.0)))
 			&& (mousex >= (btnname->buttonPos.x - (btnname->buttonWidth / 2.0)))
 			&& (mousey <= (btnname->buttonPos.y + (btnname->buttonHeight / 2.0)))
-			&& (mousex >= (btnname->buttonPos.y - (btnname->buttonHeight / 2.0))))
+			&& (mousey >= (btnname->buttonPos.y - (btnname->buttonHeight / 2.0))))
 		{
 			return 1;
 

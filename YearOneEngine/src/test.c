@@ -287,21 +287,23 @@ void Test_Init(void)
     
     for (int k = 0; k < (int)(sizeof(g_enemyHitCD) / sizeof(g_enemyHitCD[0])); ++k)
         g_enemyHitCD[k] = 0.0f;
+    Pause_Init();
 }
 
 void Test_Update(void)
 {
-    float dt = CP_System_GetDt();
+    float dt = Pause_Dt(CP_System_GetDt());
 
+    
     CP_Graphics_ClearBackground(CP_Color_Create(128, 128, 128, 255));
-    Map_Update();
+    Map_Update();                      
 
     HealthTimer_Update(dt);
     Hearts_Update(dt);
 
-    
-    if (IsCircleClicked(circles[0].centerPos.x, circles[0].centerPos.y, circles[0].diameter,
-        CP_Input_GetMouseX(), CP_Input_GetMouseY()))
+    if (!Pause_IsPaused() &&
+        IsCircleClicked(circles[0].centerPos.x, circles[0].centerPos.y, circles[0].diameter,
+            CP_Input_GetMouseX(), CP_Input_GetMouseY()))
     {
         GameEntity t = (GameEntity){
             .id = 0, .centerPos = (CP_Vector){100, 100}, .rotation = 0, .isPlayer = 1,
@@ -320,10 +322,11 @@ void Test_Update(void)
         Arr_Insert(&playerArr, ae);
     }
 
-    /* players draw */
     for (size_t i = 0; i < playerArr.used; ++i) {
         ActiveEntity* ent = &playerArr.ActiveEntityArr[i];
-        FSM_Update(&ent->fsm, &ent->unit, dt);
+        if (!Pause_IsPaused()) {
+            FSM_Update(&ent->fsm, &ent->unit, dt);
+        }
 
         GameEntity* p = &ent->unit;
         if (p->isSel) { p->color.red = 0; p->color.green = 0; p->color.blue = 255; p->color.opacity = 255; }
@@ -333,11 +336,12 @@ void Test_Update(void)
         CP_Graphics_DrawCircle(p->centerPos.x, p->centerPos.y, p->diameter);
     }
 
-    
     for (size_t i = 0; i < enemyArr.used; ++i) {
         ActiveEntity* ent = &enemyArr.ActiveEntityArr[i];
-        FSM_Update(&ent->fsm, &ent->unit, dt);
-        moveWave(&ent->unit, dt); 
+        if (!Pause_IsPaused()) {
+            FSM_Update(&ent->fsm, &ent->unit, dt);
+            moveWave(&ent->unit, dt);
+        }
 
         GameEntity* e = &ent->unit;
         if (e->isSel) { e->color.red = 255; e->color.green = 255; e->color.blue = 255; e->color.opacity = 255; }
@@ -345,16 +349,14 @@ void Test_Update(void)
 
         CP_Settings_Fill(CP_Color_Create(e->color.red, e->color.green, e->color.blue, e->color.opacity));
         CP_Graphics_DrawCircle(e->centerPos.x, e->centerPos.y, e->diameter);
-
-        
         Health_DrawEnemyBar(ent, 80.0f, 10.0f, 20.0f);
     }
 
-    
-    DamageEnemiesOnPlayerCollisions(34, 0.30f, dt);
-    ProcessGoalHits();
+    if (!Pause_IsPaused()) {
+        DamageEnemiesOnPlayerCollisions(34, 0.30f, dt);
+        ProcessGoalHits();
+    }
 
-    
     if (g_drawGoals) {
         CP_Settings_Fill(CP_Color_Create(0, 0, 0, 0));
         CP_Settings_Stroke(CP_Color_Create(255, 0, 0, 160));
@@ -363,25 +365,32 @@ void Test_Update(void)
             CP_Graphics_DrawCircle(g_goalCenters[r].x, g_goalCenters[r].y, g_goalRadius * 2.0f);
     }
 
-   
     CP_Settings_RectMode(CP_POSITION_CENTER);
     CP_Settings_Fill(CP_Color_Create(circles[0].color.red, circles[0].color.green, circles[0].color.blue, circles[0].color.opacity));
     CP_Graphics_DrawCircle(circles[0].centerPos.x, circles[0].centerPos.y, circles[0].diameter);
 
-    
     Hearts_Draw();
 
-    CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));    
-    CP_Settings_TextSize(28.0f);
-    CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_RIGHT, CP_TEXT_ALIGN_V_TOP);
-
+    CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
+    CP_Settings_TextSize(35.0f);
+    CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_TOP);
     char tbuf[48];
-    snprintf(tbuf, sizeof(tbuf), "Time: %.1fs", HealthTimer_Seconds()); 
+    snprintf(tbuf, sizeof(tbuf), "Time: %.1fs", HealthTimer_Seconds());
+    CP_Font_DrawText(tbuf, (float)CP_System_GetWindowWidth() * 0.5f, 12.0f);
 
-    float pad = 12.0f;
-    float tx = (float)CP_System_GetWindowWidth() - pad; 
-    CP_Font_DrawText(tbuf, tx, pad);
+    //an internal check every gameloop that checks if button pause=1
+    Pause_UpdateAndDraw();
+
+    // if menu was hit do tis
+    if (Pause_TakeMenuRequest()) {
+        extern void Main_Menu_Init(void);
+        extern void Main_Menu_Update(void);
+        extern void Main_Menu_Exit(void);
+        CP_Engine_SetNextGameState(Main_Menu_Init, Main_Menu_Update, Main_Menu_Exit);
+        return;
+    }
 }
+
 
 void Test_Exit(void)
 {

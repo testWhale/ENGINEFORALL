@@ -1,22 +1,14 @@
-#ifndef PAUSE_H
-#define PAUSE_H
+#ifndef PAUSE_H_INCLUDED
+#define PAUSE_H_INCLUDED
 
-
+#include "cprocessing.h"
 
 
 void Pause_Init(void);
-
-
-void Pause_Toggle(void);
-
-
-int  Pause_IsOpen(void);
-
-
-void Pause_UpdateAndDrawTopRightButton(void);
-
-
-void Pause_DrawOverlay(void);
+void Pause_UpdateAndDraw(void);
+int   Pause_IsPaused(void);          
+void  Pause_SetPaused(int on);      
+float Pause_Dt(float dt);           
+int   Pause_TakeMenuRequest(void);
 
 #endif 
-
