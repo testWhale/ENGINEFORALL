@@ -23,7 +23,7 @@ void HealthAudio_Free(void);
 void  HealthTimer_Reset(void);
 void  HealthTimer_Update(float dt);
 float HealthTimer_Get(void);
-#define HealthTimer_Seconds HealthTimer_Get  /* keep old callers working */
+#define HealthTimer_Seconds HealthTimer_Get 
 
 
 void Health_DrawEnemyBar(const ActiveEntity* e, float barW, float barH, float yOffset);

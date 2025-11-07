@@ -173,7 +173,6 @@ void initPlayerDemo(void)
     Arr_Init(2, &playerArr);
     Arr_Init(32, &enemyArr);
 
-    /* players */
     for (int i = 0; i < 4; i++) {
         ActiveEntity ae;
         ae.id = i;
@@ -292,7 +291,7 @@ void Test_Init(void)
 
 void Test_Update(void)
 {
-    float dt = Pause_Dt(CP_System_GetDt());
+    float dt = Pause_Dt(CP_System_GetDt()); // retrieves frame delta time and pass it to pause_dt so when game is pause loop is still maintain
 
     
     CP_Graphics_ClearBackground(CP_Color_Create(128, 128, 128, 255));
@@ -381,7 +380,7 @@ void Test_Update(void)
     //an internal check every gameloop that checks if button pause=1
     Pause_UpdateAndDraw();
 
-    // if menu was hit do tis
+    // if menu was hit do this
     if (Pause_TakeMenuRequest()) {
         extern void Main_Menu_Init(void);
         extern void Main_Menu_Update(void);
