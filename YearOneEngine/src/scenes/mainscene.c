@@ -196,12 +196,15 @@ void Main_Scene_Update(void)
 
     sprintf_s(clicker1Cost, 100, "%.0f$ ", Scaling_Cost(clickerUpgrade1Count, 50));
     sprintf_s(clicker2Cost, 100, "%.0f$ ", Scaling_Cost(clickerUpgrade2Count, 10));
+    sprintf_s(troop1Cost, 100, "%.0f$ ", Scaling_Cost(troop1Count, 50));
+    sprintf_s(troop2Cost, 100, "%.0f$ ", Scaling_Cost(troop2Count, 50));
+    sprintf_s(troop3Cost, 100, "%.0f$ ", Scaling_Cost(troop3Count, 50));
     CP_Font_DrawText(clicker1Cost, 10 * unit, 75 * unit);
     CP_Font_DrawText(clicker2Cost, 25 * unit, 75 * unit);
     CP_Font_DrawText("Cost 3", 40 * unit, 75 * unit);
-    CP_Font_DrawText("Cost 4", 10 * unit, 95 * unit);
-    CP_Font_DrawText("Cost 5", 25 * unit, 95 * unit);
-    CP_Font_DrawText("Cost 6", 40 * unit, 95 * unit);
+    CP_Font_DrawText(troop1Cost, 10 * unit, 95 * unit);
+    CP_Font_DrawText(troop2Cost, 25 * unit, 95 * unit);
+    CP_Font_DrawText(troop3Cost, 40 * unit, 95 * unit);
 
     if (ClickerButton.isClicked == 1) {
         One_Click(&currentMoney);
@@ -215,6 +218,7 @@ void Main_Scene_Update(void)
             Click_Upgrade();
         }
     }
+
     if (ClickerUpgrade2.isClicked == 1)
     {
         if (Purchase_System(&currentMoney, Scaling_Cost(clickerUpgrade2Count, 10)))
@@ -253,6 +257,30 @@ void Main_Scene_Update(void)
         Arr_Insert(&playerArr, (ActiveEntity) { playerArr.used, player, (StateMachine) { .currState = IdleState } });
         } 
         else {}
+    }
+
+    if (TroopButton1.isClicked == 1)
+    {
+        if (Purchase_System(&currentMoney, Scaling_Cost(troop1Count, 50)))
+        {
+            troop1Count += 1;
+        }
+    }
+
+    if (TroopButton2.isClicked == 1)
+    {
+        if (Purchase_System(&currentMoney, Scaling_Cost(troop2Count, 50)))
+        {
+            troop2Count += 1;
+        }
+    }
+
+    if (TroopButton3.isClicked == 1)
+    {
+        if (Purchase_System(&currentMoney, Scaling_Cost(troop3Count, 50)))
+        {
+            troop3Count += 1;
+        }
     }
 
 
