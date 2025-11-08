@@ -168,6 +168,7 @@ void Main_Scene_Update(void)
     //done
     CP_Settings_ImageMode(CP_POSITION_CORNER);
     CP_Image_Draw(Background, 0, 0, 192 * unit, 108 * unit, 255);
+    //Test_Update();
 
     Button_Behavior(&ClickerButton);
     Button_Behavior(&PauseButton);
@@ -229,40 +230,10 @@ void Main_Scene_Update(void)
     }
     if (TroopButton1.isClicked == 1)
     {
-        if (Purchase_System(&currentMoney, 50))
-        {
-            GameEntity player = MakeTemplate("player");
-            /*printf("EBUudb");*/
-            Arr_Insert(&playerArr, (ActiveEntity) { playerArr.used, player, (StateMachine) { .currState = IdleState } });
-        }
-        else{}
-    }
-    if (TroopButton2.isClicked == 1)
-    {
-        if (Purchase_System(&currentMoney, 50))
-        {
-            GameEntity player = MakeTemplate("player");
-            /*printf("EBUudb");*/
-            Arr_Insert(&playerArr, (ActiveEntity) { playerArr.used, player, (StateMachine) { .currState = IdleState } });
-        }
-        
-        else{}
-    }
-    if (TroopButton3.isClicked == 1)
-    {
-        if (Purchase_System(&currentMoney, 50))
-        {
-        GameEntity player = MakeTemplate("player");
-        /*printf("EBUudb");*/
-        Arr_Insert(&playerArr, (ActiveEntity) { playerArr.used, player, (StateMachine) { .currState = IdleState } });
-        } 
-        else {}
-    }
-
-    if (TroopButton1.isClicked == 1)
-    {
         if (Purchase_System(&currentMoney, Scaling_Cost(troop1Count, 50)))
         {
+            GameEntity player = MakeTemplate("player");
+            Arr_Insert(&playerArr, (ActiveEntity) { playerArr.used, player, (StateMachine) { .currState = IdleState } });
             troop1Count += 1;
         }
     }
@@ -271,6 +242,8 @@ void Main_Scene_Update(void)
     {
         if (Purchase_System(&currentMoney, Scaling_Cost(troop2Count, 50)))
         {
+            GameEntity player = MakeTemplate("player");
+            Arr_Insert(&playerArr, (ActiveEntity) { playerArr.used, player, (StateMachine) { .currState = IdleState } });
             troop2Count += 1;
         }
     }
@@ -279,15 +252,18 @@ void Main_Scene_Update(void)
     {
         if (Purchase_System(&currentMoney, Scaling_Cost(troop3Count, 50)))
         {
+            GameEntity player = MakeTemplate("player");
+            Arr_Insert(&playerArr, (ActiveEntity) { playerArr.used, player, (StateMachine) { .currState = IdleState } });
             troop3Count += 1;
         }
     }
+    
 
 
     Passive_System(&currentMoney);
     if (CP_Input_KeyDown(KEY_Q))CP_Engine_Terminate();
 
-    //Test_Update();
+   
 
 }
 
