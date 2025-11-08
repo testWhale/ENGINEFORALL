@@ -75,6 +75,7 @@ void PickedUp_Update(GameEntity* entity, StateMachine* SM, float dt) {
 	entity->stateTimer += dt;
 	entity->centerPos = (CP_Vector){ CP_Input_GetMouseX(), CP_Input_GetMouseY() };
 	hoverTileAt(entity, (CP_Vector) { CP_Input_GetMouseX(), CP_Input_GetMouseY() });
+
 	if (IsCircleClicked(entity->centerPos.x, entity->centerPos.y, entity->diameter, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
 		setOnTile(entity, (CP_Vector) { CP_Input_GetMouseX(), CP_Input_GetMouseY() });
 		FSM_SetState(SM, IdleState, entity, dt);

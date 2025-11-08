@@ -58,9 +58,11 @@ void Map_Init(float width, float height) {
 Tile* setOnTile(GameEntity* Entity,CP_Vector mouse) {
 	int row = (mouse.y - off.offset.y) / g_TileMap[0][0].dim.y;
 	int col = (mouse.x - off.offset.x) / g_TileMap[0][0].dim.x;
+	if (row < 0 || col < 0) { return; }
 	Tile* c_tile = &g_TileMap[row][col];
+
 	if (row < 0 || row >= TILE_ROWS || col < 0 || col >= TILE_COLUMNS) {
-		printf("ERROR");
+		//printf("Out of Bounds\n");
 	}
 	if (1 == c_tile->hasEntity) {
 		printf("Cannot Place Unit Here.\n");
@@ -77,6 +79,8 @@ Tile* setOnTile(GameEntity* Entity,CP_Vector mouse) {
 	else{
 		c_tile->hasEntity = 1;
 		Entity->isItOnMap = 1; 
+		printf("CENTERPOS %d\n", c_tile->centerPos);
+		printf("Tile %d %d\n", row, col);
 
 		Entity->centerPos = c_tile->centerPos; //magnetise entity to tile
 		c_tile->entity = Entity; //in case tile needs entity data give it
@@ -91,10 +95,15 @@ Tile* hoverTileAt(GameEntity* Entity, CP_Vector mouse) {
 			g_TileMap[i][j].currHovered=0;
 		}
 	}
+	if (mouse.x < g_TileMap[0][0].startPos.x) mouse.x = g_TileMap[0][0].startPos.x;
+	if (mouse.y < g_TileMap[0][0].startPos.y) mouse.y = g_TileMap[0][0].startPos.y;
+	if (mouse.x > g_TileMap[0][TILE_COLUMNS-1].startPos.x) mouse.x = g_TileMap[0][TILE_COLUMNS-1].startPos.x;
+	if (mouse.y > g_TileMap[TILE_ROWS-1][0].startPos.y) mouse.y = g_TileMap[TILE_ROWS-1][0].startPos.y;
+
 	int row = (mouse.y - off.offset.y) / g_TileMap[0][0].dim.y;
 	int col = (mouse.x - off.offset.x) / g_TileMap[0][0].dim.x;
 	if (row < 0 || row >= TILE_ROWS || col < 0 || col >= TILE_COLUMNS) {
-		printf("ERROR");
+		//printf("ERROR"Z);
 		return;
 	}
 	Tile* c_tile = &g_TileMap[row][col];
@@ -116,7 +125,7 @@ Tile* SelAfterPlaced(GameEntity* Entity, CP_Vector mouse) {
 	Tile* c_tile = &g_TileMap[row][col];
 	c_tile->tsel = 1;
 	if (row < 0 || row >= TILE_ROWS || col < 0 || col >= TILE_COLUMNS) {
-		printf("ERROR");
+		//printf("ERROR");
 	}
 }
 

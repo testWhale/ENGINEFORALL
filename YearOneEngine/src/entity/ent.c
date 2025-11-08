@@ -15,12 +15,24 @@ GameEntity MakeTemplate(const char* name) {
 		.centerPos = {100, 100}, .rotation = 0, .isPlayer = 1, .forwardVector = {0, 0}, .color = {255,0,0,255},
 		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "Fire", .bullets = {0 } };
 	}
-
-	if (name == "enemy")
+	
+	
+	if (name == "poison")
 	{
+		Bullet temp = BulletTemplate("poison");
 		e = (GameEntity){
 		.centerPos = {100, 400}, .rotation = 0, .isPlayer = 0, .forwardVector = {0, 0}, .color = {255,0,0,255},
 		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "Fire" , .bullets = {0} };
+		B_Arr_Init(2, &e.bullets);
+		B_Arr_Insert(&e.bullets, temp);
+	}
+	if (name == "enemy")
+	{
+		
+		e = (GameEntity){
+		.centerPos = {100, 400}, .rotation = 0, .isPlayer = 0, .forwardVector = {0, 0}, .color = {255,0,0,255},
+		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "Fire" , .bullets = {0} };
+		
 	}
 	//do not assign any pointers here as it will point to the same address
 	/* aka: 
@@ -84,13 +96,30 @@ void initPlayerDemo() {
 }
 
 void PrintBulletInfo(GameEntity* entity) {
+	for (size_t i = 0; i < playerArr.used; ++i) {
 
-	for (size_t i = 0; i < entity->bullets.used; i++) {
-		Bullet* b = &entity->bullets.bulletArr[i];
-		printf("  Bullet %d at (%.1f, %.1f)\n", b->id, b->centerPos.x, b->centerPos.y);
+		for (size_t i = 0; i < entity->bullets.used; i++) {
+			Bullet* b = &entity->bullets.bulletArr[i];
+			printf("  Bullet %d at (%.1f, %.1f)\n", b->id, b->centerPos.x, b->centerPos.y);
+		}
 	}
 }
 
+void DrawBullets() {
+	for (size_t i = 0; i < playerArr.used; ++i) {
+		GameEntity* p = &playerArr.ActiveEntityArr[i].unit;
+		for (int j = 0; j < p->bullets.used; j++)
+		{
+			Bullet* pew = &p->bullets.bulletArr[j];
+
+			if (pew->opacity == 255)
+			{
+				CP_Settings_Fill(CP_Color_Create(pew->color.red, pew->color.green, pew->color.blue, pew->opacity));
+				CP_Graphics_DrawCircle(pew->centerPos.x, pew->centerPos.y, pew->diameter);
+			}
+		}
+	}
+}
 
 void DrawEntities() {
 	float dt = CP_System_GetDt();
@@ -107,18 +136,8 @@ void DrawEntities() {
 		CP_Settings_Fill(CP_Color_Create(p->color.red, p->color.green, p->color.blue, p->color.opacity));
 		CP_Graphics_DrawCircle(p->centerPos.x, p->centerPos.y, p->diameter);
 		
-		for (int j = 0; j < p->bullets.used; j++)
-		{
-			Bullet* pew = &p->bullets.bulletArr[j];
-
-			if (pew->opacity == 255)
-			{
-				CP_Settings_Fill(CP_Color_Create(pew->color.red, pew->color.green, pew->color.blue, pew->opacity));
-				CP_Graphics_DrawCircle(pew->centerPos.x, pew->centerPos.y, pew->diameter);
-			}
-		}
 	}
-
+	DrawBullets();
 
 	for (size_t i = 0; i < enemyArr.used; ++i) {
 		ActiveEntity* ent = &enemyArr.ActiveEntityArr[i];

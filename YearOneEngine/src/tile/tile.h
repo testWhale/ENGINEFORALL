@@ -24,6 +24,11 @@ typedef struct Tile{
 
 extern Tile g_TileMap[TILE_ROWS][TILE_COLUMNS]; //declaration of one global instance of TileMap
 
+Tile* setOnTile(GameEntity* Entity, CP_Vector mouse);
+Tile* hoverTileAt(GameEntity* Entity, CP_Vector mouse);
+Tile* hoverTileExit();
+Tile* SelAfterPlaced(GameEntity* Entity, CP_Vector mouse);
+
 void Map_Init(float width, float height);
 
 void Map_Update();

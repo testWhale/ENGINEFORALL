@@ -16,12 +16,12 @@ void Enemy_IdleInit(GameEntity* entity, StateMachine* SM, float dt) {
 void Enemy_IdleUpdate(GameEntity* entity, StateMachine* SM, float dt) {
 	entity->stateTimer += dt;
 	// Example: Transition to Attack if "attack" input detected
-	if (IsCircleClicked(entity->centerPos.x, entity->centerPos.y, entity->diameter, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
-		//printf("STARTED ATTACK STATE FROM IDLE\n");
-		/*deselectEnt();*/
-		FSM_SetState(SM, Enemy_PickUpState, entity, dt);
-		return;
-	}
+	//if (IsCircleClicked(entity->centerPos.x, entity->centerPos.y, entity->diameter, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
+	//	//printf("STARTED ATTACK STATE FROM IDLE\n");
+	//	/*deselectEnt();*/
+	//	FSM_SetState(SM, Enemy_PickUpState, entity, dt);
+	//	return;
+	//}
 }
 void Enemy_IdleExit(GameEntity* entity, StateMachine* SM, float dt) {
 	//printf("LEAVING IDLE state\n");

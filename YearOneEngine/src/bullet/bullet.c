@@ -16,7 +16,7 @@
 
 Bullet BulletTemplate(const char* name) {
     Bullet bullet = { 0 };
-
+    
     if (strcmp(name, "poison") == 0) {
         bullet = (Bullet){
             .id = 0,

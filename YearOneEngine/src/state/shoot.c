@@ -75,6 +75,7 @@ void Shoot_Update(GameEntity* turret, StateMachine* SM, float dt) {
 				if (AreCirclesIntersecting(bullet, enemy)) {
 					//Deactivate bullet
 			//	printf("\nARGHH\n");
+
 					B_Arr_Del(&(turret->bullets), bullet->id);
 
 				}

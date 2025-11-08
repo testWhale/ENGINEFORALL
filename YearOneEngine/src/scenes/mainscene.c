@@ -212,21 +212,34 @@ void Main_Scene_Update(void)
     }
     if (TroopButton1.isClicked == 1)
     {
-        GameEntity player = MakeTemplate("player");
-        /*printf("EBUudb");*/
-        Arr_Insert(&playerArr, (ActiveEntity) { playerArr.used, player, (StateMachine) { .currState = IdleState } });
+        if (Purchase_System(&currentMoney, 50))
+        {
+            GameEntity player = MakeTemplate("player");
+            /*printf("EBUudb");*/
+            Arr_Insert(&playerArr, (ActiveEntity) { playerArr.used, player, (StateMachine) { .currState = IdleState } });
+        }
+        else{}
     }
     if (TroopButton2.isClicked == 1)
     {
-        GameEntity player = MakeTemplate("player");
-        /*printf("EBUudb");*/
-        Arr_Insert(&playerArr, (ActiveEntity) { playerArr.used, player, (StateMachine) { .currState = IdleState } });
+        if (Purchase_System(&currentMoney, 50))
+        {
+            GameEntity player = MakeTemplate("player");
+            /*printf("EBUudb");*/
+            Arr_Insert(&playerArr, (ActiveEntity) { playerArr.used, player, (StateMachine) { .currState = IdleState } });
+        }
+        
+        else{}
     }
     if (TroopButton3.isClicked == 1)
     {
+        if (Purchase_System(&currentMoney, 50))
+        {
         GameEntity player = MakeTemplate("player");
         /*printf("EBUudb");*/
         Arr_Insert(&playerArr, (ActiveEntity) { playerArr.used, player, (StateMachine) { .currState = IdleState } });
+        } 
+        else {}
     }
 
     if (CP_Input_KeyDown(KEY_Q))CP_Engine_Terminate();
