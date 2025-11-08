@@ -29,7 +29,7 @@ Tile* hoverTileAt(GameEntity* Entity, CP_Vector mouse);
 Tile* hoverTileExit();
 Tile* SelAfterPlaced(GameEntity* Entity, CP_Vector mouse);
 
-void Map_Init(float width, float height);
+void Map_Init(CP_Vector startPos, float width, float height);
 
 void Map_Update();
 

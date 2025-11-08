@@ -14,6 +14,8 @@
 #define BLUE  (Color){ 0,   0, 255, 255 }
 #define GREEN (Color){ 0, 255,  0,  255 }
 #define WHITE (Color){ 255, 255,  255,  255 }
+#define WHITISH (Color){ 255, 255,  255,  100 }
+#define REALLYCLEAR (Color){ 255, 255,  255,  0 }
 
 typedef int EntityID;
 typedef struct GameEntity GameEntity;

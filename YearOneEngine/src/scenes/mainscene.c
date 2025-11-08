@@ -113,7 +113,7 @@ void Main_Scene_Init(void)
         "Assets/Buttons/Troops3/Troops3Normal.png",
         "Assets/Buttons/Troops3/Troops3Highlight.png",
         "Assets/Buttons/Troops3/Troops3Clicked.png");
-    Map_Init(108*unit, 72*unit);
+    Map_Init((CP_Vector) {66*unit, 24*unit },108*unit, 72*unit);
     initPlayerDemo();
 
     /* HEALTH FUNCTIONS */

@@ -6,20 +6,20 @@ Tile g_TileMap[TILE_ROWS][TILE_COLUMNS];
 Offset off;
 
 /*---------------------------------MAP_INIT FUNCTION-----------------------------*/
-void Map_Init(float width, float height) {
-	float scrnW =width;
-	float scrnH =height;
+void Map_Init(CP_Vector startPos, float width, float height) {
+	float scrnW = width;
+	float scrnH = height;
 
 	float t_width = scrnW / TILE_COLUMNS;
 	float t_height = scrnH / TILE_ROWS;
 
-	CP_Vector startPoint = { width, height };
+	CP_Vector startPoint = { startPos.x, startPos.y };
 	CP_Vector centerPos = { 0, 0 };
 
 	off = (Offset){ .offset.x = width, .offset.y = height };
 
 	for (int i = 0; i < TILE_ROWS; i++) {
-		startPoint.x = width; // reset x at the start of each row
+		startPoint.x = startPos.x; // reset x at the start of each row
 		centerPos.y = startPoint.y + (t_height / 2);
 
 		for (int j = 0; j < TILE_COLUMNS; j++) {
@@ -41,7 +41,7 @@ void Map_Init(float width, float height) {
 			g_TileMap[i][j].nextTileCheck = NULL;
 			g_TileMap[i][j].tcolor = WHITE;
 			g_TileMap[i][j].currHovered = 0;
-			
+
 			// Optional debug visuals
 			CP_Settings_Fill(CP_Color_Create(0, 255, 0, 255));
 			CP_Graphics_DrawCircle(startPoint.x, startPoint.y, 10);
@@ -55,9 +55,11 @@ void Map_Init(float width, float height) {
 
 
 /*---------------------------------Check TILE FUNCTIONS-----------------------------*/
-Tile* setOnTile(GameEntity* Entity,CP_Vector mouse) {
-	int row = (mouse.y - off.offset.y) / g_TileMap[0][0].dim.y;
-	int col = (mouse.x - off.offset.x) / g_TileMap[0][0].dim.x;
+Tile* setOnTile(GameEntity* Entity, CP_Vector mouse) {
+
+	int row = (mouse.y - g_TileMap[0][0].startPos.y) / g_TileMap[0][0].dim.y;
+	printf("ROW: %d", row);
+	int col = (mouse.x - g_TileMap[0][0].startPos.x) / g_TileMap[0][0].dim.x;
 	if (row < 0 || col < 0) { return; }
 	Tile* c_tile = &g_TileMap[row][col];
 
@@ -67,7 +69,7 @@ Tile* setOnTile(GameEntity* Entity,CP_Vector mouse) {
 	if (1 == c_tile->hasEntity) {
 		printf("Cannot Place Unit Here.\n");
 		CP_Settings_Fill(CP_Color_Create(255, 0, 0, 255));
-		Entity->centerPos = (CP_Vector){0,0};
+		Entity->centerPos = (CP_Vector){ 0,0 };
 		return NULL;
 	}
 	if (1 == c_tile->nextTileCheck) {
@@ -76,9 +78,9 @@ Tile* setOnTile(GameEntity* Entity,CP_Vector mouse) {
 		Entity->centerPos = (CP_Vector){ 0,0 };
 		return NULL;
 	}
-	else{
+	else {
 		c_tile->hasEntity = 1;
-		Entity->isItOnMap = 1; 
+		Entity->isItOnMap = 1;
 		/*printf("CENTERPOS %d\n", c_tile->centerPos);
 		printf("Tile %d %d\n", row, col);*/
 
@@ -92,16 +94,16 @@ Tile* hoverTileAt(GameEntity* Entity, CP_Vector mouse) {
 	//reset all tileMaps to 0 first
 	for (int i = 0; i < TILE_ROWS; i++) {
 		for (int j = 0; j < TILE_COLUMNS; j++) {
-			g_TileMap[i][j].currHovered=0;
+			g_TileMap[i][j].currHovered = 0;
 		}
 	}
 	if (mouse.x < g_TileMap[0][0].startPos.x) mouse.x = g_TileMap[0][0].startPos.x;
 	if (mouse.y < g_TileMap[0][0].startPos.y) mouse.y = g_TileMap[0][0].startPos.y;
-	if (mouse.x > g_TileMap[0][TILE_COLUMNS-1].startPos.x) mouse.x = g_TileMap[0][TILE_COLUMNS-1].startPos.x;
-	if (mouse.y > g_TileMap[TILE_ROWS-1][0].startPos.y) mouse.y = g_TileMap[TILE_ROWS-1][0].startPos.y;
+	if (mouse.x > g_TileMap[0][TILE_COLUMNS - 1].startPos.x) mouse.x = g_TileMap[0][TILE_COLUMNS - 1].startPos.x;
+	if (mouse.y > g_TileMap[TILE_ROWS - 1][0].startPos.y) mouse.y = g_TileMap[TILE_ROWS - 1][0].startPos.y;
 
-	int row = (mouse.y - off.offset.y) / g_TileMap[0][0].dim.y;
-	int col = (mouse.x - off.offset.x) / g_TileMap[0][0].dim.x;
+	int row = (mouse.y - g_TileMap[0][0].startPos.y) / g_TileMap[0][0].dim.y;
+	int col = (mouse.x - g_TileMap[0][0].startPos.x) / g_TileMap[0][0].dim.x;
 	if (row < 0 || row >= TILE_ROWS || col < 0 || col >= TILE_COLUMNS) {
 		//printf("ERROR"Z);
 		return;
@@ -136,18 +138,18 @@ void Map_Update() {
 			Tile* c_tile = &g_TileMap[i][j];
 			Color t_color = c_tile->tcolor;
 			if (c_tile->currHovered || c_tile->tsel) {
-				t_color = BLUE;
+				t_color = WHITISH;
 
 			}
 			else {
-				t_color = WHITE; // NOT HOVERED = WHITE
+				t_color = REALLYCLEAR; // NOT HOVERED = WHITE
 			}
 			//CP_Settings_Fill(CP_Color_Create(0, 255, 0, 255));
 			//CP_Graphics_DrawCircle(startPoint.x, startPoint.y, 10);
-			
-			CP_Settings_Fill(CP_Color_Create(0, 0, 255, 50));
-			CP_Graphics_DrawCircle(c_tile->centerPos.x, c_tile->centerPos.y, 10);
-			{ CP_Settings_Fill(CP_Color_Create(t_color.red, t_color.green, t_color.blue,10)); }
+
+			CP_Settings_Fill(CP_Color_Create(255, 255, 255, 150));
+			//CP_Graphics_DrawCircle(c_tile->centerPos.x, c_tile->centerPos.y, 10);
+			{ CP_Settings_Fill(CP_Color_Create(t_color.red, t_color.green, t_color.blue, t_color.opacity)); }
 			CP_Graphics_DrawRect(c_tile->startPos.x, c_tile->startPos.y, c_tile->dim.x - 2, c_tile->dim.y - 2);
 		}
 	}
