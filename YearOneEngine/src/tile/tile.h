@@ -3,7 +3,12 @@
 #include "cprocessing.h"
 #include "utils/SM.h"
 #define TILE_ROWS 6
-#define TILE_COLUMNS 12
+#define TILE_COLUMNS 9
+
+typedef struct Offset {
+	CP_Vector offset;
+}Offset;
+
 typedef struct Tile{
 	CP_Vector centerPos;
 	CP_Vector startPos;
@@ -18,7 +23,9 @@ typedef struct Tile{
 }Tile;
 
 extern Tile g_TileMap[TILE_ROWS][TILE_COLUMNS]; //declaration of one global instance of TileMap
-void Map_Init();
+
+void Map_Init(float width, float height);
+
 void Map_Update();
 
 

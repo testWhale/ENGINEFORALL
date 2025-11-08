@@ -3,6 +3,7 @@
 
 #include "cprocessing.h"
 #include "sound.h"
+#include "bullet/bullet.h"
 
 #define Up 90.0
 #define Left 0.0
@@ -18,14 +19,14 @@ typedef int EntityID;
 typedef struct GameEntity GameEntity;
 typedef struct StateMachine StateMachine;
 
-typedef struct { int red; int green; int blue; int opacity; }Color;
 struct GameEntity {
 	/*Generic Values*/
-	int id; CP_Vector centerPos; float rotation; CP_BOOL isPlayer; 
+	CP_Vector centerPos; float rotation; CP_BOOL isPlayer; 
 	CP_Vector forwardVector, velocity; Color color; float diameter; float stateTimer; 
 
 	/*Check Values*/
 	int isItOnMap; int isSel; char* label; entSound sound;
+	BulletArr bullets;
 }; //Base For all Entities
 
 // Step 1: State function pointer type:

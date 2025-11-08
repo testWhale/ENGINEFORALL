@@ -41,7 +41,7 @@ void Draw_Button_Feedback(ButtonInfo* btnname);
 void Draw_Button_Highlight(ButtonInfo* btnname);
 
 //int isSquareButtonHovered(buttonInfo* btnname, float mousex, float mousey);
-//int isCircleButtonHovered(buttonInfo* btnname, float mousex, float mousey);
+//int isCircleButtonHovered(b uttonInfo* btnname, float mousex, float mousey);
 int Is_Any_Button_Hovered(ButtonInfo* btnname, float mousex, float mousey);
 int Is_Button_Pressed(ButtonInfo* btnname, int isHovered);
 int Is_Button_Released(ButtonInfo* btnname, int isHovered);

@@ -1,12 +1,21 @@
 #include "cprocessing.h"
 #include "utils/utils.h"
 #include "mainscene.h"
-#include "test.h"
+
 #include "economy/economyCode.h"
 #include "clicker/clickCode.h"
 #include "buttons/buttonCode.h"
 #include "utils/arr.h"
+#include "tile/tile.h"
+#include "entity/ent.h"
+#include "goal/goal.h"
+
+/*Cleanup Xav*/
+//#include "test.h"
+#include "health.h"
 #include <stdio.h>
+#include <time.h>
+#include <stdlib.h>
 CP_Image Overlay;
 
 ButtonInfo ClickerButton, SettingButton;
@@ -18,10 +27,14 @@ float winWidth;
 float winHeight;
 float unit;
 
+int g_drawGoals = 1;
+float g_goalRadius = 0.0f;
 
 void Main_Scene_Init(void)
 {   
-    CP_System_Fullscreen();
+    //CP_System_Fullscreen();
+    srand((unsigned)time(NULL));
+    /*CP_System_Fullscreen();*/
     winHeight = CP_System_GetWindowHeight();
     winWidth = CP_System_GetWindowWidth();
     unit = CP_System_GetWindowWidth()/ 192.0f;
@@ -99,12 +112,60 @@ void Main_Scene_Init(void)
         "Assets/buttonTesters/NormalImage.jpg",
         "Assets/buttonTesters/HighlightImage.jpg",
         "Assets/buttonTesters/ClickedImage.jpg");
+    Map_Init(ClickerButton.buttonWidth + 100, 100);
+    initPlayerDemo();
+
+    /* HEALTH FUNCTIONS */
+    Hearts_Init(3);
+    HealthAudio_Load("Assets/Metal Ping by timgormly Id-170957.wav",
+        "Assets/Glass Break by unfa Id-221528.wav");
+
+    extern void GameOver_SetData(float, int);
+    extern void GameOver_Init(void);
+    extern void GameOver_Update(void);
+    extern void GameOver_Exit(void);
+    Health_BindGameOver(GameOver_SetData, GameOver_Init, GameOver_Update, GameOver_Exit);
+    HealthTimer_Reset();
+    setGoal();
+    /*Test_Init();*/
 }
 
 
 void Main_Scene_Update(void)
 {
     CP_Graphics_ClearBackground(CP_Color_Create(255, 128, 128, 255));
+    float dt = CP_System_GetDt();
+    
+    Map_Update(); /*Tile Map*/
+
+    DrawEntities(); /*Draw Players & Enemies*/
+    HealthTimer_Update(dt); /*Health Icons*/
+    Hearts_Update(dt); /*Health Icons*/
+
+    DamageEnemiesOnPlayerCollisions(34, 0.30f, dt);
+    ProcessGoalHits();
+
+    if (g_drawGoals) {
+        CP_Settings_Fill(CP_Color_Create(0, 0, 0, 0));
+        CP_Settings_Stroke(CP_Color_Create(255, 0, 0, 160));
+        CP_Settings_StrokeWeight(3.0f);
+        for (int r = 0; r < TILE_ROWS; ++r)
+            CP_Graphics_DrawCircle(g_goalCenters[r].x, g_goalCenters[r].y, g_goalRadius * 2.0f);
+    }
+
+    Hearts_Draw();
+
+    CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
+    CP_Settings_TextSize(28.0f);
+    CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_RIGHT, CP_TEXT_ALIGN_V_TOP);
+
+    char tbuf[48];
+    snprintf(tbuf, sizeof(tbuf), "Time: %.1fs", HealthTimer_Seconds());
+
+    float pad = 12.0f;
+    float tx = (float)CP_System_GetWindowWidth() - pad;
+    CP_Font_DrawText(tbuf, tx, pad);
+    //done
 
     Button_Behavior(&ClickerButton);
     Button_Behavior(&SettingButton);
@@ -149,13 +210,34 @@ void Main_Scene_Update(void)
         {
         }
     }
+    if (TroopButton1.isClicked == 1)
+    {
+        GameEntity player = MakeTemplate("player");
+        /*printf("EBUudb");*/
+        Arr_Insert(&playerArr, (ActiveEntity) { playerArr.used, player, (StateMachine) { .currState = IdleState } });
+    }
+    if (TroopButton2.isClicked == 1)
+    {
+        GameEntity player = MakeTemplate("player");
+        /*printf("EBUudb");*/
+        Arr_Insert(&playerArr, (ActiveEntity) { playerArr.used, player, (StateMachine) { .currState = IdleState } });
+    }
+    if (TroopButton3.isClicked == 1)
+    {
+        GameEntity player = MakeTemplate("player");
+        /*printf("EBUudb");*/
+        Arr_Insert(&playerArr, (ActiveEntity) { playerArr.used, player, (StateMachine) { .currState = IdleState } });
+    }
 
     if (CP_Input_KeyDown(KEY_Q))CP_Engine_Terminate();
+
+    //Test_Update();
 
 }
 
 void Main_Scene_Exit(void)
 {
+    //Test_Exit();
 	CP_Font_Free(myFont);
     Button_Free(&ClickerButton);
     Button_Free(&SettingButton);

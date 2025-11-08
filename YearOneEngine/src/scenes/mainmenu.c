@@ -1,7 +1,9 @@
 #include <cprocessing.h>
 #include "utils/utils.h"
 #include "scenes/mainmenu.h"
+#include "scenes/mainscene.h"
 #include "test.h"
+
 
 CP_Font myFont;
 float winWidth;
@@ -40,7 +42,7 @@ void Main_Menu_Update(void)
     CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
     CP_Font_DrawText("Play", firstButtonCx, firstButtonCy);
     if (IsAreaClicked(firstButtonCx, firstButtonCy, 300.0f, 200.0f, CP_Input_GetMouseX(), CP_Input_GetMouseY())){   
-        CP_Engine_SetNextGameState(Test_Init, Test_Update, NULL);
+        CP_Engine_SetNextGameState(Main_Scene_Init, Main_Scene_Update, NULL);
     }
     
    

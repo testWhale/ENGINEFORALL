@@ -1,6 +1,6 @@
 #include "cprocessing.h"
 #include "gameover.h"
-#include "test.h"       
+#include "scenes/mainscene.h"   
 #include "mainmenu.h"
 #include <math.h>
 #include <stdio.h>
@@ -51,7 +51,7 @@ void GameOver_Update(void) {
     if (GO_timer > 0.6f) {
         if (CP_Input_KeyTriggered(KEY_R) || CP_Input_KeyTriggered('R')) {
            
-            CP_Engine_SetNextGameState(Test_Init, Test_Update, Test_Exit);
+            CP_Engine_SetNextGameState(Main_Scene_Init, Main_Scene_Update, Main_Scene_Exit);
             return;
         }
         if (CP_Input_KeyTriggered(KEY_M) || CP_Input_KeyTriggered('M')) {
