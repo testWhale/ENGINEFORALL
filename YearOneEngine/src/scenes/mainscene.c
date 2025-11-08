@@ -7,27 +7,22 @@
 #include "buttons/buttonCode.h"
 #include "utils/arr.h"
 #include <stdio.h>
-CP_Image Overlay;
+CP_Image Background;
 
-ButtonInfo ClickerButton, SettingButton;
+ButtonInfo ClickerButton, PauseButton;
 ButtonInfo ClickerUpgrade1, ClickerUpgrade2, ClickerUpgrade3;
 ButtonInfo TroopButton1, TroopButton2, TroopButton3;
 ButtonSound defaultSound;
 CP_Font myFont;
-float winWidth;
-float winHeight;
 float unit;
 
 
 void Main_Scene_Init(void)
 {   
     CP_System_Fullscreen();
-    winHeight = CP_System_GetWindowHeight();
-    winWidth = CP_System_GetWindowWidth();
     unit = CP_System_GetWindowWidth()/ 192.0f;
-    printf("%f \n %f\n %f\n", winHeight, winWidth,unit );
-    Overlay = CP_Image_Load("Assets/ConceptArt.jpg");
-    myFont = CP_Font_Load("Assets/Fonts/Exo2-Regular.ttf");
+    myFont = CP_Font_Load("Assets/Fonts/QuinnDoodle.ttf");
+    Background = CP_Image_Load("Assets/Misc/BackgroundArt.png");
 
     Button_Sound_Load(&defaultSound, 
         "Assets/soundTesters/ClickSound.wav", 
@@ -39,75 +34,77 @@ void Main_Scene_Init(void)
         25 * unit, 40 * unit, 
         40 * unit, 40 * unit,
         40 * unit,
-        "Assets/buttons/Clicker.png", 
-        "Assets/buttonTesters/CircleClicked.png", 
-        "Assets/buttonTesters/CircleHighlight.png");
+        "Assets/Buttons/Clicker/ClickerNormal.png", 
+        "Assets/Buttons/Clicker/ClickerHighlight.png", 
+        "Assets/Buttons/Clicker/ClickerClicked2.png");
 
-    Button_Load(&SettingButton, &defaultSound, 
+    Button_Load(&PauseButton, &defaultSound, 
         182 * unit, 10 * unit,
         10 * unit, 10 * unit,
         0 * unit,
-        "Assets/buttonTesters/NormalImage.jpg", 
-        "Assets/buttonTesters/HighlightImage.jpg", 
-        "Assets/buttonTesters/ClickedImage.jpg");
+        "Assets/Buttons/Pause/PauseNormal.png", 
+        "Assets/Buttons/Pause/PauseHighlight.png",
+        "Assets/Buttons/Pause/PauseClicked.png");
 
 
     Button_Load(&ClickerUpgrade1, &defaultSound,
-        10 * unit, 75 * unit,
+        10 * unit, 80 * unit,
         10 * unit, 10 * unit,
         0 * unit,
-        "Assets/buttonTesters/NormalImage.jpg",
-        "Assets/buttonTesters/HighlightImage.jpg",
-        "Assets/buttonTesters/ClickedImage.jpg");
+        "Assets/Buttons/ClickerUpgrade1/ClickerUpgrade1Normal.png",
+        "Assets/Buttons/ClickerUpgrade1/ClickerUpgrade1Highlight.png",
+        "Assets/Buttons/ClickerUpgrade1/ClickerUpgrade1Clicked.png");
 
     Button_Load(&ClickerUpgrade2, &defaultSound,
-        25 * unit, 75 * unit,
+        25 * unit, 80 * unit,
         10 * unit, 10 * unit,
         0 * unit,
-        "Assets/buttonTesters/NormalImage.jpg",
-        "Assets/buttonTesters/HighlightImage.jpg",
-        "Assets/buttonTesters/ClickedImage.jpg");
+        "Assets/Buttons/ClickerUpgrade2/ClickerUpgrade2Normal.png",
+        "Assets/Buttons/ClickerUpgrade2/ClickerUpgrade2Highlight.png",
+        "Assets/Buttons/ClickerUpgrade2/ClickerUpgrade2Clicked.png");
 
     Button_Load(&ClickerUpgrade3, &defaultSound,
-        40 * unit, 75 * unit,
+        40 * unit, 80* unit,
         10 * unit, 10 * unit,
         0 * unit,
-        "Assets/buttonTesters/NormalImage.jpg",
-        "Assets/buttonTesters/HighlightImage.jpg",
-        "Assets/buttonTesters/ClickedImage.jpg");
+        "Assets/Buttons/ClickerUpgrade3/ClickerUpgrade3Normal.png",
+        "Assets/Buttons/ClickerUpgrade3/ClickerUpgrade3Highlight.png",
+        "Assets/Buttons/ClickerUpgrade3/ClickerUpgrade3Clicked.png");
 
     Button_Load(&TroopButton1, &defaultSound,
-        10 * unit, 95 * unit,
+        10 * unit, 100 * unit,
         10 * unit, 10 * unit,
         0 * unit,
-        "Assets/buttonTesters/NormalImage.jpg",
-        "Assets/buttonTesters/HighlightImage.jpg",
-        "Assets/buttonTesters/ClickedImage.jpg");
+        "Assets/Buttons/Troops1/Troops1Normal.png",
+        "Assets/Buttons/Troops1/Troops1Highlight.png",
+        "Assets/Buttons/Troops1/Troops1Clicked.png");
 
     Button_Load(&TroopButton2, &defaultSound,
-        25 * unit, 95 * unit,
+        25 * unit, 100* unit,
         10 * unit, 10 * unit,
         0 * unit,
-        "Assets/buttonTesters/NormalImage.jpg",
-        "Assets/buttonTesters/HighlightImage.jpg",
-        "Assets/buttonTesters/ClickedImage.jpg");
+        "Assets/Buttons/Troops2/Troops2Normal.png",
+        "Assets/Buttons/Troops2/Troops2Highlight.png",
+        "Assets/Buttons/Troops2/Troops2Clicked.png");
 
     Button_Load(&TroopButton3, &defaultSound,
-        40 * unit, 95 * unit,
+        40 * unit, 100 * unit,
         10 * unit, 10 * unit,
         0 * unit,
-        "Assets/buttonTesters/NormalImage.jpg",
-        "Assets/buttonTesters/HighlightImage.jpg",
-        "Assets/buttonTesters/ClickedImage.jpg");
+        "Assets/Buttons/Troops3/Troops3Normal.png",
+        "Assets/Buttons/Troops3/Troops3Highlight.png",
+        "Assets/Buttons/Troops3/Troops3Clicked.png");
 }
 
 
 void Main_Scene_Update(void)
 {
     CP_Graphics_ClearBackground(CP_Color_Create(255, 128, 128, 255));
+    CP_Settings_ImageMode(CP_POSITION_CORNER);
+    CP_Image_Draw(Background, 0, 0, 192 * unit, 108 * unit, 255);
 
     Button_Behavior(&ClickerButton);
-    Button_Behavior(&SettingButton);
+    Button_Behavior(&PauseButton);
     Button_Behavior(&ClickerUpgrade1);
     Button_Behavior(&ClickerUpgrade2);
     Button_Behavior(&ClickerUpgrade3);
@@ -116,24 +113,29 @@ void Main_Scene_Update(void)
     Button_Behavior(&TroopButton3);
 
     CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
-    CP_Settings_TextSize(12*unit);
-    sprintf_s(moneyString, 10, "%.0f", currentMoney);
+    CP_Settings_TextSize(9*unit);
+    sprintf_s(moneyString, 10, "%.0f$", currentMoney);
 
     CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
     CP_Font_DrawText(moneyString,25*unit, 10*unit);
 
     CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_BOTTOM);
-    CP_Settings_TextSize(3 * unit);
-    sprintf_s(statisticString, 100, "Click Power : %d Passive Income : %.0f ", clickPower,passiveIncome);
+    CP_Settings_TextSize(4 * unit);
+    sprintf_s(statisticString, 100, "Click Power : %d ", clickPower);
+    sprintf_s(statisticString2, 100, "Passive Income : %.1f", passiveIncome/5);
     CP_Font_DrawText(statisticString, 24 * unit, 65 * unit);
+    CP_Font_DrawText(statisticString2, 24 * unit, 70 * unit);
 
     CP_Settings_TextSize(4 * unit);
-    CP_Font_DrawText("50", 10 * unit, 70 * unit);
-    CP_Font_DrawText("Cost 2", 25 * unit, 70 * unit);
-    CP_Font_DrawText("Cost 3", 40 * unit, 70 * unit);
-    CP_Font_DrawText("Cost 4", 10 * unit, 90 * unit);
-    CP_Font_DrawText("Cost 5", 25 * unit, 90 * unit);
-    CP_Font_DrawText("Cost 6", 40 * unit, 90 * unit);
+
+    sprintf_s(clicker1Cost, 100, "%.0f$ ", Scaling_Cost(clickerUpgrade1Count, 50));
+    sprintf_s(clicker2Cost, 100, "%.0f$ ", Scaling_Cost(clickerUpgrade2Count, 10));
+    CP_Font_DrawText(clicker1Cost, 10 * unit, 75 * unit);
+    CP_Font_DrawText(clicker2Cost, 25 * unit, 75 * unit);
+    CP_Font_DrawText("Cost 3", 40 * unit, 75 * unit);
+    CP_Font_DrawText("Cost 4", 10 * unit, 95 * unit);
+    CP_Font_DrawText("Cost 5", 25 * unit, 95 * unit);
+    CP_Font_DrawText("Cost 6", 40 * unit, 95 * unit);
 
     if (ClickerButton.isClicked == 1) {
         One_Click(&currentMoney);
@@ -141,15 +143,23 @@ void Main_Scene_Update(void)
 
     if (ClickerUpgrade1.isClicked == 1)
     {
-        if (Purchase_System(&currentMoney, 50))
+        if (Purchase_System(&currentMoney, Scaling_Cost(clickerUpgrade1Count, 50)))
         {
+            clickerUpgrade1Count += 1;
             Click_Upgrade();
         }
-        else
+    }
+    if (ClickerUpgrade2.isClicked == 1)
+    {
+        if (Purchase_System(&currentMoney, Scaling_Cost(clickerUpgrade2Count, 10)))
         {
+            clickerUpgrade2Count += 1;
+            Passive_Upgrade();
         }
     }
 
+
+    Passive_System(&currentMoney);
     if (CP_Input_KeyDown(KEY_Q))CP_Engine_Terminate();
 
 }
@@ -158,11 +168,12 @@ void Main_Scene_Exit(void)
 {
 	CP_Font_Free(myFont);
     Button_Free(&ClickerButton);
-    Button_Free(&SettingButton);
+    Button_Free(&PauseButton);
     Button_Free(&ClickerUpgrade1);
     Button_Free(&ClickerUpgrade2);
     Button_Free(&ClickerUpgrade3);
     Button_Free(&TroopButton1);
     Button_Free(&TroopButton2);
     Button_Free(&TroopButton3);
+    Button_Sound_Free(&defaultSound);
 }

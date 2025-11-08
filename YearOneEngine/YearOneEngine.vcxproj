@@ -22,6 +22,7 @@
     <ClCompile Include="src\buttons\buttonCode.c" />
     <ClCompile Include="src\clicker\clickCode.c" />
     <ClCompile Include="src\economy\economyCode.c" />
+    <ClCompile Include="src\scenes\credits.c" />
     <ClCompile Include="src\scenes\gameover.c" />
     <ClCompile Include="src\scenes\mainmenu.c" />
     <ClCompile Include="src\scenes\mainscene.c" />
@@ -39,6 +40,7 @@
     <ClInclude Include="src\buttons\buttonCode.h" />
     <ClInclude Include="src\clicker\clickCode.h" />
     <ClInclude Include="src\economy\economyCode.h" />
+    <ClInclude Include="src\scenes\credits.h" />
     <ClInclude Include="src\scenes\gameover.h" />
     <ClInclude Include="src\scenes\mainmenu.h" />
     <ClInclude Include="src\scenes\mainscene.h" />

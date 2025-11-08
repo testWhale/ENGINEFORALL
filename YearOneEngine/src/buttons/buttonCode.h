@@ -24,6 +24,19 @@ typedef struct ButtonInfo
     int isDisplayingText;
     }ButtonInfo;
 
+/// <summary>
+/// This function loads the button with all the data you pass into it.
+/// </summary>
+/// <param name="newBtn">Just insert your specific button name</param>
+/// <param name="soundPreset">Choose from the specific pre-loaded presets for the sound feedback</param>
+/// <param name="posX">The buttons X position. Please use units</param>
+/// <param name="posY">The buttons Y position. Please use units</param>
+/// <param name="width">The button's width. Please use units</param>
+/// <param name="height">The button's Length. Please use units</param>
+/// <param name="diameter">The button's diameter.Please input 0 if its a square button. Please use units</param>
+/// <param name="buttonNormalPath">Insert the pathname for the button's normal frame as a string here</param>
+/// <param name="buttonFeedbackPath">Insert the pathname for the button's Clicked frame as a string here</param>
+/// <param name="buttonHighlightPath">Insert the pathname for the button's Highlight frame as a string here</param>
 void Button_Load(ButtonInfo* newbtn, 
     ButtonSound* soundPreset, 
     float posX, float posY, 
@@ -31,10 +44,11 @@ void Button_Load(ButtonInfo* newbtn,
     float diameter, 
     const char* buttonNormalPath, 
     const char* buttonFeedbackPath, 
-    const char* buttonHighlightPath); 	//this loads the button data from the computer
-    //this loads the button data from the computer
+    const char* buttonHighlightPath); 	
+void Button_Free(ButtonInfo* newbtn);
 
 void Button_Sound_Load(ButtonSound* soundPreset, const char* soundClickPath, const char* soundHoverPath, const char* soundReleasePath);
+void Button_Sound_Free(ButtonSound* soundPreset);
 
 void Draw_Button_Normal(ButtonInfo* btnname);
 void Draw_Button_Feedback(ButtonInfo* btnname);

@@ -6,7 +6,7 @@
 clickPower = 1;
 clickPurchaseAmount = 0;
 FiveCountdown = 5.0f;
-passiveIncome = 10;
+passiveIncome = 0;
 
 void One_Click(float* currentMoney) 
 {
