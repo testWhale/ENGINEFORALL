@@ -34,8 +34,8 @@ void Main_Scene_Init(void)
     //CP_System_Fullscreen();
     srand((unsigned)time(NULL));
     /*CP_System_Fullscreen();*/
-    winHeight = CP_System_GetWindowHeight();
-    winWidth = CP_System_GetWindowWidth();
+    float winHeight = CP_System_GetWindowHeight();
+    float winWidth = CP_System_GetWindowWidth();
     CP_System_Fullscreen();
     unit = CP_System_GetWindowWidth()/ 192.0f;
     myFont = CP_Font_Load("Assets/Fonts/QuinnDoodle.ttf");
@@ -108,9 +108,9 @@ void Main_Scene_Init(void)
         40 * unit, 100 * unit,
         10 * unit, 10 * unit,
         0 * unit,
-        "Assets/buttonTesters/NormalImage.jpg",
-        "Assets/buttonTesters/HighlightImage.jpg",
-        "Assets/buttonTesters/ClickedImage.jpg");
+        "Assets/Buttons/Troops3/Troops3Normal.png",
+        "Assets/Buttons/Troops3/Troops3Highlight.png",
+        "Assets/Buttons/Troops3/Troops3Clicked.png");
     Map_Init(ClickerButton.buttonWidth + 100, 100);
     initPlayerDemo();
 
@@ -127,9 +127,7 @@ void Main_Scene_Init(void)
     HealthTimer_Reset();
     setGoal();
     /*Test_Init();*/
-        "Assets/Buttons/Troops3/Troops3Normal.png",
-        "Assets/Buttons/Troops3/Troops3Highlight.png",
-        "Assets/Buttons/Troops3/Troops3Clicked.png");
+        
 }
 
 

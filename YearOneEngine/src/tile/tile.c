@@ -79,8 +79,8 @@ Tile* setOnTile(GameEntity* Entity,CP_Vector mouse) {
 	else{
 		c_tile->hasEntity = 1;
 		Entity->isItOnMap = 1; 
-		printf("CENTERPOS %d\n", c_tile->centerPos);
-		printf("Tile %d %d\n", row, col);
+		/*printf("CENTERPOS %d\n", c_tile->centerPos);
+		printf("Tile %d %d\n", row, col);*/
 
 		Entity->centerPos = c_tile->centerPos; //magnetise entity to tile
 		c_tile->entity = Entity; //in case tile needs entity data give it
@@ -145,7 +145,7 @@ void Map_Update() {
 			//CP_Settings_Fill(CP_Color_Create(0, 255, 0, 255));
 			//CP_Graphics_DrawCircle(startPoint.x, startPoint.y, 10);
 			
-			CP_Settings_Fill(CP_Color_Create(0, 0, 255, 255));
+			CP_Settings_Fill(CP_Color_Create(0, 0, 255, 100));
 			CP_Graphics_DrawCircle(c_tile->centerPos.x, c_tile->centerPos.y, 10);
 			{ CP_Settings_Fill(CP_Color_Create(t_color.red, t_color.green, t_color.blue, t_color.opacity)); }
 			CP_Graphics_DrawRect(c_tile->startPos.x, c_tile->startPos.y, c_tile->dim.x - 2, c_tile->dim.y - 2);
