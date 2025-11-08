@@ -7,8 +7,8 @@ Offset off;
 
 /*---------------------------------MAP_INIT FUNCTION-----------------------------*/
 void Map_Init(float width, float height) {
-	float scrnW = CP_System_GetWindowWidth() - width;
-	float scrnH = CP_System_GetWindowHeight() - height;
+	float scrnW =width;
+	float scrnH =height;
 
 	float t_width = scrnW / TILE_COLUMNS;
 	float t_height = scrnH / TILE_ROWS;
@@ -147,7 +147,7 @@ void Map_Update() {
 			
 			CP_Settings_Fill(CP_Color_Create(0, 0, 255, 50));
 			CP_Graphics_DrawCircle(c_tile->centerPos.x, c_tile->centerPos.y, 10);
-			{ CP_Settings_Fill(CP_Color_Create(t_color.red, t_color.green, t_color.blue, t_color.opacity)); }
+			{ CP_Settings_Fill(CP_Color_Create(t_color.red, t_color.green, t_color.blue,10)); }
 			CP_Graphics_DrawRect(c_tile->startPos.x, c_tile->startPos.y, c_tile->dim.x - 2, c_tile->dim.y - 2);
 		}
 	}

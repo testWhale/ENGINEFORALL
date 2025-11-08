@@ -18,6 +18,7 @@ void Main_Menu_Init(void)
     unit = CP_System_GetWindowWidth() / 192.0f;
     myFont = CP_Font_Load("Assets/Fonts/QuinnDoodle.ttf");
     MainMenuBackground = CP_Image_Load("Assets/Misc/MenuScreen.png");
+    
 
     Button_Sound_Load(&defaultSound,
         "Assets/soundTesters/ClickSound.wav",
@@ -55,6 +56,7 @@ void Main_Menu_Update(void)
     CP_Graphics_ClearBackground(CP_Color_Create(255, 128, 128, 255));
     CP_Settings_ImageMode(CP_POSITION_CORNER);
     CP_Image_Draw(MainMenuBackground, 0, 0, 192 * unit, 108 * unit, 255);
+    
 
     Button_Behavior(&PlayButton);
     Button_Behavior(&CreditsButton);

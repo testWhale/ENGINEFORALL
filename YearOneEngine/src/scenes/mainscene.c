@@ -17,7 +17,7 @@
 #include <time.h>
 #include <stdlib.h>
 CP_Image Overlay;
-CP_Image Background;
+CP_Image Background,TileMap;
 
 ButtonInfo ClickerButton, PauseButton;
 ButtonInfo ClickerUpgrade1, ClickerUpgrade2, ClickerUpgrade3;
@@ -40,6 +40,8 @@ void Main_Scene_Init(void)
     unit = CP_System_GetWindowWidth()/ 192.0f;
     myFont = CP_Font_Load("Assets/Fonts/QuinnDoodle.ttf");
     Background = CP_Image_Load("Assets/Misc/BackgroundArt.png");
+    TileMap = CP_Image_Load("Assets/Misc/TileMap.jpg");
+
 
     Button_Sound_Load(&defaultSound, 
         "Assets/soundTesters/ClickSound.wav", 
@@ -111,7 +113,7 @@ void Main_Scene_Init(void)
         "Assets/Buttons/Troops3/Troops3Normal.png",
         "Assets/Buttons/Troops3/Troops3Highlight.png",
         "Assets/Buttons/Troops3/Troops3Clicked.png");
-    Map_Init(ClickerButton.buttonWidth + 100, 100);
+    Map_Init(108*unit, 72*unit);
     initPlayerDemo();
 
     /* HEALTH FUNCTIONS */
@@ -136,9 +138,7 @@ void Main_Scene_Update(void)
     CP_Graphics_ClearBackground(CP_Color_Create(255, 128, 128, 255));
     float dt = CP_System_GetDt();
     
-    Map_Update(); /*Tile Map*/
-
-    DrawEntities(); /*Draw Players & Enemies*/
+    
     HealthTimer_Update(dt); /*Health Icons*/
     Hearts_Update(dt); /*Health Icons*/
 
@@ -146,10 +146,10 @@ void Main_Scene_Update(void)
     ProcessGoalHits();
 
     if (g_drawGoals) {
-        CP_Settings_Fill(CP_Color_Create(0, 0, 0, 0));
-        CP_Settings_Stroke(CP_Color_Create(255, 0, 0, 160));
-        CP_Settings_StrokeWeight(3.0f);
-        for (int r = 0; r < TILE_ROWS; ++r)
+            /*CP_Settings_Fill(CP_Color_Create(0, 0, 0, 0));
+            CP_Settings_Stroke(CP_Color_Create(255, 0, 0, 160));
+            CP_Settings_StrokeWeight(3.0f);*/
+            for (int r = 0; r < TILE_ROWS; ++r)
             CP_Graphics_DrawCircle(g_goalCenters[r].x, g_goalCenters[r].y, g_goalRadius * 2.0f);
     }
 
@@ -168,6 +168,8 @@ void Main_Scene_Update(void)
     //done
     CP_Settings_ImageMode(CP_POSITION_CORNER);
     CP_Image_Draw(Background, 0, 0, 192 * unit, 108 * unit, 255);
+    CP_Settings_ImageMode(CP_POSITION_CENTER);
+    CP_Image_Draw(TileMap, 120*unit, 60*unit, 108 * unit, 72 * unit, 255);
     //Test_Update();
 
     Button_Behavior(&ClickerButton);
@@ -206,6 +208,10 @@ void Main_Scene_Update(void)
     CP_Font_DrawText(troop1Cost, 10 * unit, 95 * unit);
     CP_Font_DrawText(troop2Cost, 25 * unit, 95 * unit);
     CP_Font_DrawText(troop3Cost, 40 * unit, 95 * unit);
+
+    Map_Update(); /*Tile Map*/
+
+    DrawEntities(); /*Draw Players & Enemies*/
 
     if (ClickerButton.isClicked == 1) {
         One_Click(&currentMoney);
