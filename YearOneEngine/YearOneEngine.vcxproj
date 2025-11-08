@@ -25,6 +25,7 @@
     <ClCompile Include="src\economy\economyCode.c" />
     <ClCompile Include="src\entity\ent.c" />
     <ClCompile Include="src\goal\goal.c" />
+    <ClCompile Include="src\scenes\credits.c" />
     <ClCompile Include="src\scenes\gameover.c" />
     <ClCompile Include="src\scenes\mainmenu.c" />
     <ClCompile Include="src\scenes\mainscene.c" />
@@ -47,6 +48,7 @@
     <ClInclude Include="src\economy\economyCode.h" />
     <ClInclude Include="src\entity\ent.h" />
     <ClInclude Include="src\goal\goal.h" />
+    <ClInclude Include="src\scenes\credits.h" />
     <ClInclude Include="src\scenes\gameover.h" />
     <ClInclude Include="src\scenes\mainmenu.h" />
     <ClInclude Include="src\scenes\mainscene.h" />

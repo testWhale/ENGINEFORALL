@@ -32,9 +32,10 @@ void Button_Load(ButtonInfo* newBtn,
 	float posX, float posY,
 	float width, float height,
 	float diameter,
-	const char* buttonNormalPath,
-	const char* buttonFeedbackPath,
-	const char* buttonHighlightPath)
+	const char* buttonNormalPath, 
+	const char* buttonHighlightPath,
+	const char* buttonFeedbackPath
+	)
 	{	
 	newBtn -> buttonPos = CP_Vector_Set(posX, posY);
 	newBtn -> buttonWidth = width;
@@ -235,6 +236,7 @@ void Button_Behavior(ButtonInfo* btnname) {
 				}
 				btnname->isSel = 0;
 				btnname->isClicked = 0;
+				btnname->isDisplayingText = 1;
 				}
 			}
 		}

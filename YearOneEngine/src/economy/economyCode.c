@@ -1,6 +1,7 @@
 #include <cprocessing.h>
+#include <math.h>
 
-currentMoney = 0;
+currentMoney = 10000;
 float timer = 2;
 
 int Purchase_System(float *currentMoney,float itemCost)
@@ -30,4 +31,9 @@ void Poor_Feedback(float fontsize,float PosX, float PosY)
 	{
 		timer = 2;
 	}
+}
+
+float Scaling_Cost(int purchaseCount, float basePrice)
+{
+	return basePrice * pow(2, (double)purchaseCount);
 }
