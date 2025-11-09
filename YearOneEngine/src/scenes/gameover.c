@@ -62,6 +62,6 @@ void GameOver_Update(void) {
 }
 
 void GameOver_Exit(void) {
-    if (GO_font) CP_Font_Free(&GO_font);
+    if (GO_font) CP_Font_Free(GO_font);
     CP_Sound_Free(KO);
 }
