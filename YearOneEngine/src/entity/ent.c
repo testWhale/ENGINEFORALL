@@ -200,8 +200,8 @@ void DrawEntities() {
 		// simulate flattening by using ellipse
 		CP_Graphics_DrawEllipse(shadowPos.x, shadowPos.y, p->diameter, p->diameter * shadowScaleY);
 
-		//if (p->isSel) { p->color.red = 0; p->color.green = 0; p->color.blue = 255; p->color.opacity = 255; }
-		
+		if (p->isSel) { p->color.red = 0; p->color.green = 0; p->color.blue = 255; p->color.opacity = 255; }
+		else { p->color.red = 255; p->color.green = 0; p->color.blue = 0;   p->color.opacity = 255; }
 
 		CP_Settings_Fill(CP_Color_Create(p->color.red, p->color.green, p->color.blue, p->color.opacity));
 		CP_Graphics_DrawCircle(p->centerPos.x, p->centerPos.y, p->diameter);
