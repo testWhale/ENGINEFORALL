@@ -126,7 +126,7 @@ void Init_NewWave(int currWave) {
 	}
 }
 
-void Draw_Text(float dt) {
+void Draw_TempText(float dt) {
 	if (waveFlag) {
 		waveState += (dt * 2);
 		printf("DT: %f\n", waveState);
@@ -178,6 +178,8 @@ void DrawBullets() {
 
 void DrawEntities() {
 	float dt = CP_System_GetDt();
+	CP_Vector lightDir = CP_Vector_Set(1.0f, -1.0f); // direction light comes *from*
+	float lightHeight = 1.5f;
 
 	/* players draw */
 	for (size_t i = 0; i < playerArr.used; ++i) {
@@ -185,6 +187,16 @@ void DrawEntities() {
 		FSM_Update(&ent->fsm, &ent->unit, dt);
 
 		GameEntity* p = &ent->unit;
+		// --- SHADOW COMPUTATION ---
+		CP_Vector shadowOffset = CP_Vector_Scale(lightDir, -50 );
+		CP_Vector shadowPos = CP_Vector_Add(p->centerPos, shadowOffset);
+		float shadowScaleY = 0.5f;  // flatten vertically
+
+		// --- DRAW SHADOW ---
+		CP_Settings_Fill(CP_Color_Create(0, 0, 0, 100)); // semi-transparent black
+		// simulate flattening by using ellipse
+		CP_Graphics_DrawEllipse(shadowPos.x, shadowPos.y, p->diameter, p->diameter * shadowScaleY);
+
 		if (p->isSel) { p->color.red = 0; p->color.green = 0; p->color.blue = 255; p->color.opacity = 255; }
 		else { p->color.red = 255; p->color.green = 0; p->color.blue = 0;   p->color.opacity = 255; }
 
@@ -194,14 +206,14 @@ void DrawEntities() {
 	}
 	DrawBullets();
 	if (enemyArr.used <= 0) {
-		printf("WAVE DONE\n");
+		
 		Init_NewWave(wave++);
 		
 	}
 	for (size_t i = 0; i < enemyArr.used; ++i) {
 		ActiveEntity* ent = &enemyArr.ActiveEntityArr[i];
 		FSM_Update(&ent->fsm, &ent->unit, dt);
-		//moveWave(&ent->unit, dt);
+		moveWave(&ent->unit, dt);
 
 		GameEntity* e = &ent->unit;
 		if (e->isSel) { e->color.red = 255; e->color.green = 255; e->color.blue = 255; e->color.opacity = 255; }

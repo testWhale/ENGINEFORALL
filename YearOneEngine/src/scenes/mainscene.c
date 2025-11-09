@@ -212,7 +212,8 @@ void Main_Scene_Update(void)
 
     DrawEntities(); /*Draw Players & Enemies*/
     
-    Draw_Text(dt);
+    Draw_TempText(dt); /* Flag check that displays a temporary msg/ reward */
+
     if (ClickerButton.isClicked == 1) {
         One_Click(&currentMoney);
     }
