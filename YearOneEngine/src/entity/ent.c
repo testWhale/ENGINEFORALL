@@ -40,7 +40,7 @@ GameEntity MakeTemplate(const char* name) {
 	{
 		
 		e = (GameEntity){
-		.centerPos = {100, 400}, .rotation = 0, .isPlayer = 0, .forwardVector = {0, 0}, .color = {255,0,0,255},
+		.centerPos = {100, 400}, .rotation = 0, .isPlayer = 0, .forwardVector = {0, 0}, .color = {255,255,0,255},
 		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "Fire" , .bullets = {0} };
 		
 	}
@@ -88,7 +88,7 @@ void initPlayerDemo() {
 		ActiveEntity ae;
 		ae.id = i;
 		ae.unit = enemy;
-		ae.fsm = (StateMachine){ .currState = IdleState };
+		ae.fsm = (StateMachine){ .currState = EnemyIdleState };
 		ae.maxHealth = 100;
 		ae.health = 100;
 		ae.alive = 1;
@@ -133,11 +133,11 @@ void Draw_TempText(float dt) {
 		CP_Graphics_DrawRect(CP_Input_GetMouseX(), CP_Input_GetMouseY(), 50, 50);
 		Button_Load(&NewWaveButton, &defaultSound,
 			96 * unit, 92 * unit,
-			55 * unit, 19.5 * unit,
+			20 * unit, 20 * unit,
 			0 * unit,
-			"Assets/Buttons/MainMenu/CreditsNormal.png",
-			"Assets/Buttons/MainMenu/CreditsHighlight.png",
-			"Assets/Buttons/MainMenu/CreditsClicked.png");
+			"Assets/Buttons/Suprise/JackNormal.png",
+			"Assets/Buttons/Suprise/JackHighlight.png",
+			"Assets/Buttons/Suprise/JackClicked.png");
 		Button_Behavior(&NewWaveButton);
 		if (NewWaveButton.isClicked)
 		{
@@ -178,8 +178,11 @@ void DrawBullets() {
 
 void DrawEntities() {
 	float dt = CP_System_GetDt();
+	
+
 	CP_Vector lightDir = CP_Vector_Set(1.0f, -1.0f); // direction light comes *from*
 	float lightHeight = 1.5f;
+	
 
 	/* players draw */
 	for (size_t i = 0; i < playerArr.used; ++i) {
@@ -197,8 +200,8 @@ void DrawEntities() {
 		// simulate flattening by using ellipse
 		CP_Graphics_DrawEllipse(shadowPos.x, shadowPos.y, p->diameter, p->diameter * shadowScaleY);
 
-		if (p->isSel) { p->color.red = 0; p->color.green = 0; p->color.blue = 255; p->color.opacity = 255; }
-		else { p->color.red = 255; p->color.green = 0; p->color.blue = 0;   p->color.opacity = 255; }
+		//if (p->isSel) { p->color.red = 0; p->color.green = 0; p->color.blue = 255; p->color.opacity = 255; }
+		
 
 		CP_Settings_Fill(CP_Color_Create(p->color.red, p->color.green, p->color.blue, p->color.opacity));
 		CP_Graphics_DrawCircle(p->centerPos.x, p->centerPos.y, p->diameter);
@@ -212,20 +215,21 @@ void DrawEntities() {
 	}
 	for (size_t i = 0; i < enemyArr.used; ++i) {
 		ActiveEntity* ent = &enemyArr.ActiveEntityArr[i];
-		FSM_Update(&ent->fsm, &ent->unit, dt);
+
 		moveWave(&ent->unit, dt);
+		FSM_Update(&ent->fsm, &ent->unit, dt);
 		if (enemyArr.ActiveEntityArr[i].health <= 0.f) {
 			Arr_Del(&enemyArr, enemyArr.ActiveEntityArr[i].id);
 			continue;
 		}
 		GameEntity* e = &ent->unit;
-		if (e->isSel) { e->color.red = 255; e->color.green = 255; e->color.blue = 255; e->color.opacity = 255; }
-		else { e->color.red = 255; e->color.green = 255; e->color.blue = 0;   e->color.opacity = 255; }
+		//if (e->isSel) { e->color.red = 255; e->color.green = 255; e->color.blue = 255; e->color.opacity = 255; }
 
 		CP_Settings_Fill(CP_Color_Create(e->color.red, e->color.green, e->color.blue, e->color.opacity));
 		CP_Graphics_DrawCircle(e->centerPos.x, e->centerPos.y, e->diameter);
 
-
 		Health_DrawEnemyBar(ent, 80.0f, 10.0f, 20.0f);
 	}
+	
+	
 }

@@ -28,9 +28,9 @@ void Credits_Init(void)
         156 * unit, 92 * unit,
         55 * unit, 19.5 * unit,
         0 * unit,
-        "Assets/Buttons/MainMenu/QuitNormal.png",
-        "Assets/Buttons/MainMenu/QuitHighlight.png",
-        "Assets/Buttons/MainMenu/QuitClicked.png");
+        "Assets/Buttons/Back/BackNormal.png",
+        "Assets/Buttons/Back/BackHighlighted.png",
+        "Assets/Buttons/Back/BackClicked.png");
 }
 
 void Credits_Update(void)

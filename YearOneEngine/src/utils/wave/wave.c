@@ -25,19 +25,19 @@ GameEntity* moveWave(GameEntity* entity, float dt) {
 	CP_Vector acc = { -4 * dt,0 };
 	
 	if (rndm == 4) { 
-		acc.x = -10;
+		acc.x = -5;
 		entity->velocity = CP_Vector_Add(entity->velocity, acc);
 		entity->centerPos = CP_Vector_Add(entity->centerPos, CP_Vector_Scale(entity->velocity, dt));
 		return 1;
 	}
 	if (rndm == 3) {
-		acc.x = -40;
+		acc.x = -5;
 		entity->velocity = CP_Vector_Add(entity->velocity, acc);
-		entity->color = (Color){1,1,1,255};
+		//entity->color = (Color){1,1,1,255};
 		entity->centerPos = CP_Vector_Add(entity->centerPos, CP_Vector_Scale(entity->velocity, dt));
 		return 1;
 	}
-	entity->color = (Color){ 255,1,1,255 };
+	{ entity->color.red = 255; entity->color.green = 255; entity->color.blue = 0;   entity->color.opacity = 255; }
 	entity->velocity = CP_Vector_Add(entity->velocity, acc);
 	entity->centerPos = CP_Vector_Add(entity->centerPos,CP_Vector_Scale(entity->velocity, dt));
 

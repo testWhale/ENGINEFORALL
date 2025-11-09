@@ -240,6 +240,8 @@ void Main_Scene_Update(void)
         if (Purchase_System(&currentMoney, Scaling_Cost(troop1Count, 50)))
         {
             GameEntity player = MakeTemplate("player");
+            player.centerPos.x += playerArr.used * 50;
+           
             Arr_Insert(&playerArr, (ActiveEntity) {
                 playerArr.used,
                     player, (StateMachine) { .currState = IdleState },
@@ -254,6 +256,7 @@ void Main_Scene_Update(void)
         if (Purchase_System(&currentMoney, Scaling_Cost(troop2Count, 50)))
         {
             GameEntity player = MakeTemplate("player");
+            player.centerPos.x += playerArr.used * 50;
             Arr_Insert(&playerArr, (ActiveEntity) { playerArr.used, 
                 player, (StateMachine) { .currState = IdleState },
                 .maxHealth = 100, .health = 100, .alive = 1, .hasScored = 0, .lastLeftmostX = 0
@@ -267,6 +270,8 @@ void Main_Scene_Update(void)
         if (Purchase_System(&currentMoney, Scaling_Cost(troop3Count, 50)))
         {
             GameEntity player = MakeTemplate("player");
+            player.centerPos.x += playerArr.used * 50;
+
             Arr_Insert(&playerArr, (ActiveEntity) { playerArr.used, 
                 player, (StateMachine) { .currState = IdleState },
                 .maxHealth = 100, .health = 100, .alive = 1, .hasScored = 0, .lastLeftmostX = 0

@@ -20,7 +20,7 @@ void B_Arr_Refresh(BulletArr* array, GameEntity* turret) {
 		array->bulletArr[i].centerPos.x = turret->centerPos.x;
 		array->bulletArr[i].centerPos.y = turret->centerPos.y;
 		array->bulletArr[i].opacity = 255;
-		printf("%d %f", turret->bullets.bulletArr[i].id, turret->bullets.bulletArr[i].opacity);
+		//printf("%d %f", turret->bullets.bulletArr[i].id, turret->bullets.bulletArr[i].opacity);
 	}
 }
 
@@ -126,11 +126,13 @@ void Shoot_Update(GameEntity* turret, StateMachine* SM, float dt) {
 			//loop through all enemies and check if they are being hit
 			for (int j = 0; j < enemyArr.used; j++) {
 				GameEntity* enemy = &enemyArr.ActiveEntityArr[j].unit;
-
+				
 				/*enemy->unit.centerPos = 
 				printf("ID %d CenterPos %f\n", enemy->id,enemy->unit.centerPos.x);*/
 				/* Check if enemy is intersecting with bullet*/
 				if (AreCirclesIntersecting(bullet, enemy)) {
+					{ enemy->color.red = 255; enemy->color.green = 0; enemy->color.blue = 0;   enemy->color.opacity = 255; }
+
 					//Deactivate bullet
 					enemyArr.ActiveEntityArr[j].health -= 60.0f;
 					if (enemyArr.ActiveEntityArr[j].health <= 0.f) {
