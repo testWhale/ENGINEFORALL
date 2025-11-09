@@ -15,6 +15,9 @@ typedef struct Bullet {
 	CP_Vector velocity; Color color;
 	float diameter; float stateTimer;
 	int opacity;
+	float bulletDmg;
+	float stunTimer;
+	float poisonDmg;
 	CP_BOOL isActive; char* type;
 }Bullet;
 

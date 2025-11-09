@@ -1,21 +1,44 @@
 #include "bullet.h"
 #include <stdio.h>
 #include <stdlib.h>
+<<<<<<< Updated upstream:YearOneEngine/src/utils/bullet.c
 #include <string.h> // for strcmp, memset
 
 Bullet BulletTemplate(const char* name) {
     Bullet bullet = { 0 };
 
+=======
+#include <string.h>
+
+// for strcmp, memset
+//ARR_(Bullet)
+//typedef struct {
+//    int id;
+//    char label[45];
+//    CP_Image img;
+//    char* filepath;
+//    CP_Vector leftTCornerPos;
+//}UI;
+//
+//ARR_(UI)
+
+Bullet BulletTemplate(const char* name) {
+    Bullet bullet = { 0 };
+    int dt = CP_System_GetDt();
+>>>>>>> Stashed changes:YearOneEngine/src/bullet/bullet.c
     if (strcmp(name, "poison") == 0) {
         bullet = (Bullet){
             .id = 0,
             .centerPos = {100, 100},
             .velocity = {0, 0},
-            .color = {0, 255, 0, 255},
-            .diameter = 300,
+            .color = {255, 0, 255, 255},
+            .diameter = 100,
             .opacity = 0,
-            .type = "poison"
+            .type = "poison",
+            .bulletDmg = 10.0f,
+            .poisonDmg = 10.0f
         };
+        bullet.bulletDmg += bullet.poisonDmg * dt;
     }
     else if (strcmp(name, "stun") == 0) {
         bullet = (Bullet){
@@ -23,9 +46,11 @@ Bullet BulletTemplate(const char* name) {
             .centerPos = {100, 100},
             .velocity = {0, 0},
             .color = {255, 255, 0, 255},
-            .diameter = 300,
+            .diameter = 100,
             .opacity = 0,
-            .type = "stun"
+            .type = "stun",
+            .bulletDmg = 10.0f,
+            .stunTimer = 1.0f
         };
     }
     else { // default "normal"
@@ -36,7 +61,8 @@ Bullet BulletTemplate(const char* name) {
             .color = {255, 0, 0, 255},
             .diameter = 100,
             .opacity = 0,
-            .type = "normal"
+            .type = "normal",
+            .bulletDmg = 10.0f
         };
     }
 

@@ -36,7 +36,7 @@ void Shoot_Update(GameEntity* turret, StateMachine* SM, float dt) {
 	for (int i = 0; i < turret->bullets.used; i++) 
 	{ /* Bullets that are currently being shot */
 		Bullet* bullet = &turret->bullets.bulletArr[i];
-		CP_Vector acc = { 10,0 };
+		CP_Vector acc = { 3,0 };
 		
 			//spawn bullet
 			bullet->velocity = CP_Vector_Add(bullet->velocity, acc);
@@ -44,9 +44,9 @@ void Shoot_Update(GameEntity* turret, StateMachine* SM, float dt) {
 			//Move bullet
 
 			/*if (bullet->type == "poison") {
-
-			}
-			if (bullet->type == "normal") {
+				
+			}*/
+			/*if (bullet->type == "normal") {
 
 			}
 			if (bullet->type == "stun") {
@@ -63,16 +63,42 @@ void Shoot_Update(GameEntity* turret, StateMachine* SM, float dt) {
 			//loop through all enemies and check if they are being hit
 			for (int j = 0; j < enemyArr.used; j++) {
 				GameEntity* enemy = &enemyArr.ActiveEntityArr[j].unit;
+<<<<<<< Updated upstream
 
 				//enemy->unit.centerPos = 
 				//printf("ID %d CenterPos %f\n", enemy->id,enemy->unit.centerPos.x);
+=======
+				
+				/*enemy->unit.centerPos = 
+				printf("ID %d CenterPos %f\n", enemy->id,enemy->unit.centerPos.x);*/
+>>>>>>> Stashed changes
 				/* Check if enemy is intersecting with bullet*/
+				//enemy->color = ;
+				int color_C = 1;
+				if (color_C = 0) {
+					enemy->color = RED;
+				}
+				if (color_C = 1) {
+					enemy->color = (Color){ 255,255,0,255 };
+				}
+
 				if (AreCirclesIntersecting(bullet, enemy)) {
 					//Deactivate bullet
+<<<<<<< Updated upstream
 					printf("\nARGHH\n");
-					B_Arr_Del(&(turret->bullets), bullet->id);
+=======
+					color_C = 0;
 
+					enemyArr.ActiveEntityArr[j].health -= 60.0f;
+					if (enemyArr.ActiveEntityArr[j].health <= 0.f) {
+						Arr_Del(&enemyArr, enemyArr.ActiveEntityArr[j].id);
+					}
+
+>>>>>>> Stashed changes
+					B_Arr_Del(&(turret->bullets), bullet->id);
 				}
+			
+				
 
 			}
 				

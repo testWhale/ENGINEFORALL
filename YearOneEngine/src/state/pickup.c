@@ -107,13 +107,16 @@ void Sel_Init(GameEntity* entity, StateMachine* SM, float dt) {
 	
 }
 void Sel_Update(GameEntity* entity, StateMachine* SM, float dt) {
-	entity->stateTimer += dt;
 	hoverTileAt(entity, (CP_Vector) { entity->centerPos.x, entity->centerPos.y });
 	//Container_Draw( getContainer(entity->label, &containersArr) );
 	if (0==entity->isSel || IsCircleClicked(entity->centerPos.x, entity->centerPos.y, entity->diameter, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
 		FSM_SetState(SM, IdleState, entity, dt);
 		return;
 	}
+<<<<<<< Updated upstream
+=======
+	Shoot_Update(entity, SM, dt);
+>>>>>>> Stashed changes
 }
 
 void Sel_Exit(GameEntity* entity, StateMachine* SM, float dt) {
