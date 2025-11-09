@@ -48,6 +48,7 @@ void Map_Init(CP_Vector startPos, float width, float height) {
 			startPoint.x += t_width;
 		}
 
+		//printf("ROW NUM: %d\n", i);
 		startPoint.y += t_height;
 	}
 }
@@ -56,15 +57,20 @@ void Map_Init(CP_Vector startPos, float width, float height) {
 
 /*---------------------------------Check TILE FUNCTIONS-----------------------------*/
 Tile* setOnTile(GameEntity* Entity, CP_Vector mouse) {
-
-	int row = (mouse.y - g_TileMap[0][0].startPos.y) / g_TileMap[0][0].dim.y;
-	printf("ROW: %d", row);
-	int col = (mouse.x - g_TileMap[0][0].startPos.x) / g_TileMap[0][0].dim.x;
-	if (row < 0 || col < 0) { return; }
+	float y = mouse.y - g_TileMap[0][0].startPos.y;
+	float x = mouse.x - g_TileMap[0][0].startPos.x;
+	if (y < 0 || x < 0) { return; }
+	int row = (y) / g_TileMap[0][0].dim.y;
+	
+	int col = (x) / g_TileMap[0][0].dim.x;
+	printf("ROW NOT GOOD: %d %d", row, col);
+	printf("The Value %f %f", mouse.x - g_TileMap[0][0].startPos.x, mouse.y - g_TileMap[0][0].startPos.y);
+	if (row < 0 || row > TILE_ROWS || col < 0 || col > TILE_COLUMNS) {  return 0; }
 	Tile* c_tile = &g_TileMap[row][col];
 
 	if (row < 0 || row >= TILE_ROWS || col < 0 || col >= TILE_COLUMNS) {
 		//printf("Out of Bounds\n");
+		return;
 	}
 	if (1 == c_tile->hasEntity) {
 		printf("Cannot Place Unit Here.\n");

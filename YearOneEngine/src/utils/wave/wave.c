@@ -37,7 +37,7 @@ GameEntity* moveWave(GameEntity* entity, float dt) {
 		entity->centerPos = CP_Vector_Add(entity->centerPos, CP_Vector_Scale(entity->velocity, dt));
 		return 1;
 	}
-	{ entity->color.red = 255; entity->color.green = 255; entity->color.blue = 0;   entity->color.opacity = 255; }
+
 	entity->velocity = CP_Vector_Add(entity->velocity, acc);
 	entity->centerPos = CP_Vector_Add(entity->centerPos,CP_Vector_Scale(entity->velocity, dt));
 
