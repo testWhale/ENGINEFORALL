@@ -64,10 +64,13 @@ void Shoot_Update(GameEntity* turret, StateMachine* SM, float dt) {
 			for (int j = 0; j < enemyArr.used; j++) {
 				GameEntity* enemy = &enemyArr.ActiveEntityArr[j].unit;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
 				//enemy->unit.centerPos = 
 				//printf("ID %d CenterPos %f\n", enemy->id,enemy->unit.centerPos.x);
 =======
+=======
+>>>>>>> Stashed changes
 				
 				/*enemy->unit.centerPos = 
 				printf("ID %d CenterPos %f\n", enemy->id,enemy->unit.centerPos.x);*/
@@ -85,8 +88,11 @@ void Shoot_Update(GameEntity* turret, StateMachine* SM, float dt) {
 				if (AreCirclesIntersecting(bullet, enemy)) {
 					//Deactivate bullet
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 					printf("\nARGHH\n");
 =======
+=======
+>>>>>>> Stashed changes
 					color_C = 0;
 
 					enemyArr.ActiveEntityArr[j].health -= 60.0f;

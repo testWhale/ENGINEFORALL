@@ -114,6 +114,10 @@ void Sel_Update(GameEntity* entity, StateMachine* SM, float dt) {
 		return;
 	}
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+	Shoot_Update(entity, SM, dt);
+>>>>>>> Stashed changes
 =======
 	Shoot_Update(entity, SM, dt);
 >>>>>>> Stashed changes
