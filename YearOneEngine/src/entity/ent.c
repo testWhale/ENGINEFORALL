@@ -23,8 +23,8 @@ GameEntity MakeTemplate(const char* name) {
 	if (name == "player")
 	{
 		e = (GameEntity){
-		.centerPos = {100, 100}, .rotation = 0, .isPlayer = 1, .forwardVector = {0, 0}, .color = {255,0,0,255},
-		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "Fire", .bullets = {0 } };
+		.centerPos = {400, 100}, .rotation = 0, .isPlayer = 1, .forwardVector = {0, 0}, .color = {255,0,0,255},
+		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "fire", .bullets = {0 } };
 	}
 
 
@@ -32,8 +32,8 @@ GameEntity MakeTemplate(const char* name) {
 	{
 		Bullet temp = BulletTemplate("poison");
 		e = (GameEntity){
-		.centerPos = {100, 100}, .rotation = 0, .isPlayer = 0, .forwardVector = {0, 0}, .color = {255,0,255,255},
-		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "Fire" , .bullets = {0} };
+		.centerPos = {400, 150}, .rotation = 0, .isPlayer = 0, .forwardVector = {0, 0}, .color = {255,0,255,255},
+		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "poison" , .bullets = {0} };
 		/*B_Arr_Init(2, &e.bullets);
 		B_Arr_Insert(&e.bullets, temp);*/
 	}
@@ -42,8 +42,8 @@ GameEntity MakeTemplate(const char* name) {
 	{
 		Bullet temp = BulletTemplate("stun");
 		e = (GameEntity){
-		.centerPos = {100, 100}, .rotation = 0, .isPlayer = 0, .forwardVector = {0, 0}, .color = {255,0,0,255},
-		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "Fire" , .bullets = {0} };
+		.centerPos = {500, 100}, .rotation = 0, .isPlayer = 0, .forwardVector = {0, 0}, .color = {255,0,0,255},
+		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "fire" , .bullets = {0} };
 		/*B_Arr_Init(2, &e.bullets);
 		B_Arr_Insert(&e.bullets, temp);*/
 	}
@@ -53,7 +53,7 @@ GameEntity MakeTemplate(const char* name) {
 
 		e = (GameEntity){
 		.centerPos = {100, 400}, .rotation = 0, .isPlayer = 0, .forwardVector = {0, 0}, .color = {255,255,0,255},
-		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "Fire" , .bullets = {0} };
+		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "enemy" , .bullets = {0} };
 
 	}
 	//do not assign any pointers here as it will point to the same address
@@ -77,7 +77,7 @@ void initPlayerDemo() {
 	Arr_Init(11, &enemyArr);
 
 	/*FOR PLAYER_UNITS ONLY*/
-	for (int i = 0; i < 7; i++) {
+	for (int i = 0; i < 4; i++) {
 		ActiveEntity ae;
 		ae.id = i;
 		ae.unit = player;
@@ -100,7 +100,7 @@ void initPlayerDemo() {
 		ActiveEntity ae;
 		ae.id = i;
 		ae.unit = enemy;
-		ae.fsm = (StateMachine){ .currState = Enemy_IdleState };
+		ae.fsm = (StateMachine){ .currState = EnemyIdleState };
 		ae.maxHealth = 100;
 		ae.health = 100;
 		ae.alive = 1;
@@ -158,6 +158,7 @@ void Draw_TempText(float dt) {
 
 		if (waveState > 4) {
 			waveFlag = 0; waveState = 0;
+			Button_Free(&NewWaveButton);
 		}
 	}
 }
@@ -212,8 +213,10 @@ void DrawEntities() {
 		// simulate flattening by using ellipse
 		CP_Graphics_DrawEllipse(shadowPos.x, shadowPos.y, p->diameter, p->diameter * shadowScaleY);
 
-		/*if (p->isSel) { p->color.red = 0; p->color.green = 0; p->color.blue = 255; p->color.opacity = 255; }*/
-		/*else { p->color.red = 255; p->color.green = 0; p->color.blue = 0;   p->color.opacity = 255; }*/
+		if (p->label == "poison") { p->color.red = 255; p->color.green = 0; p->color.blue = 255; p->color.opacity = 255; }
+		if (p->label == "fire") { p->color.red = 255; p->color.green = 0; p->color.blue = 0;   p->color.opacity = 255; }
+
+		if (p->isSel) { p->color.red = 0; p->color.green = 0; p->color.blue = 255; p->color.opacity = 255; }
 
 		CP_Settings_Fill(CP_Color_Create(p->color.red, p->color.green, p->color.blue, p->color.opacity));
 		CP_Graphics_DrawCircle(p->centerPos.x, p->centerPos.y, p->diameter);
