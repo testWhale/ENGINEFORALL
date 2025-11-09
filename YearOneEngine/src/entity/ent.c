@@ -214,7 +214,10 @@ void DrawEntities() {
 		ActiveEntity* ent = &enemyArr.ActiveEntityArr[i];
 		FSM_Update(&ent->fsm, &ent->unit, dt);
 		moveWave(&ent->unit, dt);
-
+		if (enemyArr.ActiveEntityArr[i].health <= 0.f) {
+			Arr_Del(&enemyArr, enemyArr.ActiveEntityArr[i].id);
+			continue;
+		}
 		GameEntity* e = &ent->unit;
 		if (e->isSel) { e->color.red = 255; e->color.green = 255; e->color.blue = 255; e->color.opacity = 255; }
 		else { e->color.red = 255; e->color.green = 255; e->color.blue = 0;   e->color.opacity = 255; }
