@@ -31,7 +31,7 @@ GameEntity* moveWave(GameEntity* entity, float dt) {
 		return 1;
 	}
 	if (rndm == 3) {
-		acc.x = 10;
+		acc.x = -40;
 		entity->velocity = CP_Vector_Add(entity->velocity, acc);
 		entity->color = (Color){1,1,1,255};
 		entity->centerPos = CP_Vector_Add(entity->centerPos, CP_Vector_Scale(entity->velocity, dt));

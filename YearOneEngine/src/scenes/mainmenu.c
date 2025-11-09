@@ -1,5 +1,6 @@
 #include <cprocessing.h>
 #include "utils/utils.h"
+#include "mainmenu.h"
 #include "scenes/mainscene.h"
 #include "scenes/credits.h"
 #include "buttons/buttonCode.h"
@@ -9,12 +10,11 @@ CP_Font myFont;
 CP_Image MainMenuBackground;
 ButtonInfo PlayButton, CreditsButton,QuitButton;
 ButtonSound defaultSound;
-float unit;
 
 
 void Main_Menu_Init(void)
 {
-    CP_System_Fullscreen();
+    //CP_System_Fullscreen();
     unit = CP_System_GetWindowWidth() / 192.0f;
     myFont = CP_Font_Load("Assets/Fonts/QuinnDoodle.ttf");
     MainMenuBackground = CP_Image_Load("Assets/Misc/MenuScreen.png");

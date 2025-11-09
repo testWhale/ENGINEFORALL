@@ -6,6 +6,16 @@
 #include "../utils/arr/State.h"
 #include "../wave/wave.h"
 #include "health.h"
+#include "../container.h"
+#include "../buttons/buttonCode.h"
+#include "../scenes/mainmenu.h"
+#include "../economy/economyCode.h"
+extern int wave = 0;
+extern int waveFlag = 0;
+extern float waveState = 0;
+ButtonInfo NewWaveButton;
+ButtonSound defaultSound;
+
 /*-------------Template Value--------------*/
 GameEntity MakeTemplate(const char* name) {
 	GameEntity e;
@@ -55,7 +65,7 @@ void initPlayerDemo() {
 	Arr_Init(11, &enemyArr);
 
 	/*FOR PLAYER_UNITS ONLY*/
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < 7; i++) {
 		ActiveEntity ae;
 		ae.id = i;
 		ae.unit = player;
@@ -86,13 +96,58 @@ void initPlayerDemo() {
 		ae.lastLeftmostX = 0.0f;
 
 		Arr_Insert(&enemyArr, ae);
-		startWave(&enemyArr.ActiveEntityArr[i].unit, (int)2);
-
-
+		startWave(&enemyArr.ActiveEntityArr[i].unit, 0);
 		/*enemyArr.ActiveEntityArr[i].unit.centerPos.x += 200.0f;*/
 	}
 	//ContArr_Init(playerArr.used, &containersArr);
 	//readFile("Assets/containers");
+}
+
+void Init_NewWave(int currWave) {
+	GameEntity enemy = MakeTemplate("enemy");
+	/* FOR ENEMY UNITS */
+	waveFlag = 1;
+	int spawn = currWave + 5;
+	for (int i = 0; i < spawn; i++) {
+		ActiveEntity ae;
+		ae.id = i;
+		ae.unit = enemy;
+		ae.fsm = (StateMachine){ .currState = IdleState };
+		ae.maxHealth = 100;
+		ae.health = 100;
+		ae.alive = 1;
+		ae.hasScored = 0;
+		ae.lastLeftmostX = 0.0f;
+
+		Arr_Insert(&enemyArr, ae);
+		startWave(&enemyArr.ActiveEntityArr[i].unit, (int)2);
+
+		/*enemyArr.ActiveEntityArr[i].unit.centerPos.x += 200.0f;*/
+	}
+}
+
+void Draw_Text(float dt) {
+	if (waveFlag) {
+		waveState += (dt * 2);
+		printf("DT: %f\n", waveState);
+		CP_Graphics_DrawRect(CP_Input_GetMouseX(), CP_Input_GetMouseY(), 50, 50);
+		Button_Load(&NewWaveButton, &defaultSound,
+			96 * unit, 92 * unit,
+			55 * unit, 19.5 * unit,
+			0 * unit,
+			"Assets/Buttons/MainMenu/CreditsNormal.png",
+			"Assets/Buttons/MainMenu/CreditsHighlight.png",
+			"Assets/Buttons/MainMenu/CreditsClicked.png");
+		Button_Behavior(&NewWaveButton);
+		if (NewWaveButton.isClicked)
+		{
+			Reward_Click(&currentMoney);
+		}
+
+		if (waveState > 4) {
+			waveFlag = 0; waveState = 0;
+		}
+	}
 }
 
 void PrintBulletInfo(GameEntity* entity) {
@@ -138,11 +193,15 @@ void DrawEntities() {
 		
 	}
 	DrawBullets();
-
+	if (enemyArr.used <= 0) {
+		printf("WAVE DONE\n");
+		Init_NewWave(wave++);
+		
+	}
 	for (size_t i = 0; i < enemyArr.used; ++i) {
 		ActiveEntity* ent = &enemyArr.ActiveEntityArr[i];
 		FSM_Update(&ent->fsm, &ent->unit, dt);
-		moveWave(&ent->unit, dt);
+		//moveWave(&ent->unit, dt);
 
 		GameEntity* e = &ent->unit;
 		if (e->isSel) { e->color.red = 255; e->color.green = 255; e->color.blue = 255; e->color.opacity = 255; }

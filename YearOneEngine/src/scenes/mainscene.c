@@ -36,7 +36,7 @@ void Main_Scene_Init(void)
     /*CP_System_Fullscreen();*/
     float winHeight = CP_System_GetWindowHeight();
     float winWidth = CP_System_GetWindowWidth();
-    CP_System_Fullscreen();
+    //CP_System_Fullscreen();
     unit = CP_System_GetWindowWidth()/ 192.0f;
     myFont = CP_Font_Load("Assets/Fonts/QuinnDoodle.ttf");
     Background = CP_Image_Load("Assets/Misc/BackgroundArt.png");
@@ -137,8 +137,7 @@ void Main_Scene_Update(void)
 {
     CP_Graphics_ClearBackground(CP_Color_Create(255, 128, 128, 255));
     float dt = CP_System_GetDt();
-    
-    
+   
     HealthTimer_Update(dt); /*Health Icons*/
     Hearts_Update(dt); /*Health Icons*/
 
@@ -212,7 +211,8 @@ void Main_Scene_Update(void)
     Map_Update(); /*Tile Map*/
 
     DrawEntities(); /*Draw Players & Enemies*/
-
+    
+    Draw_Text(dt);
     if (ClickerButton.isClicked == 1) {
         One_Click(&currentMoney);
     }
@@ -239,7 +239,11 @@ void Main_Scene_Update(void)
         if (Purchase_System(&currentMoney, Scaling_Cost(troop1Count, 50)))
         {
             GameEntity player = MakeTemplate("player");
-            Arr_Insert(&playerArr, (ActiveEntity) { playerArr.used, player, (StateMachine) { .currState = IdleState } });
+            Arr_Insert(&playerArr, (ActiveEntity) {
+                playerArr.used,
+                    player, (StateMachine) { .currState = IdleState },
+                    .maxHealth=100, .health = 100, .alive = 1, .hasScored = 0, .lastLeftmostX = 0
+            });
             troop1Count += 1;
         }
     }
@@ -249,7 +253,10 @@ void Main_Scene_Update(void)
         if (Purchase_System(&currentMoney, Scaling_Cost(troop2Count, 50)))
         {
             GameEntity player = MakeTemplate("player");
-            Arr_Insert(&playerArr, (ActiveEntity) { playerArr.used, player, (StateMachine) { .currState = IdleState } });
+            Arr_Insert(&playerArr, (ActiveEntity) { playerArr.used, 
+                player, (StateMachine) { .currState = IdleState },
+                .maxHealth = 100, .health = 100, .alive = 1, .hasScored = 0, .lastLeftmostX = 0
+            });
             troop2Count += 1;
         }
     }
@@ -259,7 +266,10 @@ void Main_Scene_Update(void)
         if (Purchase_System(&currentMoney, Scaling_Cost(troop3Count, 50)))
         {
             GameEntity player = MakeTemplate("player");
-            Arr_Insert(&playerArr, (ActiveEntity) { playerArr.used, player, (StateMachine) { .currState = IdleState } });
+            Arr_Insert(&playerArr, (ActiveEntity) { playerArr.used, 
+                player, (StateMachine) { .currState = IdleState },
+                .maxHealth = 100, .health = 100, .alive = 1, .hasScored = 0, .lastLeftmostX = 0
+            });
             troop3Count += 1;
         }
     }

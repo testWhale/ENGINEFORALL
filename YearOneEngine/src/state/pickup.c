@@ -83,7 +83,8 @@ void PickedUp_Update(GameEntity* entity, StateMachine* SM, float dt) {
 	}
 }
 void PickedUp_Exit(GameEntity* entity, StateMachine* SM, float dt) {
-	//printf("Player left IDLE state\n"); 
+	//printf("Player left IDLE state\n");
+	B_Arr_Refresh(&(entity->bullets.bulletArr), entity);
 	entity->isSel = 0;
 	entity->sound.soundPlace = CP_Sound_Load("./Assets/soundeffect/meow.wav");
 	if (entity->sound.soundPlace == NULL) {
@@ -114,6 +115,7 @@ void Sel_Update(GameEntity* entity, StateMachine* SM, float dt) {
 		FSM_SetState(SM, IdleState, entity, dt);
 		return;
 	}
+	Shoot(entity, SM, dt);
 }
 
 void Sel_Exit(GameEntity* entity, StateMachine* SM, float dt) {

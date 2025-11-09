@@ -12,6 +12,10 @@ void One_Click(float* currentMoney)
 {
 	*currentMoney += clickPower;
 }
+void Reward_Click(float* currentMoney) {
+	int rndm = rand() % 10;
+	*currentMoney += rndm;
+}
 
 void Click_Upgrade() {
 	clickPower += 1;
