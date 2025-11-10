@@ -23,7 +23,7 @@ typedef struct BulletArr {
 	size_t maxLength;
 }BulletArr;
 
-Bullet BulletTemplate(char* name);
+Bullet Bullet_Template(char* name);
 
 BulletArr* B_Arr_Init(size_t maxLength, BulletArr* Array);
 

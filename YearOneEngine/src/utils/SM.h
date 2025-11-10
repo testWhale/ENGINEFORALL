@@ -40,9 +40,9 @@ typedef void (*StateFunction)(float deltaTime);
 
 //eg: Idle State
 typedef struct {
-	void (*init)(GameEntity* data,  StateMachine* SM, float dt); //replace with T
-	void (*update)(GameEntity* data,  StateMachine* SM, float dt);
-	void (*exit)(GameEntity* data,  StateMachine* SM, float dt);
+	void (*Init)(GameEntity* data,  StateMachine* sm, float dt); //replace with T
+	void (*Update)(GameEntity* data,  StateMachine* sm, float dt);
+	void (*Exit)(GameEntity* data,  StateMachine* sm, float dt);
 } States;
 
 struct StateMachine {

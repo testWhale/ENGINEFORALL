@@ -31,7 +31,7 @@ void Main_Menu_Init(void)
         0 * unit,
         "Assets/Buttons/MainMenu/PlayNormal.png",
         "Assets/Buttons/MainMenu/PlayHighlight.png",
-        "Assets/Buttons/MainMenu/PlayClicked.png");
+        "Assets/Buttons/MainMenu/PlayClicked.png", 1);
 
     Button_Load(&CreditsButton, &defaultSound,
         96 * unit, 92 * unit,
@@ -39,7 +39,7 @@ void Main_Menu_Init(void)
         0 * unit,
         "Assets/Buttons/MainMenu/CreditsNormal.png",
         "Assets/Buttons/MainMenu/CreditsHighlight.png",
-        "Assets/Buttons/MainMenu/CreditsClicked.png");
+        "Assets/Buttons/MainMenu/CreditsClicked.png", 1);
 
     Button_Load(&QuitButton, &defaultSound,
         156 * unit, 92 * unit,
@@ -47,7 +47,7 @@ void Main_Menu_Init(void)
         0 * unit,
         "Assets/Buttons/MainMenu/QuitNormal.png",
         "Assets/Buttons/MainMenu/QuitHighlight.png",
-        "Assets/Buttons/MainMenu/QuitClicked.png");
+        "Assets/Buttons/MainMenu/QuitClicked.png", 1);
 }
 
 void Main_Menu_Update(void)

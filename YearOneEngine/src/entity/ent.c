@@ -18,7 +18,7 @@ ButtonInfo NewWaveButton;
 ButtonSound defaultSound;
 
 /*-------------Template Value--------------*/
-GameEntity MakeTemplate(const char* name) {
+GameEntity Make_Template(const char* name) {
 	GameEntity e;
 	if (name == "player")
 	{
@@ -30,7 +30,7 @@ GameEntity MakeTemplate(const char* name) {
 
 	if (name == "poison")
 	{
-		Bullet temp = BulletTemplate("poison");
+		Bullet temp = Bullet_Template("poison");
 		e = (GameEntity){
 		.centerPos = {400, 150}, .rotation = 0, .isPlayer = 0, .forwardVector = {0, 0}, .color = {255,0,255,255},
 		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "poison" , .bullets = {0} };
@@ -40,7 +40,7 @@ GameEntity MakeTemplate(const char* name) {
 
 	if (name == "stun")
 	{
-		Bullet temp = BulletTemplate("stun");
+		Bullet temp = Bullet_Template("stun");
 		e = (GameEntity){
 		.centerPos = {500, 100}, .rotation = 0, .isPlayer = 0, .forwardVector = {0, 0}, .color = {255,0,0,255},
 		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "fire" , .bullets = {0} };
@@ -67,10 +67,10 @@ GameEntity MakeTemplate(const char* name) {
 }
 
 /*LOADS IN PLAYER & ENEMY ARRAY */
-void initPlayerDemo() {
+void Init_PlayerDemo() {
 
-	GameEntity player = MakeTemplate("player");
-	GameEntity enemy = MakeTemplate("enemy");
+	GameEntity player = Make_Template("player");
+	GameEntity enemy = Make_Template("enemy");
 
 	/*-------------Template Value--------------*/
 	Arr_Init(2, &playerArr);
@@ -108,15 +108,15 @@ void initPlayerDemo() {
 		ae.lastLeftmostX = 0.0f;
 
 		Arr_Insert(&enemyArr, ae);
-		startWave(&enemyArr.ActiveEntityArr[i].unit, 0);
+		Start_Wave(&enemyArr.ActiveEntityArr[i].unit, 0);
 		/*enemyArr.ActiveEntityArr[i].unit.centerPos.x += 200.0f;*/
 	}
 	//ContArr_Init(playerArr.used, &containersArr);
-	//readFile("Assets/containers");
+	//Read_File("Assets/containers");
 }
 
 void Init_NewWave(int currWave) {
-	GameEntity enemy = MakeTemplate("enemy");
+	GameEntity enemy = Make_Template("enemy");
 	/* FOR ENEMY UNITS */
 	waveFlag = 1;
 	int spawn = currWave + 5;
@@ -132,7 +132,7 @@ void Init_NewWave(int currWave) {
 		ae.lastLeftmostX = 0.0f;
 
 		Arr_Insert(&enemyArr, ae);
-		startWave(&enemyArr.ActiveEntityArr[i].unit, (int)2);
+		Start_Wave(&enemyArr.ActiveEntityArr[i].unit, (int)2);
 
 		/*enemyArr.ActiveEntityArr[i].unit.centerPos.x += 200.0f;*/
 	}
@@ -149,21 +149,22 @@ void Draw_TempText(float dt) {
 			0 * unit,
 			"Assets/Buttons/Suprise/JackNormal.png",
 			"Assets/Buttons/Suprise/JackHighlight.png",
-			"Assets/Buttons/Suprise/JackClicked.png");
+			"Assets/Buttons/Suprise/JackClicked.png", 1);
 		Button_Behavior(&NewWaveButton);
 		if (NewWaveButton.isClicked)
 		{
 			Reward_Click(&currentMoney);
 		}
 
-		if (waveState > 4) {
+		if (waveState > 4 && (NewWaveButton.alive==1)) {
 			waveFlag = 0; waveState = 0;
-			Button_Free(&NewWaveButton);
+			NewWaveButton.alive = 0;
+			
 		}
 	}
 }
 
-void PrintBulletInfo(GameEntity* entity) {
+void Print_BulletInfo(GameEntity* entity) {
 	for (size_t i = 0; i < playerArr.used; ++i) {
 
 		for (size_t i = 0; i < entity->bullets.used; i++) {
@@ -173,7 +174,7 @@ void PrintBulletInfo(GameEntity* entity) {
 	}
 }
 
-void DrawBullets() {
+void Draw_Bullets() {
 	for (size_t i = 0; i < playerArr.used; ++i) {
 		GameEntity* p = &playerArr.ActiveEntityArr[i].unit;
 		for (int j = 0; j < p->bullets.used; j++)
@@ -189,7 +190,7 @@ void DrawBullets() {
 	}
 }
 
-void DrawEntities() {
+void Draw_Entities() {
 	float dt = CP_System_GetDt();
 	
 
@@ -222,7 +223,7 @@ void DrawEntities() {
 		CP_Graphics_DrawCircle(p->centerPos.x, p->centerPos.y, p->diameter);
 
 	}
-	DrawBullets();
+	Draw_Bullets();
 	if (enemyArr.used <= 0) {
 
 		Init_NewWave(wave++);
@@ -231,7 +232,7 @@ void DrawEntities() {
 	for (size_t i = 0; i < enemyArr.used; ++i) {
 		ActiveEntity* ent = &enemyArr.ActiveEntityArr[i];
 
-		moveWave(&ent->unit, dt);
+		Move_Wave(&ent->unit, dt);
 		FSM_Update(&ent->fsm, &ent->unit, dt);
 		if (enemyArr.ActiveEntityArr[i].health <= 0.f) {
 			Arr_Del(&enemyArr, enemyArr.ActiveEntityArr[i].id);

@@ -16,7 +16,7 @@
 //
 //ARR_(UI)
 
-Bullet BulletTemplate(const char* name) {
+Bullet Bullet_Template(const char* name) {
     Bullet bullet = { 0 };
     int dt = CP_System_GetDt();
     if (strcmp(name, "poison") == 0) {

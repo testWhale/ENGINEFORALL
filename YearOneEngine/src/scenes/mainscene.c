@@ -55,7 +55,7 @@ void Main_Scene_Init(void)
         40 * unit,
         "Assets/Buttons/Clicker/ClickerNormal.png",
         "Assets/Buttons/Clicker/ClickerHighlight.png",
-        "Assets/Buttons/Clicker/ClickerClicked2.png");
+        "Assets/Buttons/Clicker/ClickerClicked2.png", 1);
 
     Button_Load(&PauseButton, &defaultSound,
         182 * unit, 10 * unit,
@@ -63,7 +63,7 @@ void Main_Scene_Init(void)
         0 * unit,
         "Assets/Buttons/Pause/PauseNormal.png",
         "Assets/Buttons/Pause/PauseHighlight.png",
-        "Assets/Buttons/Pause/PauseClicked.png");
+        "Assets/Buttons/Pause/PauseClicked.png", 1);
 
 
     Button_Load(&ClickerUpgrade1, &defaultSound,
@@ -72,7 +72,7 @@ void Main_Scene_Init(void)
         0 * unit,
         "Assets/Buttons/ClickerUpgrade1/ClickerUpgrade1Normal.png",
         "Assets/Buttons/ClickerUpgrade1/ClickerUpgrade1Highlight.png",
-        "Assets/Buttons/ClickerUpgrade1/ClickerUpgrade1Clicked.png");
+        "Assets/Buttons/ClickerUpgrade1/ClickerUpgrade1Clicked.png", 1);
 
     Button_Load(&ClickerUpgrade2, &defaultSound,
         25 * unit, 80 * unit,
@@ -80,7 +80,7 @@ void Main_Scene_Init(void)
         0 * unit,
         "Assets/Buttons/ClickerUpgrade2/ClickerUpgrade2Normal.png",
         "Assets/Buttons/ClickerUpgrade2/ClickerUpgrade2Highlight.png",
-        "Assets/Buttons/ClickerUpgrade2/ClickerUpgrade2Clicked.png");
+        "Assets/Buttons/ClickerUpgrade2/ClickerUpgrade2Clicked.png", 1);
 
     Button_Load(&ClickerUpgrade3, &defaultSound,
         40 * unit, 80 * unit,
@@ -88,7 +88,7 @@ void Main_Scene_Init(void)
         0 * unit,
         "Assets/Buttons/ClickerUpgrade3/ClickerUpgrade3Normal.png",
         "Assets/Buttons/ClickerUpgrade3/ClickerUpgrade3Highlight.png",
-        "Assets/Buttons/ClickerUpgrade3/ClickerUpgrade3Clicked.png");
+        "Assets/Buttons/ClickerUpgrade3/ClickerUpgrade3Clicked.png", 1);
 
     Button_Load(&TroopButton1, &defaultSound,
         10 * unit, 100 * unit,
@@ -96,7 +96,7 @@ void Main_Scene_Init(void)
         0 * unit,
         "Assets/Buttons/Troops1/Troops1Normal.png",
         "Assets/Buttons/Troops1/Troops1Highlight.png",
-        "Assets/Buttons/Troops1/Troops1Clicked.png");
+        "Assets/Buttons/Troops1/Troops1Clicked.png", 1);
 
     Button_Load(&TroopButton2, &defaultSound,
         25 * unit, 100 * unit,
@@ -104,7 +104,7 @@ void Main_Scene_Init(void)
         0 * unit,
         "Assets/Buttons/Troops2/Troops2Normal.png",
         "Assets/Buttons/Troops2/Troops2Highlight.png",
-        "Assets/Buttons/Troops2/Troops2Clicked.png");
+        "Assets/Buttons/Troops2/Troops2Clicked.png", 1);
 
     Button_Load(&TroopButton3, &defaultSound,
         40 * unit, 100 * unit,
@@ -112,9 +112,9 @@ void Main_Scene_Init(void)
         0 * unit,
         "Assets/Buttons/Troops3/Troops3Normal.png",
         "Assets/Buttons/Troops3/Troops3Highlight.png",
-        "Assets/Buttons/Troops3/Troops3Clicked.png");
+        "Assets/Buttons/Troops3/Troops3Clicked.png", 1);
     Map_Init((CP_Vector) { 66 * unit, 24 * unit }, 108 * unit, 72 * unit);
-    initPlayerDemo();
+    Init_PlayerDemo();
 
     /* HEALTH FUNCTIONS */
     Hearts_Init(3);
@@ -210,7 +210,7 @@ void Main_Scene_Update(void)
 
     Map_Update(); /*Tile Map*/
 
-    DrawEntities(); /*Draw Players & Enemies*/
+    Draw_Entities(); /*Draw Players & Enemies*/
 
     Draw_TempText(dt); /* Flag check that displays a temporary msg/ reward */
 
@@ -239,7 +239,7 @@ void Main_Scene_Update(void)
     {
         if (Purchase_System(&currentMoney, Scaling_Cost(troop1Count, 50)))
         {
-            GameEntity player = MakeTemplate("poison");
+            GameEntity player = Make_Template("poison");
             player.centerPos.x += playerArr.used * 50;
            
             
@@ -256,8 +256,8 @@ void Main_Scene_Update(void)
     {
         if (Purchase_System(&currentMoney, Scaling_Cost(troop2Count, 50)))
         {
-            GameEntity player = MakeTemplate("player");
-            player.centerPos.x += playerArr.used * 50;
+            GameEntity player = Make_Template("player");
+            player.centerPos.x += playerArr.used * 60;
             Arr_Insert(&playerArr, (ActiveEntity) { playerArr.used, 
                 player, (StateMachine) { .currState = IdleState },
                 .maxHealth = 100, .health = 100, .alive = 1, .hasScored = 0, .lastLeftmostX = 0
@@ -270,8 +270,8 @@ void Main_Scene_Update(void)
     {
         if (Purchase_System(&currentMoney, Scaling_Cost(troop3Count, 50)))
         {
-            GameEntity player = MakeTemplate("player");
-            player.centerPos.x += playerArr.used * 50;
+            GameEntity player = Make_Template("player");
+            player.centerPos.x += playerArr.used * 70;
 
             Arr_Insert(&playerArr, (ActiveEntity) { playerArr.used, 
                 player, (StateMachine) { .currState = IdleState },

@@ -3,7 +3,7 @@
 #include "readTxt.h"
 #define _countof(arr) (sizeof(arr) / sizeof((arr)[0]))
 
-void readFile(char* filePath) {
+void Read_File(char* filePath) {
     FILE* f = fopen("./Assets/containers.txt", "r");
     Container c; 
     while (fscanf_s(f, "%d %100s { %f,%f } %d %d %100s %f %f %d",

@@ -47,9 +47,9 @@ void Enemy_PickedUpUpdate(GameEntity* entity, StateMachine* sm, float dt) {
 	/*//printf("UPDATING\n");*/
 	entity->stateTimer += dt;
 	entity->centerPos = (CP_Vector){ CP_Input_GetMouseX(), CP_Input_GetMouseY() };
-	hoverTileAt(entity, (CP_Vector) { CP_Input_GetMouseX(), CP_Input_GetMouseY() });
+	Hover_TileAt(entity, (CP_Vector) { CP_Input_GetMouseX(), CP_Input_GetMouseY() });
 	if (IsCircleClicked(entity->centerPos.x, entity->centerPos.y, entity->diameter, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
-		setOnTile(entity, (CP_Vector) { CP_Input_GetMouseX(), CP_Input_GetMouseY() });
+		Set_OnTile(entity, (CP_Vector) { CP_Input_GetMouseX(), CP_Input_GetMouseY() });
 		FSM_SetState(sm, EnemyIdleState, entity, dt);
 		return;
 	}
@@ -61,18 +61,18 @@ void Enemy_PickedUpExit(GameEntity* entity, StateMachine* sm, float dt) {
 	if (entity->sound.soundPlace == NULL) {
 		printf("HELP");
 	}
-	hoverTileExit();
+	Hover_Tile_Exit();
 }
 
 /*---------------------------------SELECT FUNCTION-----------------------------*/
 void Enemy_SelInit(GameEntity* entity, StateMachine* sm, float dt) {
-	hoverTileExit();
-	//SelAfterPlaced(entity, entity->centerPos); //Select Function
+	Hover_Tile_Exit();
+	//Sel_AfterPlaced(entity, entity->centerPos); //Select Function
 
 	entity->stateTimer = 0.0f;
 	CP_Sound_Play(entity->sound.soundPlace);
 
-	if (checkForSel()) { //check if other unit has been selected. Before Setting New isSel
+	if (Check_ForSel()) { //check if other unit has been selected. Before Setting New isSel
 		deselectEnt();
 	};
 	entity->isSel = 1;
@@ -80,7 +80,7 @@ void Enemy_SelInit(GameEntity* entity, StateMachine* sm, float dt) {
 }
 void Enemy_SelUpdate(GameEntity* entity, StateMachine* sm, float dt) {
 	entity->stateTimer += dt;
-	hoverTileAt(entity, (CP_Vector) { entity->centerPos.x, entity->centerPos.y });
+	Hover_TileAt(entity, (CP_Vector) { entity->centerPos.x, entity->centerPos.y });
 	//Container_Draw( getContainer(entity->label, &containersArr) );
 	if (0 == entity->isSel || IsCircleClicked(entity->centerPos.x, entity->centerPos.y, entity->diameter, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
 		FSM_SetState(sm, EnemyIdleState, entity, dt);
@@ -91,8 +91,8 @@ void Enemy_SelUpdate(GameEntity* entity, StateMachine* sm, float dt) {
 void Enemy_SelExit(GameEntity* entity, StateMachine* sm, float dt) {
 	printf("BYE SELECTION\n");
 	entity->isSel = 0;
-	checkForSel();
-	hoverTileExit();
+	Check_ForSel();
+	Hover_Tile_Exit();
 }
 
 /*---------------------------------States Assigning-----------------------------*/

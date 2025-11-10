@@ -22,6 +22,7 @@ typedef struct ButtonInfo
     int isSel, isClicked, wasHovered;
     ButtonSound *soundEffect;
     int isDisplayingText;
+    int alive;
     }ButtonInfo;
 
 /// <summary>
@@ -37,14 +38,17 @@ typedef struct ButtonInfo
 /// <param name="buttonNormalPath">Insert the pathname for the button's normal frame as a string here</param>
 /// <param name="buttonFeedbackPath">Insert the pathname for the button's Clicked frame as a string here</param>
 /// <param name="buttonHighlightPath">Insert the pathname for the button's Highlight frame as a string here</param>
-void Button_Load(ButtonInfo* newbtn, 
-    ButtonSound* soundPreset, 
-    float posX, float posY, 
-    float width, float height, 
-    float diameter, 
-    const char* buttonNormalPath, 
-    const char* buttonFeedbackPath, 
-    const char* buttonHighlightPath); 	
+void Button_Load(ButtonInfo* newbtn,
+    ButtonSound* soundPreset,
+    float posX, float posY,
+    float width, float height,
+    float diameter,
+    const char* buttonNormalPath,
+    const char* buttonFeedbackPath,
+    const char* buttonHighlightPath,
+
+    /*EXTRA */
+    int alive ); 	
 void Button_Free(ButtonInfo* newbtn);
 
 void Button_Sound_Load(ButtonSound* soundPreset, const char* soundClickPath, const char* soundHoverPath, const char* soundReleasePath);

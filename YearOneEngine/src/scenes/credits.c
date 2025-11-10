@@ -30,7 +30,7 @@ void Credits_Init(void)
         0 * unit,
         "Assets/Buttons/Back/BackNormal.png",
         "Assets/Buttons/Back/BackHighlighted.png",
-        "Assets/Buttons/Back/BackClicked.png");
+        "Assets/Buttons/Back/BackClicked.png", 1);
 }
 
 void Credits_Update(void)

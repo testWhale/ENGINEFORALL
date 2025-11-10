@@ -5,14 +5,14 @@
 
 void Init_NewWave(int num);
 
-GameEntity MakeTemplate(const char* name);
+GameEntity Make_Template(const char* name);
 
-void initPlayerDemo();
+void Init_PlayerDemo();
 
 void Draw_TempText(float dt);
 
-void PrintBulletInfo(GameEntity* entity);
+void Print_BulletInfo(GameEntity* entity);
 
-void DrawEntities();
+void Draw_Entities();
 
 #endif

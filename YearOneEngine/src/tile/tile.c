@@ -56,7 +56,7 @@ void Map_Init(CP_Vector startPos, float width, float height) {
 
 
 /*---------------------------------Check TILE FUNCTIONS-----------------------------*/
-Tile* setOnTile(GameEntity* Entity, CP_Vector mouse) {
+Tile* Set_OnTile(GameEntity* Entity, CP_Vector mouse) {
 	float y = mouse.y - g_TileMap[0][0].startPos.y;
 	float x = mouse.x - g_TileMap[0][0].startPos.x;
 	if (y < 0 || x < 0) { return; }
@@ -96,7 +96,7 @@ Tile* setOnTile(GameEntity* Entity, CP_Vector mouse) {
 }
 
 /*---------------------------------HOVER FUNCTIONS-----------------------------*/
-Tile* hoverTileAt(GameEntity* Entity, CP_Vector mouse) {
+Tile* Hover_TileAt(GameEntity* Entity, CP_Vector mouse) {
 	//reset all tileMaps to 0 first
 	for (int i = 0; i < TILE_ROWS; i++) {
 		for (int j = 0; j < TILE_COLUMNS; j++) {
@@ -119,7 +119,7 @@ Tile* hoverTileAt(GameEntity* Entity, CP_Vector mouse) {
 
 	return c_tile;
 }
-Tile* hoverTileExit() {
+Tile* Hover_Tile_Exit() {
 	for (int i = 0; i < TILE_ROWS; i++) {
 		for (int j = 0; j < TILE_COLUMNS; j++) {
 			g_TileMap[i][j].currHovered = 0;
@@ -127,7 +127,7 @@ Tile* hoverTileExit() {
 		}
 	}
 }
-Tile* SelAfterPlaced(GameEntity* Entity, CP_Vector mouse) {
+Tile* Sel_AfterPlaced(GameEntity* Entity, CP_Vector mouse) {
 	int row = mouse.y / g_TileMap[0][0].dim.y;
 	int col = mouse.x / g_TileMap[0][0].dim.x;
 	Tile* c_tile = &g_TileMap[row][col];

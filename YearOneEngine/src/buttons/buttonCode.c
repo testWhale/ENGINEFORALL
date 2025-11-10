@@ -34,7 +34,8 @@ void Button_Load(ButtonInfo* newBtn,
 	float diameter,
 	const char* buttonNormalPath, 
 	const char* buttonHighlightPath,
-	const char* buttonFeedbackPath
+	const char* buttonFeedbackPath,
+	int alive
 	)
 	{	
 	newBtn -> buttonPos = CP_Vector_Set(posX, posY);
@@ -45,6 +46,7 @@ void Button_Load(ButtonInfo* newBtn,
 	newBtn -> buttonFeedback = CP_Image_Load(buttonFeedbackPath);
 	newBtn -> buttonHighlight = CP_Image_Load(buttonHighlightPath);
 	newBtn->soundEffect = soundPreset;
+	newBtn->alive = alive;
 	}
 
 void Button_Free(ButtonInfo* newBtn)

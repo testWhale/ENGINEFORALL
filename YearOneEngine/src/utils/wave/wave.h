@@ -1,4 +1,4 @@
 #include "../arr.h"
 
-GameEntity* startWave(GameEntity* entity, float dt);
-GameEntity* moveWave(GameEntity* entity, float dt);
+GameEntity* Start_Wave(GameEntity* entity, float dt);
+GameEntity* Move_Wave(GameEntity* entity, float dt);

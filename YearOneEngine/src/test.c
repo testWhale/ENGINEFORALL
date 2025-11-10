@@ -205,14 +205,14 @@
 //        Arr_Insert(&enemyArr, ae);
 //        //enemyArr.ActiveEntityArr[i].unit.id = i;
 //
-//        startWave(&enemyArr.ActiveEntityArr[i].unit, (int)2);
+//        Start_Wave(&enemyArr.ActiveEntityArr[i].unit, (int)2);
 //
 //
 //        enemyArr.ActiveEntityArr[i].unit.centerPos.x += 200.0f;
 //    }
 //
 //    ContArr_Init(playerArr.used, &containersArr);
-//    readFile("Assets/containers");
+//    Read_File("Assets/containers");
 //}
 //
 ///* -------------------------------------------------------------------------- */
@@ -337,7 +337,7 @@
 //    for (size_t i = 0; i < enemyArr.used; ++i) {
 //        ActiveEntity* ent = &enemyArr.ActiveEntityArr[i];
 //        FSM_Update(&ent->fsm, &ent->unit, dt);
-//        moveWave(&ent->unit, dt);
+//        Move_Wave(&ent->unit, dt);
 //
 //        GameEntity* e = &ent->unit;
 //        if (e->isSel) { e->color.red = 255; e->color.green = 255; e->color.blue = 255; e->color.opacity = 255; }

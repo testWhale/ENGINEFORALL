@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-GameEntity* startWave(GameEntity* entity, float dt) {
+GameEntity* Start_Wave(GameEntity* entity, float dt) {
 	int rndm = rand() % TILE_ROWS;
 	int tes=rndm;
 	if (tes == rndm) { rndm = rand() % TILE_ROWS;  }
@@ -15,7 +15,7 @@ GameEntity* startWave(GameEntity* entity, float dt) {
 	entity->centerPos.x += 2000;
 
 }
-GameEntity* moveWave(GameEntity* entity, float dt) {
+GameEntity* Move_Wave(GameEntity* entity, float dt) {
 	/*srand(time(0));
 	int rndm = rand() % ((TILE_ROWS - 1) - 0 + 1) + 0;
 	printf("RNDM: %d\n", rndm);*/
