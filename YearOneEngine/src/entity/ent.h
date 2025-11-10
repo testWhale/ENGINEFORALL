@@ -9,6 +9,8 @@ GameEntity Make_Template(const char* name);
 
 void Init_PlayerDemo();
 
+void Load_TempText();
+
 void Draw_TempText(float dt);
 
 void Print_BulletInfo(GameEntity* entity);

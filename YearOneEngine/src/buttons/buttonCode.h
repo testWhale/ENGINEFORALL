@@ -50,7 +50,7 @@ void Button_Load(ButtonInfo* newbtn,
     const char* buttonHighlightPath,
 
     /*EXTRA */
-    int alive ); 	
+    int alive );
 void Button_Free(ButtonInfo* newbtn);
 
 void Button_Sound_Load(ButtonSound* soundPreset, const char* soundClickPath, const char* soundHoverPath, const char* soundReleasePath);

@@ -138,18 +138,22 @@ void Init_NewWave(int currWave) {
 	}
 }
 
+void Load_TempText() {
+	Button_Load(&NewWaveButton, &defaultSound,
+		96 * unit, 92 * unit,
+		20 * unit, 20 * unit,
+		0 * unit,
+		"Assets/Buttons/Suprise/JackNormal.png",
+		"Assets/Buttons/Suprise/JackHighlight.png",
+		"Assets/Buttons/Suprise/JackClicked.png", 1);
+}
+
 void Draw_TempText(float dt) {
 	if (waveFlag) {
 		waveState += (dt * 2);
 		printf("DT: %f\n", waveState);
 		CP_Graphics_DrawRect(CP_Input_GetMouseX(), CP_Input_GetMouseY(), 50, 50);
-		Button_Load(&NewWaveButton, &defaultSound,
-			96 * unit, 92 * unit,
-			20 * unit, 20 * unit,
-			0 * unit,
-			"Assets/Buttons/Suprise/JackNormal.png",
-			"Assets/Buttons/Suprise/JackHighlight.png",
-			"Assets/Buttons/Suprise/JackClicked.png", 1);
+		
 		Button_Behavior(&NewWaveButton);
 		if (NewWaveButton.isClicked)
 		{
