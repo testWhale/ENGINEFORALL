@@ -145,7 +145,7 @@ void Load_TempText() {
 		0 * unit,
 		"Assets/Buttons/Suprise/JackNormal.png",
 		"Assets/Buttons/Suprise/JackHighlight.png",
-		"Assets/Buttons/Suprise/JackClicked.png", 1);
+		"Assets/Buttons/Suprise/JackClicked.png", 0);
 }
 
 void Draw_TempText(float dt) {
@@ -153,7 +153,7 @@ void Draw_TempText(float dt) {
 		waveState += (dt * 2);
 		printf("DT: %f\n", waveState);
 		CP_Graphics_DrawRect(CP_Input_GetMouseX(), CP_Input_GetMouseY(), 50, 50);
-		
+		NewWaveButton.alive = 1;
 		Button_Behavior(&NewWaveButton);
 		if (NewWaveButton.isClicked)
 		{
@@ -166,6 +166,9 @@ void Draw_TempText(float dt) {
 			
 		}
 	}
+}
+void Del_TempText() {
+	Button_Free(&NewWaveButton);
 }
 
 void Print_BulletInfo(GameEntity* entity) {
@@ -187,6 +190,8 @@ void Draw_Bullets() {
 
 			if (pew->opacity == 255)
 			{
+				if (pew->type == "poison") { pew->color.red = 255; pew->color.green = 0; pew->color.blue = 255; pew->color.opacity = 255; }
+				printf("DONE\n");
 				CP_Settings_Fill(CP_Color_Create(pew->color.red, pew->color.green, pew->color.blue, pew->opacity));
 				CP_Graphics_DrawCircle(pew->centerPos.x, pew->centerPos.y, pew->diameter);
 			}
@@ -227,7 +232,7 @@ void Draw_Entities() {
 		CP_Graphics_DrawCircle(p->centerPos.x, p->centerPos.y, p->diameter);
 
 	}
-	Draw_Bullets();
+
 	if (enemyArr.used <= 0) {
 
 		Init_NewWave(wave++);
@@ -252,6 +257,8 @@ void Draw_Entities() {
 
 		Health_DrawEnemyBar(ent, 80.0f, 10.0f, 20.0f);
 	}
-	
+
+	Draw_Bullets();
+
 	
 }

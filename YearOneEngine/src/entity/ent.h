@@ -13,6 +13,8 @@ void Load_TempText();
 
 void Draw_TempText(float dt);
 
+void Del_TempText();
+
 void Print_BulletInfo(GameEntity* entity);
 
 void Draw_Entities();
