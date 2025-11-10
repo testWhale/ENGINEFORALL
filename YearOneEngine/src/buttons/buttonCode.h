@@ -23,6 +23,7 @@ typedef struct ButtonInfo
     ButtonSound *soundEffect;
     int isDisplayingText;
     int alive;
+    int transparency_Value;
     }ButtonInfo;
 
 /// <summary>

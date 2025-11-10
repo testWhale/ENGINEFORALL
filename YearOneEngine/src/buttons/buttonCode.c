@@ -32,7 +32,7 @@ void Button_Load(ButtonInfo* newBtn,
 	float posX, float posY,
 	float width, float height,
 	float diameter,
-	const char* buttonNormalPath, 
+	const char* buttonNormalPath,
 	const char* buttonHighlightPath,
 	const char* buttonFeedbackPath,
 	int alive
@@ -97,10 +97,14 @@ This function pulls your data and draws the normal frame where nothing is happen
 In order to make it function please insert a valid image or else it will turn transparent
 */
 void Draw_Button_Normal(ButtonInfo* btnName) {
+	if (btnName->alive) {
+		btnName->transparency_Value = 255;
+	}
+	else btnName->transparency_Value = 0;
 	CP_Settings_ImageMode(CP_POSITION_CENTER);
 	CP_Image_Draw(	btnName->buttonNormal, 
 					btnName->buttonPos.x, btnName->buttonPos.y, 
-					btnName->buttonWidth, btnName->buttonHeight, 255);
+					btnName->buttonWidth, btnName->buttonHeight, btnName->transparency_Value);
 }
 
 /// <summary>
@@ -108,10 +112,14 @@ void Draw_Button_Normal(ButtonInfo* btnName) {
 /// </summary>
 /// <param name="btnName">Just insert your specific button name</param>
 void Draw_Button_Feedback(ButtonInfo* btnName) {
+	if (btnName->alive) {
+		btnName->transparency_Value = 255;
+	}
+	else btnName->transparency_Value = 0;
 	CP_Settings_ImageMode(CP_POSITION_CENTER);
 	CP_Image_Draw(	btnName->buttonFeedback, 
 					btnName->buttonPos.x, btnName->buttonPos.y, 
-					btnName->buttonWidth, btnName->buttonHeight, 255);
+					btnName->buttonWidth, btnName->buttonHeight, btnName->transparency_Value);
 }
 
 /*
@@ -119,8 +127,12 @@ This function pulls your data and draws the Highlight frame when you hover over 
 In order to make it function please insert a valid image or else it will turn transparent
 */
 void Draw_Button_Highlight(ButtonInfo* btnname) {
+	if (btnname->alive) {
+		btnname->transparency_Value = 255;
+	}
+	else btnname->transparency_Value = 0;
 	CP_Settings_ImageMode(CP_POSITION_CENTER);
-	CP_Image_Draw(btnname->buttonHighlight, btnname->buttonPos.x, btnname->buttonPos.y, btnname->buttonWidth, btnname->buttonHeight, 255);
+	CP_Image_Draw(btnname->buttonHighlight, btnname->buttonPos.x, btnname->buttonPos.y, btnname->buttonWidth, btnname->buttonHeight, btnname->transparency_Value);
 }
 //int isCircleButtonHovered(buttonInfo* btnname, float mousex, float mousey) {
 //	return (sqrt((mousex - btnname->buttonPos.x) * (mousex - btnname->buttonPos.x) + (mousey - btnname->buttonPos.y) * (mousey - btnname->buttonPos.y)) <= btnname->buttonDiameter / 2);
