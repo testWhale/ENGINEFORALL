@@ -22,6 +22,7 @@ typedef struct ButtonInfo
     int isSel, isClicked, wasHovered;
     ButtonSound *soundEffect;
     int isDisplayingText;
+    //EXTRAS
     int alive;
     int transparency_Value;
     }ButtonInfo;
