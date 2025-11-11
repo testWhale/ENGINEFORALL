@@ -92,9 +92,28 @@ void Shoot_Update(GameEntity* turret, StateMachine* SM, float dt) {
 
 	if (turret->stateTimer >= shootSpan) {
 		turret->stateTimer = 0;
-		Bullet b = { .id = 0, .centerPos = turret->centerPos, .velocity = {1,0}, .color = {0,255,0,255}, .diameter = 50 };
+		Bullet b;
+		if(turret->label == "poison"){
+			printf("FYUCKECECWEC\n");
+			b = Bullet_Template("poison");
+		
+
+		}
+		if (turret->label == "stun") {
+			b = Bullet_Template("stun");
+		
+
+		}
+		if (turret->label == "fire") {
+			b = Bullet_Template("normal");
+			
+
+		}
+		b.centerPos = turret->centerPos;
 		B_Arr_Insert(&(turret->bullets), b);
+		//Bullet b = { .id = 0, .centerPos = turret->centerPos, .velocity = {1,0}, .color = {0,255,0,255}, .diameter = 50 };
 	}
+
 	for (int i = 0; i < turret->bullets.used; i++) 
 	{ /* Bullets that are currently being shot */
 		Bullet* bullet = &turret->bullets.bulletArr[i];

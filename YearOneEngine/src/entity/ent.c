@@ -34,6 +34,7 @@ GameEntity Make_Template(const char* name) {
 		e = (GameEntity){
 		.centerPos = {400, 150}, .rotation = 0, .isPlayer = 0, .forwardVector = {0, 0}, .color = {255,0,255,255},
 		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "poison" , .bullets = {0} };
+		B_Arr_Insert(&e.bullets, temp);
 		/*B_Arr_Init(2, &e.bullets);
 		B_Arr_Insert(&e.bullets, temp);*/
 	}
@@ -190,8 +191,9 @@ void Draw_Bullets() {
 
 			if (pew->opacity == 255)
 			{
-				if (pew->type == "poison") { pew->color.red = 255; pew->color.green = 0; pew->color.blue = 255; pew->color.opacity = 255; }
-				printf("DONE\n");
+				if (pew->type == "poison") { 
+					pew->color.red = 255; pew->color.green = 0; pew->color.blue = 255; pew->color.opacity = 255; }
+				//printf("%s\n", pew->type);
 				CP_Settings_Fill(CP_Color_Create(pew->color.red, pew->color.green, pew->color.blue, pew->opacity));
 				CP_Graphics_DrawCircle(pew->centerPos.x, pew->centerPos.y, pew->diameter);
 			}

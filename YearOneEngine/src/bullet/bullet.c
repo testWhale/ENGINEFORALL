@@ -25,10 +25,10 @@ Bullet Bullet_Template(const char* name) {
             .centerPos = {100, 100},
             .velocity = {0, 0},
             .color = {255, 0, 255, 255},
-            .diameter = 100,
+            .diameter = 30,
             .opacity = 0,
             .type = "poison",
-            .bulletDmg = 10.0f,
+            .bulletDmg = 2.0f,
             .poisonDmg = 10.0f
         };
         bullet.bulletDmg += bullet.poisonDmg * dt;
@@ -39,7 +39,7 @@ Bullet Bullet_Template(const char* name) {
             .centerPos = {100, 100},
             .velocity = {0, 0},
             .color = {255, 255, 0, 255},
-            .diameter = 100,
+            .diameter = 30,
             .opacity = 0,
             .type = "stun",
             .bulletDmg = 10.0f,
@@ -52,7 +52,7 @@ Bullet Bullet_Template(const char* name) {
             .centerPos = {100, 100},
             .velocity = {0, 0},
             .color = {255, 0, 0, 255},
-            .diameter = 100,
+            .diameter = 30,
             .opacity = 0,
             .type = "normal",
             .bulletDmg = 10.0f
