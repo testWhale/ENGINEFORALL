@@ -1,35 +1,26 @@
-#ifndef HEALTH_H_INCLUDED
-#define HEALTH_H_INCLUDED
+#ifndef HEALTH_H_INCLUDED 
+#define HEALTH_H_INCLUDED 
 
-#include "cprocessing.h"
-#include "utils/arr.h"
+#define MAX_HEARTS_CAP 6 
+#define HEART_FLASH_TIME 1.5f 
 
+typedef struct {
+	int maxHearts; 
+	int currentHearts;
+	float timer; 
+	float health;
+	float maxhealth; 
+	float alpha[MAX_HEARTS_CAP];
+	float flashTimer[MAX_HEARTS_CAP];
+} HealthSystem;
 
-typedef void (*GO_SetDataFn)(float timeSec, int goals);
-typedef void (*StateFn)(void);
-void Health_BindGameOver(GO_SetDataFn setData, StateFn init, StateFn update, StateFn exit);
-
-void Hearts_Init(int max_hearts);
-void Hearts_Update(float dt);
-void Hearts_Draw(void);
-void Hearts_TakeDamage(void);
-int  Hearts_Get(void);
-
-
-void HealthAudio_Load(const char* hitSfxPath, const char* loseSfxPath);
-void HealthAudio_Free(void);
-
-
-void  HealthTimer_Reset(void);
-void  HealthTimer_Update(float dt);
-float HealthTimer_Get(void);
-#define HealthTimer_Seconds HealthTimer_Get 
-
-
-void Health_DrawEnemyBar(const ActiveEntity* e, float barW, float barH, float yOffset);
-void Health_DrawAllEnemyBars(const TestArr* A, float barW, float barH, float yOffset);
-
-
-void Health_ProcessGoalCircle(TestArr* enemies, CP_Vector goalCenter, float goalRadius);
+void HealthSystem_Init(HealthSystem* hs, int maxHearts, int maxhealth); 
+void HealthSystem_Update(HealthSystem* hs, float deltaTime);
+void HealthSystem_TakeDamage(HealthSystem* hs); 
+int HealthSystem_GetHearts(const HealthSystem* hs);
+void HealthSystem_ResetTimer(HealthSystem* hs); 
+float HealthSystem_GetTimer(const HealthSystem* hs); 
+void HealthSystem_DrawHearts(const HealthSystem* hs); 
+void HealthSystem_DrawBar(const HealthSystem* hs, float x, float y, float width, float height); 
 
 #endif 

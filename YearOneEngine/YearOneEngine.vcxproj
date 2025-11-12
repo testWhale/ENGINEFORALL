@@ -26,6 +26,7 @@
     <ClCompile Include="src\utils\arr.c" />
     <ClCompile Include="src\utils\backend\containerStates.c" />
     <ClCompile Include="src\utils\container.c" />
+    <ClCompile Include="src\utils\health\goal.c" />
     <ClCompile Include="src\utils\health\health.c" />
     <ClCompile Include="src\utils\readTxt.c" />
     <ClCompile Include="src\utils\arr\sample.c" />
@@ -42,6 +43,7 @@
     <ClCompile Include="src\utils\sound.h" />
     <ClCompile Include="src\utils\arr\State.h" />
     <ClCompile Include="src\utils\utils.c" />
+    <ClInclude Include="src\utils\health\goal.h" />
     <ClInclude Include="src\utils\UI\Pause.h" />
     <ClInclude Include="src\utils\wave\wave.h" />
   </ItemGroup>

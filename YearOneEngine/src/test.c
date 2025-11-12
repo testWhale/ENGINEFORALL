@@ -8,11 +8,12 @@
 #include "tile/tile.h"
 #include "utils/health/health.h"
 #include "utils/UI/Pause.h"
+#include "utils/health/goal.h"
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
 #include <stdio.h>
-
+#include <gameover.h>
 
 #define minWidth  0.0f
 #define maxWidth  1400.0f
@@ -20,7 +21,6 @@
 
 
 CP_Sound mySound = NULL;
-
 
 float winWidth;
 float winHeight;
@@ -45,24 +45,23 @@ typedef struct {
     funcArea  inArea;
 } Circle;
 
-static Circle circles[2];
-static float  width = maxWidth;
-static float  startPoint = 100.0f;
-static int    maxed;
-static int    minimum;
-static int    indent = 146;
-static int    size = 80;
-static int    i_g;
+static Circle  circles[2];
+static float   width = maxWidth;
+static float   startPoint = 100.0f;
+static int     maxed;
+static int     minimum;
+static int     indent = 146;
+static int     size = 80;
+static int     i_g;
 static CP_Font myFont;
 
 
-static CP_Vector g_goalCenters[TILE_ROWS];
-static float     g_goalRadius = 0.0f;
-
-static int       g_drawGoals = 1;
+static HealthSystem gHealth;
 
 
-static float     g_enemyHitCD[1024];
+static float g_enemyHitCD[1024];
+
+static int g_drawGoals = 1;
 
 
 extern int IsCircleClicked(float cx, float cy, float diameter, float mx, float my);
@@ -112,7 +111,7 @@ static void DamageEnemiesOnPlayerCollisions(int dmgPerHit, float cd, float dt)
                 {
                     e->health -= dmgPerHit;
                     if (e->health <= 0) {
-                        Arr_Del(&enemyArr, id);   
+                        Arr_Del(&enemyArr, id);
                         removed = 1;
                     }
                     else {
@@ -124,35 +123,6 @@ static void DamageEnemiesOnPlayerCollisions(int dmgPerHit, float cd, float dt)
         }
 
         if (!removed) ++i;
-    }
-}
-
-
-static void ProcessGoalHits(void)
-{
-    for (size_t i = 0; i < enemyArr.used; ) {
-        ActiveEntity* e = &enemyArr.ActiveEntityArr[i];
-        if (!e->alive || e->unit.isPlayer) { ++i; continue; }
-
-        
-        int row = 0;
-        float best = 1e9f;
-        for (int r = 0; r < TILE_ROWS; ++r) {
-            float dy = fabsf(e->unit.centerPos.y - g_goalCenters[r].y);
-            if (dy < best) { best = dy; row = r; }
-        }
-
-        float ex = e->unit.centerPos.x;
-        float ey = e->unit.centerPos.y;
-        float er = 0.5f * e->unit.diameter;
-
-        if (CirclesOverlap(ex, ey, er, g_goalCenters[row].x, g_goalCenters[row].y, g_goalRadius)) {
-            Hearts_TakeDamage();        
-            Arr_Del(&enemyArr, e->id);  
-            continue;                  
-        }
-
-        ++i;
     }
 }
 
@@ -189,7 +159,6 @@ void initPlayerDemo(void)
         playerArr.ActiveEntityArr[i].unit.id = i;
     }
 
-  
     for (int i = 0; i < 11; i++) {
         ActiveEntity ae;
         ae.id = i;
@@ -205,8 +174,6 @@ void initPlayerDemo(void)
         enemyArr.ActiveEntityArr[i].unit.id = i;
 
         startWave(&enemyArr.ActiveEntityArr[i].unit, (int)2);
-
-       
         enemyArr.ActiveEntityArr[i].unit.centerPos.x += 200.0f;
     }
 
@@ -214,9 +181,7 @@ void initPlayerDemo(void)
     readFile("Assets/containers");
 }
 
-/* -------------------------------------------------------------------------- */
-/* Lifecycle                                                                   */
-/* -------------------------------------------------------------------------- */
+
 void Test_Init(void)
 {
     srand((unsigned)time(NULL));
@@ -233,73 +198,40 @@ void Test_Init(void)
     mySound = CP_Sound_Load("Assets/sound.mp3");
 
    
-    Hearts_Init(3);
-    HealthAudio_Load("Assets/Metal Ping by timgormly Id-170957.wav",
-        "Assets/Glass Break by unfa Id-221528.wav");
-
-    extern void GameOver_SetData(float, int);
-    extern void GameOver_Init(void);
-    extern void GameOver_Update(void);
-    extern void GameOver_Exit(void);
-    Health_BindGameOver(GameOver_SetData, GameOver_Init, GameOver_Update, GameOver_Exit);
-    HealthTimer_Reset();
+    HealthSystem_Init(&gHealth, 3, 100);
+    HealthSystem_ResetTimer(&gHealth);
 
   
-    float colW, rowH;
+    GameOver_Init(&gGameOver);
 
-    /* column width */
-    if (TILE_COLUMNS > 1)
-        colW = g_TileMap[0][1].centerPos.x - g_TileMap[0][0].centerPos.x;
-    else if (g_TileMap[0][0].dim.x > 0.0f)
-        colW = g_TileMap[0][0].dim.x;
-    else
-        colW = 96.0f;
-
-    /* row height */
-    if (TILE_ROWS > 1)
-        rowH = g_TileMap[1][0].centerPos.y - g_TileMap[0][0].centerPos.y;
-    else if (g_TileMap[0][0].dim.y > 0.0f)
-        rowH = g_TileMap[0][0].dim.y;
-    else
-        rowH = colW;
-
-  
-    float cell = (colW < rowH) ? colW : rowH;
-
-    g_goalRadius = 0.45f * cell; 
-
-    
-    float leftEdgeX = g_TileMap[0][0].centerPos.x - 0.5f * colW;
-
-  
-    float goalMargin = 0.25f * cell;
-
-    
-    for (int r = 0; r < TILE_ROWS; ++r) {
-        g_goalCenters[r].x = leftEdgeX - (g_goalRadius + goalMargin);
-        g_goalCenters[r].y = g_TileMap[r][0].centerPos.y;
-    }
-
-    
-    g_drawGoals = 1;
+   
+    Goal_InitFromTileMap(0.45f, 0.25f);
 
     
     for (int k = 0; k < (int)(sizeof(g_enemyHitCD) / sizeof(g_enemyHitCD[0])); ++k)
         g_enemyHitCD[k] = 0.0f;
+
     Pause_Init();
 }
 
 void Test_Update(void)
 {
-    float dt = Pause_Dt(CP_System_GetDt()); // retrieves frame delta time and pass it to pause_dt so when game is pause loop is still maintain
+    float dt = Pause_Dt(CP_System_GetDt()); 
 
-    
     CP_Graphics_ClearBackground(CP_Color_Create(128, 128, 128, 255));
-    Map_Update();                      
+    Map_Update();
 
-    HealthTimer_Update(dt);
-    Hearts_Update(dt);
+   
+    HealthSystem_Update(&gHealth, dt);
+    if (HealthSystem_GetHearts(&gHealth) <= 0) {
+        float finalTime = HealthSystem_GetTimer(&gHealth);
+        int   goals = 0; 
 
+        GameOver_SetData(&gGameOver, finalTime, goals);  
+        CP_Engine_SetNextGameState(GameOver_State_Init, GameOver_State_Update, GameOver_State_Exit);
+        return;
+    }
+    
     if (!Pause_IsPaused() &&
         IsCircleClicked(circles[0].centerPos.x, circles[0].centerPos.y, circles[0].diameter,
             CP_Input_GetMouseX(), CP_Input_GetMouseY()))
@@ -321,6 +253,7 @@ void Test_Update(void)
         Arr_Insert(&playerArr, ae);
     }
 
+    
     for (size_t i = 0; i < playerArr.used; ++i) {
         ActiveEntity* ent = &playerArr.ActiveEntityArr[i];
         if (!Pause_IsPaused()) {
@@ -331,10 +264,25 @@ void Test_Update(void)
         if (p->isSel) { p->color.red = 0; p->color.green = 0; p->color.blue = 255; p->color.opacity = 255; }
         else { p->color.red = 255; p->color.green = 0; p->color.blue = 0;   p->color.opacity = 255; }
 
+        
         CP_Settings_Fill(CP_Color_Create(p->color.red, p->color.green, p->color.blue, p->color.opacity));
         CP_Graphics_DrawCircle(p->centerPos.x, p->centerPos.y, p->diameter);
+
+        
+        {
+            HealthSystem hsTmp = { 0 };
+            hsTmp.maxHearts = 1;              
+            hsTmp.currentHearts = 1;          
+            hsTmp.maxhealth = (float)ent->maxHealth;
+            hsTmp.health = (float)ent->health;
+            float barW = 80.0f, barH = 10.0f;
+            float barX = p->centerPos.x - barW * 0.5f;
+            float barY = p->centerPos.y - 0.5f * p->diameter - 20.0f;
+            HealthSystem_DrawBar(&hsTmp, barX, barY, barW, barH);
+        }
     }
 
+   
     for (size_t i = 0; i < enemyArr.used; ++i) {
         ActiveEntity* ent = &enemyArr.ActiveEntityArr[i];
         if (!Pause_IsPaused()) {
@@ -346,41 +294,64 @@ void Test_Update(void)
         if (e->isSel) { e->color.red = 255; e->color.green = 255; e->color.blue = 255; e->color.opacity = 255; }
         else { e->color.red = 255; e->color.green = 255; e->color.blue = 0;   e->color.opacity = 255; }
 
+        
         CP_Settings_Fill(CP_Color_Create(e->color.red, e->color.green, e->color.blue, e->color.opacity));
         CP_Graphics_DrawCircle(e->centerPos.x, e->centerPos.y, e->diameter);
-        Health_DrawEnemyBar(ent, 80.0f, 10.0f, 20.0f);
+
+        
+        {
+            HealthSystem hsTmp = { 0 };
+            hsTmp.maxHearts = 1;             
+            hsTmp.currentHearts = 1;         
+            hsTmp.maxhealth = (float)ent->maxHealth;
+            hsTmp.health = (float)ent->health;
+            float barW = 80.0f, barH = 10.0f;
+            float barX = e->centerPos.x - barW * 0.5f;
+            float barY = e->centerPos.y - 0.5f * e->diameter - 20.0f;
+            HealthSystem_DrawBar(&hsTmp, barX, barY, barW, barH);
+        }
     }
 
+    
     if (!Pause_IsPaused()) {
         DamageEnemiesOnPlayerCollisions(34, 0.30f, dt);
-        ProcessGoalHits();
+        ProcessGoalHits(&gHealth);  
     }
 
+   
     if (g_drawGoals) {
-        CP_Settings_Fill(CP_Color_Create(0, 0, 0, 0));
-        CP_Settings_Stroke(CP_Color_Create(255, 0, 0, 160));
-        CP_Settings_StrokeWeight(3.0f);
-        for (int r = 0; r < TILE_ROWS; ++r)
-            CP_Graphics_DrawCircle(g_goalCenters[r].x, g_goalCenters[r].y, g_goalRadius * 2.0f);
+        Goal_DebugDraw();
     }
 
+    
     CP_Settings_RectMode(CP_POSITION_CENTER);
     CP_Settings_Fill(CP_Color_Create(circles[0].color.red, circles[0].color.green, circles[0].color.blue, circles[0].color.opacity));
     CP_Graphics_DrawCircle(circles[0].centerPos.x, circles[0].centerPos.y, circles[0].diameter);
 
-    Hearts_Draw();
+   
+    HealthSystem_DrawHearts(&gHealth);
 
+    
     CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
     CP_Settings_TextSize(35.0f);
     CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_TOP);
-    char tbuf[48];
-    snprintf(tbuf, sizeof(tbuf), "Time: %.1fs", HealthTimer_Seconds());
-    CP_Font_DrawText(tbuf, (float)CP_System_GetWindowWidth() * 0.5f, 12.0f);
+    {
+        char tbuf[48];
+        snprintf(tbuf, sizeof(tbuf), "Time: %.1fs", HealthSystem_GetTimer(&gHealth));
+        CP_Font_DrawText(tbuf, (float)CP_System_GetWindowWidth() * 0.5f, 12.0f);
+    }
 
-    //an internal check every gameloop that checks if button pause=1
+    if (HealthSystem_GetHearts(&gHealth) <= 0) {
+        float finalTime = HealthSystem_GetTimer(&gHealth);
+        int   goals = 0; 
+
+        GameOver_SetData(&gGameOver, finalTime, goals);
+        CP_Engine_SetNextGameState(GameOver_State_Init, GameOver_State_Update, GameOver_State_Exit);
+        return; 
+    }
+
+    
     Pause_UpdateAndDraw();
-
-    // if menu was hit do this
     if (Pause_TakeMenuRequest()) {
         extern void Main_Menu_Init(void);
         extern void Main_Menu_Update(void);
@@ -390,9 +361,10 @@ void Test_Update(void)
     }
 }
 
-
 void Test_Exit(void)
 {
+    GameOver_Exit(&gGameOver);
+
     if (myFont)  CP_Font_Free(myFont);
     if (mySound) CP_Sound_Free(mySound);
 }

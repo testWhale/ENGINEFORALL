@@ -75,6 +75,12 @@
     <ClCompile Include="src\utils\UI\Pause.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Button\button.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils\health\goal.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DataTypes.h">
@@ -117,6 +123,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\utils\UI\Pause.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Button\button.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils\health\goal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
