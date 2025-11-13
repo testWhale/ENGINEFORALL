@@ -1,116 +1,131 @@
-
 #include "pause.h"
 #include "Button/button.h"
+#include "cprocessing.h"
 
-static int s_paused = 0;   // Tracks pause state: 0 = running, 1 = paused
-static int s_menuRequest = 0;  // Tracks if Menu was clicked
+static int s_paused = 0;
+static int s_menuRequest = 0;
 
-static buttonInfo s_btnPause;   // Pause button
-static buttonInfo s_btnResume;  // Resume button
-static buttonInfo s_btnMenu;    // Menu button
+static buttonInfo s_btnPause;
+static buttonInfo s_btnResume;
+static buttonInfo s_btnMenu;
 
-// Button image assets
-#define PAUSE_N   "Assets/buttons/Pause normal.png"
-#define PAUSE_H   "Assets/buttons/Pause hover.png"
-#define PAUSE_C   "Assets/buttons/Pause clicked.png"
+static float s_unit = 1.0f;
 
-#define BTN_N     "Assets/buttons/button normal.png"
-#define BTN_H     "Assets/buttons/button hover.png"
-#define BTN_C     "Assets/buttons/button clicked.png"
+#define PAUSE_N   "Assets/buttons/pause normal.png"
+#define PAUSE_H   "Assets/buttons/pause hover.png"
+#define PAUSE_C   "Assets/buttons/pause clicked.png"
 
-// Returns current pause state
-int Pause_IsPaused(void) { return s_paused; }
+#define RESUME_N  "Assets/buttons/resume normal.jpg"
+#define RESUME_H  "Assets/buttons/resume hover.jpg"
+#define RESUME_C  "Assets/buttons/resume clicked.jpg"
 
-// Sets pause state (on = 1 pauses, on = 0 resumes)
-void Pause_SetPaused(int on) { s_paused = (on != 0); }
+#define MENU_N    "Assets/buttons/menu normal.jpg"
+#define MENU_H    "Assets/buttons/menu hover.jpg"
+#define MENU_C    "Assets/buttons/menu clicked.jpg"
 
-// Returns dt or 0 if paused (freezes game updates when paused)
+int   Pause_IsPaused(void) { return s_paused; }
+void  Pause_SetPaused(int on) { s_paused = (on != 0); }
 float Pause_Dt(float dt) { return s_paused ? 0.0f : dt; }
+int   Pause_TakeMenuRequest(void) { int r = s_menuRequest; s_menuRequest = 0; return r; }
 
-// Returns menu request flag and resets it
-int Pause_TakeMenuRequest(void) { int r = s_menuRequest; s_menuRequest = 0; return r; }
-
-// Initializes pause system and loads button assets
 void Pause_Init(void)
 {
-    s_paused = 0;          // Start unpaused
-    s_menuRequest = 0;     // No menu request initially
+    s_paused = 0;
+    s_menuRequest = 0;
 
     const float W = (float)CP_System_GetWindowWidth();
     const float H = (float)CP_System_GetWindowHeight();
-    (void)H;
 
-    const float icon = 42.0f;
-    const float cx = W - (icon * 0.5f) - 10.0f;
-    const float cy = 10.0f + (icon * 0.5f);
+    s_unit = H / 100.0f;  
 
-    // Configure buttons with positions and assets
-    buttonLoad(&s_btnPause, cx, cy, icon, icon, 0.0f, PAUSE_N, PAUSE_C, PAUSE_H);
-    buttonLoad(&s_btnResume, 0.0f, 0.0f, 200.0f, 48.0f, 0.0f, BTN_N, BTN_C, BTN_H);
-    buttonLoad(&s_btnMenu, 0.0f, 0.0f, 200.0f, 48.0f, 0.0f, BTN_N, BTN_C, BTN_H);
+    const float iconSize = 6.0f * s_unit;
+    const float margin = 2.5f * s_unit;
+
+    const float pauseX = W - margin - iconSize * 0.5f;
+    const float pauseY = margin + iconSize * 0.5f;
+
+    buttonLoad(&s_btnPause,
+        pauseX, pauseY,
+        iconSize, iconSize,
+        0.0f,
+        PAUSE_N, PAUSE_C, PAUSE_H);
+
+    const float cx = 0.5f * W;
+    const float cy = 0.5f * H;
+
+    const float btnW = 45.0f * s_unit;   
+    const float btnH = 13.0f * s_unit;
+    const float gap = 8.0f * s_unit;   
+
+    const float resumeY = cy - 5.0f * s_unit;          
+    const float menuY = resumeY + btnH + gap;      
+
+    buttonLoad(&s_btnResume,
+        cx, resumeY,
+        btnW, btnH, 0.0f,
+        RESUME_N, RESUME_C, RESUME_H);
+
+    buttonLoad(&s_btnMenu,
+        cx, menuY,
+        btnW, btnH, 0.0f,
+        MENU_N, MENU_C, MENU_H);
 }
 
-// Handles pause button behavior and draws pause menu when paused
 void Pause_UpdateAndDraw(void)
 {
     const float W = (float)CP_System_GetWindowWidth();
     const float H = (float)CP_System_GetWindowHeight();
+    (void)H;
 
-    // If game is running, check pause button click
     if (!s_paused)
     {
         buttonBehavior(&s_btnPause);
         if (s_btnPause.isClicked) {
-            s_paused = 1;                // Pause game
-            s_btnPause.isClicked = 0;    // Reset click state
+            s_paused = 1;
+            s_btnPause.isClicked = 0;
         }
-        return; // Skip drawing pause menu
+        return;
     }
 
-    //overlay panel for pause menu
-    const float panelW = 720.0f;
-    const float panelH = 360.0f;
+    const float panelW = 120.0f * s_unit;
+    const float panelH = 70.0f * s_unit;
     const float cx = 0.5f * W;
     const float cy = 0.5f * H;
 
     CP_Settings_RectMode(CP_POSITION_CENTER);
-    CP_Settings_Fill(CP_Color_Create(25, 25, 25, 230)); // Dark overlay
+    CP_Settings_Fill(CP_Color_Create(25, 25, 25, 230));
     CP_Settings_Stroke(CP_Color_Create(255, 255, 255, 35));
     CP_Settings_StrokeWeight(2.0f);
     CP_Graphics_DrawRect(cx, cy, panelW, panelH);
 
-    // Draw "PAUSED" text
     CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
     CP_Settings_Fill(CP_Color_Create(240, 240, 240, 255));
-    CP_Settings_TextSize(36.0f);
-    CP_Font_DrawText("PAUSED", cx, cy - panelH * 0.5f + 70.0f);
+    CP_Settings_TextSize(30.0f);
+    CP_Font_DrawText("PAUSED", cx, cy - panelH * 0.5f + 8.0f * s_unit);
 
-    // Position Resume and Menu buttons
-    const float gap = 72.0f;
-    s_btnResume.buttonWidth = 280.0f;
-    s_btnResume.buttonHeight = 60.0f;
-    s_btnMenu.buttonWidth = 280.0f;
-    s_btnMenu.buttonHeight = 60.0f;
-
-    s_btnResume.buttonPos.x = cx;
-    s_btnResume.buttonPos.y = cy - 10.0f;
-    s_btnMenu.buttonPos.x = cx;
-    s_btnMenu.buttonPos.y = s_btnResume.buttonPos.y + s_btnResume.buttonHeight + gap;
-
-    // Handle button clicks
+    // ---------- buttons ----------
     buttonBehavior(&s_btnResume);
     buttonBehavior(&s_btnMenu);
 
-    // Draw button labels
-    CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
-    CP_Settings_Fill(CP_Color_Create(255, 255, 255, 255));
-    CP_Settings_TextSize(28.0f);
-    CP_Font_DrawText("Resume", s_btnResume.buttonPos.x, s_btnResume.buttonPos.y);
-    CP_Font_DrawText("Menu", s_btnMenu.buttonPos.x, s_btnMenu.buttonPos.y);
+    CP_Settings_ImageMode(CP_POSITION_CENTER);
 
-    // Resume or menu request actions
-    if (s_btnResume.isClicked) { s_paused = 0; s_btnResume.isClicked = 0; }
-    if (s_btnMenu.isClicked) { s_menuRequest = 1; s_btnMenu.isClicked = 0; }
+    CP_Image_Draw(s_btnResume.buttonNormal,
+        s_btnResume.buttonPos.x, s_btnResume.buttonPos.y,
+        s_btnResume.buttonWidth, s_btnResume.buttonHeight, 255);
+
+    CP_Image_Draw(s_btnMenu.buttonNormal,
+        s_btnMenu.buttonPos.x, s_btnMenu.buttonPos.y,
+        s_btnMenu.buttonWidth, s_btnMenu.buttonHeight, 255);
+
+    if (s_btnResume.isClicked) {
+        s_paused = 0;
+        s_btnResume.isClicked = 0;
+    }
+
+    if (s_btnMenu.isClicked) {
+        s_menuRequest = 1;
+        s_btnMenu.isClicked = 0;
+    }
 
     CP_Settings_RectMode(CP_POSITION_CENTER);
 }

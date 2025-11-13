@@ -5,7 +5,7 @@
 #include "tile/tile.h"  
 #include "health.h"      
 
-#define GOAL_COUNT 5
+#define GOAL_COUNT 6
 
 void Goal_InitFromTileMap(float radiusScale, float marginScale);
 
