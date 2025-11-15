@@ -1,6 +1,6 @@
 #include <math.h>
 #include <stdio.h>
-#include "utils/arr.h"
+
 #include "test.h"
 #include "utils.h"
 
@@ -45,12 +45,6 @@ int IsCircleClicked(float circle_center_x, float circle_center_y, float diameter
 	return 0;
 }
 
-int AreCirclesIntersecting(Bullet* bullet, GameEntity* enemy) {
-	CP_Vector vec_c1 = CP_Vector_Set(bullet->centerPos.x, bullet->centerPos.y);
-	CP_Vector vec_c2 = CP_Vector_Set(enemy->centerPos.x, enemy->centerPos.y);
-	
-	return (bullet->diameter / 2.0f + enemy->diameter / 2.0f) >= CP_Vector_Distance(vec_c1, vec_c2);
-}
 
 //int IntitializeEntity(GameEntity* entity, int id, float pos_x, float pos_y, float rotation, CP_BOOL isPlayer) {
 //	if (entity == NULL) {

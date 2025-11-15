@@ -18,66 +18,67 @@ ButtonInfo NewWaveButton;
 ButtonSound defaultSound;
 
 /*-------------Template Value--------------*/
-GameEntity MakeTemplate(const char* name) {
+GameEntity Make_Template(const char* name) {
 	GameEntity e;
 	if (name == "player")
 	{
 		e = (GameEntity){
-		.centerPos = {100, 100}, .rotation = 0, .isPlayer = 1, .forwardVector = {0, 0}, .color = {255,0,0,255},
-		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "Fire", .bullets = {0 } };
+		.centerPos = {400, 100}, .rotation = 0, .isPlayer = 1, .forwardVector = {0, 0}, .color = {255,0,0,255},
+		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "fire", .bullets = {0 } };
 	}
-	
-	
+
+
 	if (name == "poison")
 	{
-		Bullet temp = BulletTemplate("poison");
+		Bullet temp = Bullet_Template("poison");
 		e = (GameEntity){
-		.centerPos = {100, 100}, .rotation = 0, .isPlayer = 0, .forwardVector = {0, 0}, .color = {255,0,255,255},
-		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "Fire" , .bullets = {0} };
+		.centerPos = {400, 150}, .rotation = 0, .isPlayer = 0, .forwardVector = {0, 0}, .color = {255,0,255,255},
+		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "poison" , .bullets = {0} };
+		B_Arr_Insert(&e.bullets, temp);
 		/*B_Arr_Init(2, &e.bullets);
 		B_Arr_Insert(&e.bullets, temp);*/
 	}
 
 	if (name == "stun")
 	{
-		Bullet temp = BulletTemplate("stun");
+		Bullet temp = Bullet_Template("stun");
 		e = (GameEntity){
-		.centerPos = {100, 100}, .rotation = 0, .isPlayer = 0, .forwardVector = {0, 0}, .color = {255,0,0,255},
-		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "Fire" , .bullets = {0} };
+		.centerPos = {500, 100}, .rotation = 0, .isPlayer = 0, .forwardVector = {0, 0}, .color = {255,0,0,255},
+		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "fire" , .bullets = {0} };
 		/*B_Arr_Init(2, &e.bullets);
 		B_Arr_Insert(&e.bullets, temp);*/
 	}
 
 	if (name == "enemy")
 	{
-		
+
 		e = (GameEntity){
-		.centerPos = {100, 400}, .rotation = 0, .isPlayer = 0, .forwardVector = {0, 0}, .color = {255,0,0,255},
-		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "Fire" , .bullets = {0} };
-		
+		.centerPos = {100, 400}, .rotation = 0, .isPlayer = 0, .forwardVector = {0, 0}, .color = {255,255,0,255},
+		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "enemy" , .bullets = {0} };
+
 	}
 	//do not assign any pointers here as it will point to the same address
-	/* aka: 
+	/* aka:
 	B_Arr_Init(10, &e.bullets);
 	...
-	GameEntity player = e  
-	GameEntity enemy = e 
+	GameEntity player = e
+	GameEntity enemy = e
 	both point to the same bullet array STOP */
 	return e;
 }
 
 /*LOADS IN PLAYER & ENEMY ARRAY */
-void initPlayerDemo() {
-	
-	GameEntity player = MakeTemplate("player");
-	GameEntity enemy = MakeTemplate("enemy");
+void Init_PlayerDemo() {
+
+	GameEntity player = Make_Template("player");
+	GameEntity enemy = Make_Template("enemy");
 
 	/*-------------Template Value--------------*/
 	Arr_Init(2, &playerArr);
 	Arr_Init(11, &enemyArr);
 
 	/*FOR PLAYER_UNITS ONLY*/
-	for (int i = 0; i < 7; i++) {
+	for (int i = 0; i < 4; i++) {
 		ActiveEntity ae;
 		ae.id = i;
 		ae.unit = player;
@@ -100,7 +101,7 @@ void initPlayerDemo() {
 		ActiveEntity ae;
 		ae.id = i;
 		ae.unit = enemy;
-		ae.fsm = (StateMachine){ .currState = Enemy_IdleState };
+		ae.fsm = (StateMachine){ .currState = EnemyIdleState };
 		ae.maxHealth = 100;
 		ae.health = 100;
 		ae.alive = 1;
@@ -108,15 +109,15 @@ void initPlayerDemo() {
 		ae.lastLeftmostX = 0.0f;
 
 		Arr_Insert(&enemyArr, ae);
-		startWave(&enemyArr.ActiveEntityArr[i].unit, 0);
+		Start_Wave(&enemyArr.ActiveEntityArr[i].unit, 0);
 		/*enemyArr.ActiveEntityArr[i].unit.centerPos.x += 200.0f;*/
 	}
 	//ContArr_Init(playerArr.used, &containersArr);
-	//readFile("Assets/containers");
+	//Read_File("Assets/containers");
 }
 
 void Init_NewWave(int currWave) {
-	GameEntity enemy = MakeTemplate("enemy");
+	GameEntity enemy = Make_Template("enemy");
 	/* FOR ENEMY UNITS */
 	waveFlag = 1;
 	int spawn = currWave + 5;
@@ -132,10 +133,20 @@ void Init_NewWave(int currWave) {
 		ae.lastLeftmostX = 0.0f;
 
 		Arr_Insert(&enemyArr, ae);
-		startWave(&enemyArr.ActiveEntityArr[i].unit, (int)2);
+		Start_Wave(&enemyArr.ActiveEntityArr[i].unit, (int)2);
 
 		/*enemyArr.ActiveEntityArr[i].unit.centerPos.x += 200.0f;*/
 	}
+}
+
+void Load_TempText() {
+	Button_Load(&NewWaveButton, &defaultSound,
+		96 * unit, 92 * unit,
+		20 * unit, 20 * unit,
+		0 * unit,
+		"Assets/Buttons/Suprise/JackNormal.png",
+		"Assets/Buttons/Suprise/JackHighlight.png",
+		"Assets/Buttons/Suprise/JackClicked.png", 0);
 }
 
 void Draw_TempText(float dt) {
@@ -143,26 +154,25 @@ void Draw_TempText(float dt) {
 		waveState += (dt * 2);
 		printf("DT: %f\n", waveState);
 		CP_Graphics_DrawRect(CP_Input_GetMouseX(), CP_Input_GetMouseY(), 50, 50);
-		Button_Load(&NewWaveButton, &defaultSound,
-			96 * unit, 92 * unit,
-			55 * unit, 19.5 * unit,
-			0 * unit,
-			"Assets/Buttons/MainMenu/CreditsNormal.png",
-			"Assets/Buttons/MainMenu/CreditsHighlight.png",
-			"Assets/Buttons/MainMenu/CreditsClicked.png");
+		NewWaveButton.alive = 1;
 		Button_Behavior(&NewWaveButton);
 		if (NewWaveButton.isClicked)
 		{
 			Reward_Click(&currentMoney);
 		}
 
-		if (waveState > 4) {
+		if (waveState > 4 && (NewWaveButton.alive==1)) {
 			waveFlag = 0; waveState = 0;
+			NewWaveButton.alive = 0;
+			
 		}
 	}
 }
+void Del_TempText() {
+	Button_Free(&NewWaveButton);
+}
 
-void PrintBulletInfo(GameEntity* entity) {
+void Print_BulletInfo(GameEntity* entity) {
 	for (size_t i = 0; i < playerArr.used; ++i) {
 
 		for (size_t i = 0; i < entity->bullets.used; i++) {
@@ -172,7 +182,7 @@ void PrintBulletInfo(GameEntity* entity) {
 	}
 }
 
-void DrawBullets() {
+void Draw_Bullets() {
 	for (size_t i = 0; i < playerArr.used; ++i) {
 		GameEntity* p = &playerArr.ActiveEntityArr[i].unit;
 		for (int j = 0; j < p->bullets.used; j++)
@@ -181,6 +191,9 @@ void DrawBullets() {
 
 			if (pew->opacity == 255)
 			{
+				if (pew->type == "poison") { 
+					pew->color.red = 255; pew->color.green = 0; pew->color.blue = 255; pew->color.opacity = 255; }
+				//printf("%s\n", pew->type);
 				CP_Settings_Fill(CP_Color_Create(pew->color.red, pew->color.green, pew->color.blue, pew->opacity));
 				CP_Graphics_DrawCircle(pew->centerPos.x, pew->centerPos.y, pew->diameter);
 			}
@@ -188,10 +201,13 @@ void DrawBullets() {
 	}
 }
 
-void DrawEntities() {
+void Draw_Entities() {
 	float dt = CP_System_GetDt();
+	
+
 	CP_Vector lightDir = CP_Vector_Set(1.0f, -1.0f); // direction light comes *from*
 	float lightHeight = 1.5f;
+	
 
 	/* players draw */
 	for (size_t i = 0; i < playerArr.used; ++i) {
@@ -200,7 +216,7 @@ void DrawEntities() {
 
 		GameEntity* p = &ent->unit;
 		// --- SHADOW COMPUTATION ---
-		CP_Vector shadowOffset = CP_Vector_Scale(lightDir, -50 );
+		CP_Vector shadowOffset = CP_Vector_Scale(lightDir, -50);
 		CP_Vector shadowPos = CP_Vector_Add(p->centerPos, shadowOffset);
 		float shadowScaleY = 0.5f;  // flatten vertically
 
@@ -209,37 +225,42 @@ void DrawEntities() {
 		// simulate flattening by using ellipse
 		CP_Graphics_DrawEllipse(shadowPos.x, shadowPos.y, p->diameter, p->diameter * shadowScaleY);
 
-		/*if (p->isSel) { p->color.red = 0; p->color.green = 0; p->color.blue = 255; p->color.opacity = 255; }*/
-		/*else { p->color.red = 255; p->color.green = 0; p->color.blue = 0;   p->color.opacity = 255; }*/
+		if (p->label == "poison") { p->color.red = 255; p->color.green = 0; p->color.blue = 255; p->color.opacity = 255; }
+		if (p->label == "fire") { p->color.red = 255; p->color.green = 0; p->color.blue = 0;   p->color.opacity = 255; }
+
+		if (p->isSel) { p->color.red = 0; p->color.green = 0; p->color.blue = 255; p->color.opacity = 255; }
 
 		CP_Settings_Fill(CP_Color_Create(p->color.red, p->color.green, p->color.blue, p->color.opacity));
 		CP_Graphics_DrawCircle(p->centerPos.x, p->centerPos.y, p->diameter);
-		
+
 	}
-	DrawBullets();
+
 	if (enemyArr.used <= 0) {
-		
+
 		Init_NewWave(wave++);
-		
+
 	}
 	for (size_t i = 0; i < enemyArr.used; ++i) {
 		ActiveEntity* ent = &enemyArr.ActiveEntityArr[i];
+
+		Move_Wave(&ent->unit, dt);
 		FSM_Update(&ent->fsm, &ent->unit, dt);
-		moveWave(&ent->unit, dt);
 		if (enemyArr.ActiveEntityArr[i].health <= 0.f) {
 			Arr_Del(&enemyArr, enemyArr.ActiveEntityArr[i].id);
 			continue;
 		}
 		GameEntity* e = &ent->unit;
-		
 		//if (e->isSel) { e->color.red = 255; e->color.green = 255; e->color.blue = 255; e->color.opacity = 255; }
-		 { e->color.red = 255; e->color.green = 255; e->color.blue = 0;   e->color.opacity = 255; }
 
 		CP_Settings_Fill(CP_Color_Create(e->color.red, e->color.green, e->color.blue, e->color.opacity));
 		CP_Graphics_DrawCircle(e->centerPos.x, e->centerPos.y, e->diameter);
-		
+
 
 
 		Health_DrawEnemyBar(ent, 80.0f, 10.0f, 20.0f);
 	}
+
+	Draw_Bullets();
+
+	
 }

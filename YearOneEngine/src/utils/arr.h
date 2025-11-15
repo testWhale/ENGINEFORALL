@@ -1,16 +1,39 @@
-#pragma once
-#include "SM.h"
+#ifndef UTILS_ARR_H_INCLUDED
+#define UTILS_ARR_H_INCLUDED
+
+#include <stddef.h>
+#include "state/pickup.h"   // GameEntity
+#include "utils/SM.h"       // StateMachine
+
+// utils/arr.h  (ActiveEntity definition)
+typedef struct ActiveEntity {
+    int id;
+    GameEntity unit;
+    StateMachine fsm;
+
+    int   maxHealth;
+    int   health;
+    int   alive;
+
+    
+    int   hasScored;        
+    float lastLeftmostX;   
+} ActiveEntity;
+
+
 typedef struct TestArr {
-	ActiveEntity* ActiveEntityArr; //I want TestArr to own dynamic arr ActiveEntity structs, Allows me to free it here.
-	size_t entitySize; //why not pointer? cause i want my array to actually own these structs and be able to use and delete them as and when.
-	size_t used; //used = curr empty entry
-	size_t maxLength;
-}TestArr;
-TestArr enemyArr; //newArr IS OUR ONLY ENTITY ARRAY will change name
-TestArr playerArr; //playerArr is ONLY UNIT ARRAY will change name
+    ActiveEntity* ActiveEntityArr;
+    size_t        entitySize;
+    size_t        used;
+    size_t        maxLength;
+} TestArr;
 
-TestArr* Arr_Init(size_t maxLength, TestArr* Array);
+extern TestArr enemyArr;
+extern TestArr playerArr;
 
+void Arr_Init(size_t maxLength, TestArr* Array);
 void Arr_Insert(TestArr* Array, ActiveEntity Entity);
-
+void Arr_Del(TestArr* Array, int id);
 void Arr_Free(TestArr* Array);
+
+#endif /* UTILS_ARR_H_INCLUDED */

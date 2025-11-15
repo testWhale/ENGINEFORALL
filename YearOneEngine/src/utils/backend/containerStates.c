@@ -6,7 +6,6 @@ float targetX = 400;
 /*---------------------------------IDLE CODE-----------------------------*/
 void ConIdle_Init(Container* container, StateMachine* SM, float dt) {
 	container->stateTimer = 0;
-
 	//printf("Player entered IDLE::INIT state\n");
 
 }

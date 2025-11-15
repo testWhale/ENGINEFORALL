@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-GameEntity* startWave(GameEntity* entity, float dt) {
+GameEntity* Start_Wave(GameEntity* entity, float dt) {
 	int rndm = rand() % TILE_ROWS;
 	int tes=rndm;
 	if (tes == rndm) { rndm = rand() % TILE_ROWS;  }
@@ -15,7 +15,7 @@ GameEntity* startWave(GameEntity* entity, float dt) {
 	entity->centerPos.x += 2000;
 
 }
-GameEntity* moveWave(GameEntity* entity, float dt) {
+GameEntity* Move_Wave(GameEntity* entity, float dt) {
 	/*srand(time(0));
 	int rndm = rand() % ((TILE_ROWS - 1) - 0 + 1) + 0;
 	printf("RNDM: %d\n", rndm);*/
@@ -25,19 +25,19 @@ GameEntity* moveWave(GameEntity* entity, float dt) {
 	CP_Vector acc = { -4 * dt,0 };
 	
 	if (rndm == 4) { 
-		acc.x = -3;
+		acc.x = -5;
 		entity->velocity = CP_Vector_Add(entity->velocity, acc);
 		entity->centerPos = CP_Vector_Add(entity->centerPos, CP_Vector_Scale(entity->velocity, dt));
 		return 1;
 	}
 	if (rndm == 3) {
-		acc.x = -3;
+		acc.x = -5;
 		entity->velocity = CP_Vector_Add(entity->velocity, acc);
-		entity->color = (Color){1,1,1,255};
+		//entity->color = (Color){1,1,1,255};
 		entity->centerPos = CP_Vector_Add(entity->centerPos, CP_Vector_Scale(entity->velocity, dt));
 		return 1;
 	}
-	entity->color = (Color){ 255,1,1,255 };
+
 	entity->velocity = CP_Vector_Add(entity->velocity, acc);
 	entity->centerPos = CP_Vector_Add(entity->centerPos,CP_Vector_Scale(entity->velocity, dt));
 

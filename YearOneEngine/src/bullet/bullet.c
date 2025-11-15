@@ -16,7 +16,7 @@
 //
 //ARR_(UI)
 
-Bullet BulletTemplate(const char* name) {
+Bullet Bullet_Template(const char* name) {
     Bullet bullet = { 0 };
     int dt = CP_System_GetDt();
     if (strcmp(name, "poison") == 0) {
@@ -25,10 +25,10 @@ Bullet BulletTemplate(const char* name) {
             .centerPos = {100, 100},
             .velocity = {0, 0},
             .color = {255, 0, 255, 255},
-            .diameter = 100,
+            .diameter = 30,
             .opacity = 0,
             .type = "poison",
-            .bulletDmg = 10.0f,
+            .bulletDmg = 2.0f,
             .poisonDmg = 10.0f
         };
         bullet.bulletDmg += bullet.poisonDmg * dt;
@@ -39,7 +39,7 @@ Bullet BulletTemplate(const char* name) {
             .centerPos = {100, 100},
             .velocity = {0, 0},
             .color = {255, 255, 0, 255},
-            .diameter = 100,
+            .diameter = 30,
             .opacity = 0,
             .type = "stun",
             .bulletDmg = 10.0f,
@@ -52,7 +52,7 @@ Bullet BulletTemplate(const char* name) {
             .centerPos = {100, 100},
             .velocity = {0, 0},
             .color = {255, 0, 0, 255},
-            .diameter = 100,
+            .diameter = 30,
             .opacity = 0,
             .type = "normal",
             .bulletDmg = 10.0f
@@ -76,7 +76,7 @@ BulletArr* B_Arr_Init(size_t initialCapacity, BulletArr* A) {
     A->maxLength = initialCapacity;
     A->used = 0;
 
-    return A; 
+    return A;
 }
 
 /* ---------------- INSERT ---------------- */
@@ -147,7 +147,7 @@ void B_Arr_Del(BulletArr* A, int id) {
         }
     }
     //Edge case to teammates: what happens when buffer shrinks to 1 elem?
-    /* If after deleting 1 bullet, maxLength =1, used = 1, 
+    /* If after deleting 1 bullet, maxLength =1, used = 1,
     -> if delete another bullet, -> the maxLength = 0 -> realloc(0). UNDEFINED BREAKS */
     /*SO sort based on used if arr has 2 elems, -> delete 1 -> used =1 BUT maxlength still stays 2
     when insert again, it still has space! no nd undefined realloc(0)*/
@@ -160,5 +160,4 @@ void B_Arr_Free(BulletArr* A) {
     A->maxLength = 0;
     A->used = 0;
 }
-
 

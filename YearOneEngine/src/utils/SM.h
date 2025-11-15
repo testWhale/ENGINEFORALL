@@ -3,7 +3,7 @@
 
 #include "cprocessing.h"
 #include "sound.h"
-#include "bullet.h"
+#include "bullet/bullet.h"
 
 #define Up 90.0
 #define Left 0.0
@@ -14,20 +14,20 @@
 #define BLUE  (Color){ 0,   0, 255, 255 }
 #define GREEN (Color){ 0, 255,  0,  255 }
 #define WHITE (Color){ 255, 255,  255,  255 }
+#define WHITISH (Color){ 255, 255,  255,  100 }
+#define REALLYCLEAR (Color){ 255, 255,  255,  0 }
 
 typedef int EntityID;
 typedef struct GameEntity GameEntity;
 typedef struct StateMachine StateMachine;
 
-
 struct GameEntity {
 	/*Generic Values*/
 	CP_Vector centerPos; float rotation; CP_BOOL isPlayer; 
-	CP_Vector forwardVector; Color color; float diameter; float stateTimer; 
-	
+	CP_Vector forwardVector, velocity; Color color; float diameter; float stateTimer; 
+
 	/*Check Values*/
 	int isItOnMap; int isSel; char* label; entSound sound;
-
 	BulletArr bullets;
 }; //Base For all Entities
 
@@ -40,26 +40,22 @@ typedef void (*StateFunction)(float deltaTime);
 
 //eg: Idle State
 typedef struct {
-	void (*init)(GameEntity* data,  StateMachine* SM, float dt);
-	void (*update)(GameEntity* data,  StateMachine* SM, float dt);
-	void (*exit)(GameEntity* data,  StateMachine* SM, float dt);
+	void (*Init)(GameEntity* data,  StateMachine* sm, float dt); //replace with T
+	void (*Update)(GameEntity* data,  StateMachine* sm, float dt);
+	void (*Exit)(GameEntity* data,  StateMachine* sm, float dt);
 } States;
 
 struct StateMachine {
 	States currState;
-}; 
+};  
 
-typedef struct ActiveEntity {
-	int id;
-	GameEntity unit; //Array
-	StateMachine fsm; //Array
-}ActiveEntity;
+typedef struct ActiveEntity ActiveEntity;
 
-StateFunction FSM_SetState(StateMachine* fsm, States newState, GameEntity* data, float dt);
+
+
+StateFunction FSM_SetState(StateMachine* fsm, States newState, GameEntity* data, float dt); //Replace with T
 StateFunction FSM_Update(StateMachine* fsm, GameEntity* data, float dt);
 
-GameEntity MakePlayerTemplate();
-void PrintBulletInfo(GameEntity* entity);
 
 // Init, Set currState, send function pointer to States.init
 #endif

@@ -10,8 +10,9 @@
 //---------------------------------------------------------
 
 #include "cprocessing.h"
-#include "mainmenu.h"
- 
+#include "scenes/mainmenu.h"
+#include "scenes/mainscene.h"
+#include "test.h"
  //test
 // main() the starting point for the program
 // CP_Engine_SetNextGameState() tells CProcessing which functions to use for init, update and exit
@@ -19,7 +20,9 @@
 int main(void)
 {
 	CP_Engine_SetNextGameState(Main_Menu_Init, Main_Menu_Update, Main_Menu_Exit);
-	CP_System_SetWindowSize(1600, 900);
+	
+	CP_System_SetWindowSize(1920, 1080);
+	
 	CP_Engine_Run(1);
 	return 0;
 }

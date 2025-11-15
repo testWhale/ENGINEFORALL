@@ -3,7 +3,12 @@
 #include "cprocessing.h"
 #include "utils/SM.h"
 #define TILE_ROWS 6
-#define TILE_COLUMNS 12
+#define TILE_COLUMNS 9
+
+typedef struct Offset {
+	CP_Vector offset;
+}Offset;
+
 typedef struct Tile{
 	CP_Vector centerPos;
 	CP_Vector startPos;
@@ -18,7 +23,14 @@ typedef struct Tile{
 }Tile;
 
 extern Tile g_TileMap[TILE_ROWS][TILE_COLUMNS]; //declaration of one global instance of TileMap
-void Map_Init();
+
+Tile* Set_OnTile(GameEntity* Entity, CP_Vector mouse);
+Tile* Hover_TileAt(GameEntity* Entity, CP_Vector mouse);
+Tile* Hover_Tile_Exit();
+Tile* Sel_AfterPlaced(GameEntity* Entity, CP_Vector mouse);
+
+void Map_Init(CP_Vector startPos, float width, float height);
+
 void Map_Update();
 Tile* setOnTile(GameEntity* Entity, CP_Vector mouse);
 Tile* hoverTileAt(GameEntity* Entity, CP_Vector mouse);
