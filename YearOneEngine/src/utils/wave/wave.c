@@ -25,13 +25,13 @@ GameEntity* Move_Wave(GameEntity* entity, float dt) {
 	CP_Vector acc = { -4 * dt,0 };
 	
 	if (rndm == 4) { 
-		acc.x = -5;
+		acc.x = -1;
 		entity->velocity = CP_Vector_Add(entity->velocity, acc);
 		entity->centerPos = CP_Vector_Add(entity->centerPos, CP_Vector_Scale(entity->velocity, dt));
 		return 1;
 	}
 	if (rndm == 3) {
-		acc.x = -5;
+		acc.x = -1;
 		entity->velocity = CP_Vector_Add(entity->velocity, acc);
 		//entity->color = (Color){1,1,1,255};
 		entity->centerPos = CP_Vector_Add(entity->centerPos, CP_Vector_Scale(entity->velocity, dt));

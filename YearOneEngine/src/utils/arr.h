@@ -12,7 +12,7 @@ typedef struct ActiveEntity {
     StateMachine fsm;
 
     int   maxHealth;
-    int   health;
+    float   health;
     int   alive;
 
     
