@@ -3,6 +3,7 @@
 
 #include "cprocessing.h"
 #include "sound.h"
+#include "bullet/bullet.h"
 
 #define Up 90.0
 #define Left 0.0
@@ -13,19 +14,21 @@
 #define BLUE  (Color){ 0,   0, 255, 255 }
 #define GREEN (Color){ 0, 255,  0,  255 }
 #define WHITE (Color){ 255, 255,  255,  255 }
+#define WHITISH (Color){ 255, 255,  255,  100 }
+#define REALLYCLEAR (Color){ 255, 255,  255,  0 }
 
 typedef int EntityID;
 typedef struct GameEntity GameEntity;
 typedef struct StateMachine StateMachine;
 
-typedef struct { int red; int green; int blue; int opacity; }Color;
 struct GameEntity {
 	/*Generic Values*/
-	int id; CP_Vector centerPos; float rotation; CP_BOOL isPlayer; 
+	CP_Vector centerPos; float rotation; CP_BOOL isPlayer; 
 	CP_Vector forwardVector, velocity; Color color; float diameter; float stateTimer; 
 
 	/*Check Values*/
 	int isItOnMap; int isSel; char* label; entSound sound;
+	BulletArr bullets;
 }; //Base For all Entities
 
 // Step 1: State function pointer type:
@@ -37,9 +40,9 @@ typedef void (*StateFunction)(float deltaTime);
 
 //eg: Idle State
 typedef struct {
-	void (*init)(GameEntity* data,  StateMachine* SM, float dt); //replace with T
-	void (*update)(GameEntity* data,  StateMachine* SM, float dt);
-	void (*exit)(GameEntity* data,  StateMachine* SM, float dt);
+	void (*Init)(GameEntity* data,  StateMachine* sm, float dt); //replace with T
+	void (*Update)(GameEntity* data,  StateMachine* sm, float dt);
+	void (*Exit)(GameEntity* data,  StateMachine* sm, float dt);
 } States;
 
 struct StateMachine {

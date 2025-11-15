@@ -19,38 +19,54 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Button\button.c" />
-    <ClCompile Include="src\gameover.c" />
+    <ClCompile Include="src\bullet\bullet.c" />
+    <ClCompile Include="src\buttons\buttonCode.c" />
+    <ClCompile Include="src\clicker\clickCode.c" />
+    <ClCompile Include="src\economy\economyCode.c" />
+    <ClCompile Include="src\entity\ent.c" />
+    <ClCompile Include="src\goal\goal.c" />
+    <ClCompile Include="src\scenes\credits.c" />
+    <ClCompile Include="src\scenes\gameover.c" />
+    <ClCompile Include="src\scenes\mainmenu.c" />
+    <ClCompile Include="src\scenes\mainscene.c" />
+    <ClCompile Include="src\state\enemy.c" />
     <ClCompile Include="src\state\pickup.c" />
+    <ClCompile Include="src\state\shoot.c" />
     <ClCompile Include="src\tile\layout.c" />
     <ClCompile Include="src\utils\arr.c" />
     <ClCompile Include="src\utils\backend\containerStates.c" />
     <ClCompile Include="src\utils\container.c" />
-    <ClCompile Include="src\utils\health\goal.c" />
     <ClCompile Include="src\utils\health\health.c" />
     <ClCompile Include="src\utils\readTxt.c" />
     <ClCompile Include="src\utils\arr\sample.c" />
     <ClCompile Include="src\utils\SM.c" />
     <ClCompile Include="src\utils\UI\Pause.c" />
     <ClCompile Include="src\utils\wave\wave.c" />
-    <ClInclude Include="src\Button\button.h" />
+    <ClInclude Include="src\bullet\bullet.h" />
+    <ClInclude Include="src\buttons\buttonCode.h" />
+    <ClInclude Include="src\clicker\clickCode.h" />
+    <ClInclude Include="src\economy\economyCode.h" />
     <ClInclude Include="src\entity\ent.h" />
-    <ClInclude Include="src\gameover.h" />
+    <ClInclude Include="src\goal\goal.h" />
+    <ClInclude Include="src\scenes\credits.h" />
+    <ClInclude Include="src\scenes\gameover.h" />
+    <ClInclude Include="src\scenes\mainmenu.h" />
+    <ClInclude Include="src\scenes\mainscene.h" />
+    <ClInclude Include="src\state\enemy.h" />
+    <ClInclude Include="src\state\shoot.h" />
     <ClInclude Include="src\test.h" />
     <ClCompile Include="src\main.c" />
-    <ClCompile Include="src\mainmenu.c" />
     <ClCompile Include="src\test.c" />
     <ClCompile Include="src\tile\tile.c" />
     <ClCompile Include="src\utils\sound.h" />
     <ClCompile Include="src\utils\arr\State.h" />
     <ClCompile Include="src\utils\utils.c" />
-    <ClInclude Include="src\utils\health\goal.h" />
+    <ClInclude Include="src\utils\health\health.h" />
     <ClInclude Include="src\utils\UI\Pause.h" />
     <ClInclude Include="src\utils\wave\wave.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DataTypes.h" />
-    <ClInclude Include="src\mainmenu.h" />
     <ClInclude Include="src\state\pickup.h" />
     <ClInclude Include="src\utils\arr.h" />
     <ClInclude Include="src\utils\backend\containerStates.h" />

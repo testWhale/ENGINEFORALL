@@ -1,6 +1,6 @@
 #ifndef READTXT_H
 #define READTXT_H
 
-void readFile(char* filePath);
+void Read_File(char* filePath);
 
 #endif

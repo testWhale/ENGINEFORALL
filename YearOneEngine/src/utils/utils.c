@@ -45,6 +45,7 @@ int IsCircleClicked(float circle_center_x, float circle_center_y, float diameter
 	return 0;
 }
 
+
 //int IntitializeEntity(GameEntity* entity, int id, float pos_x, float pos_y, float rotation, CP_BOOL isPlayer) {
 //	if (entity == NULL) {
 //		return 0;
