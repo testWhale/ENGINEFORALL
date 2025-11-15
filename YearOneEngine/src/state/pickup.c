@@ -10,11 +10,11 @@ int Check_ForSel() {
 	int count2 = 0;
 	for (int i = 0; i < playerArr.used; i++) {
 		ActiveEntity entity = playerArr.ActiveEntityArr[i];
-		printf("ID: %d		ISSEL: %d\n", entity.id, entity.unit.isSel);
 		if (entity.unit.isSel) {
 			printf("YES\n");
 			return 1;
 		}
+
 	}
 	return 0;
 }
