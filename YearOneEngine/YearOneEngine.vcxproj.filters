@@ -131,6 +131,9 @@
     <ClInclude Include="src\utils\health\goal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\entity\ent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="src\utils\backend\containers.txt" />

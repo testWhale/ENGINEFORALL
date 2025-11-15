@@ -5,23 +5,24 @@
 static int s_paused = 0;
 static int s_menuRequest = 0;
 
-static buttonInfo s_btnPause;
-static buttonInfo s_btnResume;
-static buttonInfo s_btnMenu;
+static ButtonInfo s_btnPause;
+static ButtonInfo s_btnResume;
+static ButtonInfo s_btnMenu;
+static ButtonSound s_pauseSound;
 
 static float s_unit = 1.0f;
 
-#define PAUSE_N   "Assets/buttons/pause normal.png"
-#define PAUSE_H   "Assets/buttons/pause hover.png"
-#define PAUSE_C   "Assets/buttons/pause clicked.png"
+#define PAUSE_N   "Assets/Buttons/pause/pause normal.png"
+#define PAUSE_H   "Assets/Buttons/pause/pause hover.png"
+#define PAUSE_C   "Assets/Buttons/pause/pause clicked.png"
 
-#define RESUME_N  "Assets/buttons/resume normal.jpg"
-#define RESUME_H  "Assets/buttons/resume hover.jpg"
-#define RESUME_C  "Assets/buttons/resume clicked.jpg"
+#define RESUME_N  "Assets/Buttons/pause/resume normal.jpg"
+#define RESUME_H  "Assets/Buttons/pause/resume hover.jpg"
+#define RESUME_C  "Assets/Buttons/pause/resume clicked.jpg"
 
-#define MENU_N    "Assets/buttons/menu normal.jpg"
-#define MENU_H    "Assets/buttons/menu hover.jpg"
-#define MENU_C    "Assets/buttons/menu clicked.jpg"
+#define MENU_N    "Assets/Buttons/pause/menu normal.jpg"
+#define MENU_H    "Assets/Buttons/pause/menu hover.jpg"
+#define MENU_C    "Assets/Buttons/pause/menu clicked.jpg"
 
 int   Pause_IsPaused(void) { return s_paused; }
 void  Pause_SetPaused(int on) { s_paused = (on != 0); }
@@ -36,7 +37,12 @@ void Pause_Init(void)
     const float W = (float)CP_System_GetWindowWidth();
     const float H = (float)CP_System_GetWindowHeight();
 
-    s_unit = H / 100.0f;  
+    s_unit = H / 100.0f;
+
+    Button_Sound_Load(&s_pauseSound,
+        "Assets/soundTesters/ClickSound.wav",
+        "Assets/soundTesters/HoverSound.wav",
+        "Assets/soundTesters/ReleaseSound.wav");
 
     const float iconSize = 6.0f * s_unit;
     const float margin = 2.5f * s_unit;
@@ -44,31 +50,36 @@ void Pause_Init(void)
     const float pauseX = W - margin - iconSize * 0.5f;
     const float pauseY = margin + iconSize * 0.5f;
 
-    buttonLoad(&s_btnPause,
+    Button_Load(&s_btnPause, &s_pauseSound,
         pauseX, pauseY,
         iconSize, iconSize,
         0.0f,
-        PAUSE_N, PAUSE_C, PAUSE_H);
+        PAUSE_N, PAUSE_C, PAUSE_H,
+        1);
 
     const float cx = 0.5f * W;
     const float cy = 0.5f * H;
 
-    const float btnW = 45.0f * s_unit;   
+    const float btnW = 45.0f * s_unit;
     const float btnH = 13.0f * s_unit;
-    const float gap = 8.0f * s_unit;   
+    const float gap = 8.0f * s_unit;
 
-    const float resumeY = cy - 5.0f * s_unit;          
-    const float menuY = resumeY + btnH + gap;      
+    const float resumeY = cy - 5.0f * s_unit;
+    const float menuY = resumeY + btnH + gap;
 
-    buttonLoad(&s_btnResume,
+    Button_Load(&s_btnResume, &s_pauseSound,
         cx, resumeY,
-        btnW, btnH, 0.0f,
-        RESUME_N, RESUME_C, RESUME_H);
+        btnW, btnH,
+        0.0f,
+        RESUME_N, RESUME_C, RESUME_H,
+        1);
 
-    buttonLoad(&s_btnMenu,
+    Button_Load(&s_btnMenu, &s_pauseSound,
         cx, menuY,
-        btnW, btnH, 0.0f,
-        MENU_N, MENU_C, MENU_H);
+        btnW, btnH,
+        0.0f,
+        MENU_N, MENU_C, MENU_H,
+        1);
 }
 
 void Pause_UpdateAndDraw(void)
@@ -79,7 +90,7 @@ void Pause_UpdateAndDraw(void)
 
     if (!s_paused)
     {
-        buttonBehavior(&s_btnPause);
+        Button_Behavior(&s_btnPause);
         if (s_btnPause.isClicked) {
             s_paused = 1;
             s_btnPause.isClicked = 0;
@@ -103,9 +114,8 @@ void Pause_UpdateAndDraw(void)
     CP_Settings_TextSize(30.0f);
     CP_Font_DrawText("PAUSED", cx, cy - panelH * 0.5f + 8.0f * s_unit);
 
-    // ---------- buttons ----------
-    buttonBehavior(&s_btnResume);
-    buttonBehavior(&s_btnMenu);
+    Button_Behavior(&s_btnResume);
+    Button_Behavior(&s_btnMenu);
 
     CP_Settings_ImageMode(CP_POSITION_CENTER);
 
@@ -128,4 +138,15 @@ void Pause_UpdateAndDraw(void)
     }
 
     CP_Settings_RectMode(CP_POSITION_CENTER);
+}
+
+void Pause_Exit(void)
+{
+    Button_Free(&s_btnPause);
+    Button_Free(&s_btnResume);
+    Button_Free(&s_btnMenu);
+    Button_Sound_Free(&s_pauseSound);
+    s_paused = 0;
+    s_menuRequest = 0;
+    s_unit = 1.0f;
 }

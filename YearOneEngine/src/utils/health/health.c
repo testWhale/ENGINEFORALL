@@ -1,19 +1,25 @@
 
 #include "health.h"
 #include "cprocessing.h"
+#include <math.h>
+#include "entity/ent.h"
+#include "utils/arr.h"
+
+static CP_Sound s_hitSfx = 0;
+static CP_Sound s_loseSfx = 0;
+static int      s_playedLose = 0;
 
 void HealthSystem_Init(HealthSystem* hs, int maxHearts, int maxhealth)
 {
     if (!hs) return;
 
-  
+
     if (maxHearts < 1) maxHearts = 1;
     if (maxHearts > MAX_HEARTS_CAP) maxHearts = MAX_HEARTS_CAP;
 
     hs->maxHearts = maxHearts;
     hs->currentHearts = maxHearts;
 
-    
     hs->timer = 0.0f;
 
 
@@ -21,11 +27,12 @@ void HealthSystem_Init(HealthSystem* hs, int maxHearts, int maxhealth)
     hs->maxhealth = (float)maxhealth;
     hs->health = (float)maxhealth;
 
- 
+
     for (int i = 0; i < MAX_HEARTS_CAP; ++i) {
         hs->alpha[i] = 0.0f;
         hs->flashTimer[i] = 0.0f;
     }
+    s_playedLose = 0;
 }
 
 void HealthSystem_Update(HealthSystem* hs, float deltaTime)
@@ -43,10 +50,10 @@ void HealthSystem_Update(HealthSystem* hs, float deltaTime)
                 hs->alpha[i] = 0.0f;
             }
             else {
-                float u = t / HEART_FLASH_TIME; 
+                float u = t / HEART_FLASH_TIME;
                 if (u < 0.0f) u = 0.0f;
                 if (u > 1.0f) u = 1.0f;
-                hs->alpha[i] = u * u;           
+                hs->alpha[i] = u * u;
             }
             hs->flashTimer[i] = t;
         }
@@ -79,10 +86,17 @@ void HealthSystem_TakeDamage(HealthSystem* hs)
     int lostIndex = hs->currentHearts - 1;
 
     hs->currentHearts -= 1;
+    if (s_hitSfx)
+        CP_Sound_Play(s_hitSfx);
 
     if (lostIndex >= 0 && lostIndex < hs->maxHearts) {
         hs->flashTimer[lostIndex] = HEART_FLASH_TIME;
         hs->alpha[lostIndex] = 1.0f;
+    }
+    if (hs->currentHearts <= 0 && !s_playedLose) {
+        if (s_loseSfx)
+            CP_Sound_Play(s_loseSfx);
+        s_playedLose = 1;
     }
 }
 
@@ -122,6 +136,46 @@ void HealthSystem_DrawHearts(const HealthSystem* hs)
     }
 }
 
+
+static int circles_overlap(float x1, float y1, float r1,
+    float x2, float y2, float r2)
+{
+    float dx = x1 - x2;
+    float dy = y1 - y2;
+    float rr = r1 + r2;
+    return (dx * dx + dy * dy) <= (rr * rr);
+}
+
+void Health_DamagePlayersOnEnemyCollisions(int dmgPerHit)
+{
+    for (size_t i = 0; i < enemyArr.used; ++i) {
+        ActiveEntity* en = &enemyArr.ActiveEntityArr[i];
+        if (!en->alive || en->unit.isPlayer) continue;
+
+        float ex = en->unit.centerPos.x;
+        float ey = en->unit.centerPos.y;
+        float er = 0.5f * en->unit.diameter;
+
+        for (size_t p = 0; p < playerArr.used; ++p) {
+            ActiveEntity* pl = &playerArr.ActiveEntityArr[p];
+            if (!pl->alive || !pl->unit.isPlayer) continue;
+
+            float px = pl->unit.centerPos.x;
+            float py = pl->unit.centerPos.y;
+            float pr = 0.5f * pl->unit.diameter;
+
+            if (circles_overlap(ex, ey, er, px, py, pr)) {
+                pl->health -= dmgPerHit;
+                if (pl->health <= 0) {
+                    pl->health = 0;
+                    pl->alive = 0;
+
+                }
+            }
+        }
+    }
+}
+
 void HealthSystem_DrawBar(const HealthSystem* hs, float x, float y, float width, float height)
 {
     if (!hs) return;
@@ -143,4 +197,30 @@ void HealthSystem_DrawBar(const HealthSystem* hs, float x, float y, float width,
     CP_Settings_NoStroke();
 }
 
+void HealthAudio_Load(const char* hitSfxPath, const char* loseSfxPath)
+{
+    if (s_hitSfx) { CP_Sound_Free(s_hitSfx);  s_hitSfx = 0; }
+    if (s_loseSfx) { CP_Sound_Free(s_loseSfx); s_loseSfx = 0; }
+
+    if (hitSfxPath && *hitSfxPath)
+        s_hitSfx = CP_Sound_Load(hitSfxPath);
+
+    if (loseSfxPath && *loseSfxPath)
+        s_loseSfx = CP_Sound_Load(loseSfxPath);
+
+    s_playedLose = 0;
+}
+
+void HealthAudio_Free(void)
+{
+    if (s_hitSfx) {
+        CP_Sound_Free(s_hitSfx);
+        s_hitSfx = 0;
+    }
+    if (s_loseSfx) {
+        CP_Sound_Free(s_loseSfx);
+        s_loseSfx = 0;
+    }
+    s_playedLose = 0;
+}
 

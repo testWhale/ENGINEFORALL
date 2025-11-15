@@ -1,4 +1,4 @@
-#include "state/pickup.h"
+/*#include "state/pickup.h"
 #include "utils/utils.h"
 #include "utils/container.h"
 #include "utils/arr.h"
@@ -367,4 +367,4 @@ void Test_Exit(void)
 
     if (myFont)  CP_Font_Free(myFont);
     if (mySound) CP_Sound_Free(mySound);
-}
+}*/
