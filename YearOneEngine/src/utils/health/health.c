@@ -146,56 +146,80 @@ static int circles_overlap(float x1, float y1, float r1,
     return (dx * dx + dy * dy) <= (rr * rr);
 }
 
-void Health_DamagePlayersOnEnemyCollisions(int dmgPerHit)
+void Health_DamagePlayersOnEnemyCollisions(int dmgPerTick,float maxContactTime,float dt)
 {
-    for (size_t i = 0; i < enemyArr.used; ++i) {
-        ActiveEntity* en = &enemyArr.ActiveEntityArr[i];
-        if (!en->alive || en->unit.isPlayer) continue;
+    const float tickInterval = 0.5f;              
+    if (maxContactTime <= 0.0f) maxContactTime = 3.0f;
 
-        float ex = en->unit.centerPos.x;
-        float ey = en->unit.centerPos.y;
-        float er = 0.5f * en->unit.diameter;
+    for (size_t ei = 0; ei < enemyArr.used; ++ei) {
+        ActiveEntity* enemy = &enemyArr.ActiveEntityArr[ei];
+        if (!enemy->alive || enemy->unit.isPlayer)
+            continue;
 
-        for (size_t p = 0; p < playerArr.used; ++p) {
-            ActiveEntity* pl = &playerArr.ActiveEntityArr[p];
-            if (!pl->alive || !pl->unit.isPlayer) continue;
+        int touching = 0;
+
+        for (size_t pi = 0; pi < playerArr.used; ++pi) {
+            ActiveEntity* pl = &playerArr.ActiveEntityArr[pi];
+            if (!pl->alive || !pl->unit.isPlayer)
+                continue;
+
+            float ex = enemy->unit.centerPos.x;
+            float ey = enemy->unit.centerPos.y;
+            float er = 0.5f * enemy->unit.diameter;
 
             float px = pl->unit.centerPos.x;
             float py = pl->unit.centerPos.y;
             float pr = 0.5f * pl->unit.diameter;
 
-            if (circles_overlap(ex, ey, er, px, py, pr)) {
-                pl->health -= dmgPerHit;
+            if (!circles_overlap(ex, ey, er, px, py, pr))
+                continue;
+            touching = 1;
+            float prevTime = enemy->contactTime;
+
+            enemy->isHitting = 1;
+            enemy->contactTime += dt;
+            if (enemy->contactTime > maxContactTime) {
+                enemy->isHitting = 0;
+                enemy->contactTime = 0.0f;
+                break;
+            }
+            int prevTick = (int)(prevTime / tickInterval);
+            int currTick = (int)(enemy->contactTime / tickInterval);
+
+            if (currTick > prevTick && pl->alive) {
+                pl->health -= dmgPerTick;
                 if (pl->health <= 0) {
                     pl->health = 0;
                     pl->alive = 0;
-
                 }
             }
+            break;
+        }
+        if (!touching) {
+            enemy->isHitting = 0;
+            enemy->contactTime = 0.0f;
         }
     }
 }
 
-void HealthSystem_DrawBar(const HealthSystem* hs, float x, float y, float width, float height)
+void HealthSystem_DrawBar(const HealthSystem* hs,
+    float x, float y,
+    float width, float height)
 {
-    if (!hs) return;
-    CP_Settings_RectMode(CP_POSITION_CORNER);
-
-    float pct = (hs->maxhealth > 0.0f) ? (hs->health / hs->maxhealth) : 0.0f;
+    if (!hs || hs->maxhealth <= 0.0f)
+        return;
+    float pct = hs->health / hs->maxhealth;
     if (pct < 0.0f) pct = 0.0f;
     if (pct > 1.0f) pct = 1.0f;
-
-    float filled = width * pct;
-    CP_Settings_NoStroke();
-    CP_Settings_Fill(CP_Color_Create(80, 80, 80, 255));
+    CP_Settings_RectMode(CP_POSITION_CORNER);
+    CP_Settings_Fill(CP_Color_Create(60, 60, 60, 255));
     CP_Graphics_DrawRect(x, y, width, height);
-    CP_Settings_Fill(CP_Color_Create(0, 200, 0, 255));
-    CP_Graphics_DrawRect(x + (width - filled), y, filled, height);
-    CP_Settings_NoFill();
-    CP_Settings_Stroke(CP_Color_Create(255, 255, 255, 255));
-    CP_Graphics_DrawRect(x, y, width, height);
-    CP_Settings_NoStroke();
+    float filledW = width * pct;
+    CP_Settings_Fill(CP_Color_Create(0, 255, 0, 255));
+    CP_Graphics_DrawRect(x, y, filledW, height);
 }
+
+
 
 void HealthAudio_Load(const char* hitSfxPath, const char* loseSfxPath)
 {

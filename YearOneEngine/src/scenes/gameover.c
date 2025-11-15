@@ -57,7 +57,7 @@ void GameOver_Update(void) {
     (void)snprintf(line, sizeof(line), "Time: %.0f s", GO_finalTime);
     CP_Font_DrawText(line, W * 0.5f, H * 0.52f);
 
-    (void)snprintf(line, sizeof(line), "Money: %.0f$", GO_money);
+    (void)snprintf(line, sizeof(line), "Money: $%.0f", GO_money);
     CP_Font_DrawText(line, W * 0.5f, H * 0.59f);
 
     float blink = 0.5f + 0.5f * sinf(6.0f * GO_timer);

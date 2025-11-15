@@ -14,10 +14,10 @@ typedef struct ActiveEntity {
     int   maxHealth;
     int   health;
     int   alive;
-
-    
     int   hasScored;        
-    float lastLeftmostX;   
+    float lastLeftmostX;  
+    int   isHitting;     
+    float  contactTime;
 } ActiveEntity;
 
 

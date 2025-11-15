@@ -11,6 +11,7 @@
 #include "../scenes/mainmenu.h"
 #include "../economy/economyCode.h"
 #include "state/shoot.h"
+#include "utils/UI/Pause.h"
 extern int wave = 0;
 extern int waveFlag = 0;
 extern float waveState = 0;
@@ -107,7 +108,8 @@ void Init_PlayerDemo() {
 		ae.alive = 1;
 		ae.hasScored = 0;
 		ae.lastLeftmostX = 0.0f;
-
+		ae.isHitting = 0;      
+		ae.contactTime = 0.0f;
 		Arr_Insert(&enemyArr, ae);
 		Start_Wave(&enemyArr.ActiveEntityArr[i].unit, 0);
 		/*enemyArr.ActiveEntityArr[i].unit.centerPos.x += 200.0f;*/
@@ -131,7 +133,8 @@ void Init_NewWave(int currWave) {
 		ae.alive = 1;
 		ae.hasScored = 0;
 		ae.lastLeftmostX = 0.0f;
-
+		ae.isHitting = 0;
+		ae.contactTime = 0.0f;
 		Arr_Insert(&enemyArr, ae);
 		Start_Wave(&enemyArr.ActiveEntityArr[i].unit, (int)2);
 
@@ -201,68 +204,112 @@ void Draw_Bullets() {
 	}
 }
 
-void Draw_Entities() {
+void Draw_Entities(void)
+{
 	float dt = CP_System_GetDt();
-	
 
-	CP_Vector lightDir = CP_Vector_Set(1.0f, -1.0f); // direction light comes *from*
-	float lightHeight = 1.5f;
-	
+	if (!Pause_IsPaused())
+	{
+		for (size_t i = 0; i < playerArr.used; ++i)
+		{
+			ActiveEntity* ent = &playerArr.ActiveEntityArr[i];
+			if (!ent->alive)
+				continue;
 
-	/* players draw */
-	for (size_t i = 0; i < playerArr.used; ++i) {
+			FSM_Update(&ent->fsm, &ent->unit, dt);
+		}
+
+		if (enemyArr.used <= 0)
+		{
+			Init_NewWave(wave++);
+		}
+
+		/* ----------------- ENEMIES ----------------- */
+		for (size_t i = 0; i < enemyArr.used; )
+		{
+			ActiveEntity* ent = &enemyArr.ActiveEntityArr[i];
+			if (!ent->alive)
+			{
+				++i;
+				continue;
+			}
+			if (!ent->isHitting)
+			{
+				Move_Wave(&ent->unit, dt);
+			}
+
+			FSM_Update(&ent->fsm, &ent->unit, dt);
+
+			if (ent->health <= 0.0f)
+			{
+				Arr_Del(&enemyArr, ent->id);
+				continue;      
+			}
+
+			++i;
+		}
+	}
+
+
+
+	CP_Vector lightDir = CP_Vector_Set(1.0f, -1.0f);   
+	float     shadowScaleY = 0.5f;
+
+	for (size_t i = 0; i < playerArr.used; ++i)
+	{
 		ActiveEntity* ent = &playerArr.ActiveEntityArr[i];
-		FSM_Update(&ent->fsm, &ent->unit, dt);
+		if (!ent->alive)
+			continue;
 
 		GameEntity* p = &ent->unit;
-		// --- SHADOW COMPUTATION ---
-		CP_Vector shadowOffset = CP_Vector_Scale(lightDir, -50);
+		CP_Vector shadowOffset = CP_Vector_Scale(lightDir, -50.0f);
 		CP_Vector shadowPos = CP_Vector_Add(p->centerPos, shadowOffset);
-		float shadowScaleY = 0.5f;  // flatten vertically
 
-		// --- DRAW SHADOW ---
-		CP_Settings_Fill(CP_Color_Create(0, 0, 0, 100)); // semi-transparent black
-		// simulate flattening by using ellipse
-		CP_Graphics_DrawEllipse(shadowPos.x, shadowPos.y, p->diameter, p->diameter * shadowScaleY);
+		CP_Settings_Fill(CP_Color_Create(0, 0, 0, 100));
+		CP_Graphics_DrawEllipse(
+			shadowPos.x, shadowPos.y,
+			p->diameter,
+			p->diameter * shadowScaleY);
 
-		if (p->label == "poison") { p->color.red = 255; p->color.green = 0; p->color.blue = 255; p->color.opacity = 255; }
-		if (p->label == "fire") { p->color.red = 255; p->color.green = 0; p->color.blue = 0;   p->color.opacity = 255; }
-
-		if (p->isSel) { p->color.red = 0; p->color.green = 0; p->color.blue = 255; p->color.opacity = 255; }
+		if (p->label == "poison") { p->color.red = 255; p->color.green = 0;   p->color.blue = 255; p->color.opacity = 255; }
+		if (p->label == "fire") { p->color.red = 255; p->color.green = 0;   p->color.blue = 0;   p->color.opacity = 255; }
+		if (p->isSel) { p->color.red = 0;   p->color.green = 0;   p->color.blue = 255; p->color.opacity = 255; }
 
 		CP_Settings_Fill(CP_Color_Create(p->color.red, p->color.green, p->color.blue, p->color.opacity));
 		CP_Graphics_DrawCircle(p->centerPos.x, p->centerPos.y, p->diameter);
 
-	}
+		{
+			HealthSystem hs = { 0 };
+			hs.maxhealth = (float)ent->maxHealth;
+			hs.health = (float)ent->health;
 
-	if (enemyArr.used <= 0) {
+			const float barW = 80.0f;
+			const float barH = 10.0f;
+			const float barX = p->centerPos.x - barW * 0.5f;
+			const float barY = p->centerPos.y - p->diameter * 0.75f;
 
-		Init_NewWave(wave++);
-
-	}
-	for (size_t i = 0; i < enemyArr.used; ++i) {
-		ActiveEntity* ent = &enemyArr.ActiveEntityArr[i];
-
-		Move_Wave(&ent->unit, dt);
-		FSM_Update(&ent->fsm, &ent->unit, dt);
-		if (enemyArr.ActiveEntityArr[i].health <= 0.f) {
-			Arr_Del(&enemyArr, enemyArr.ActiveEntityArr[i].id);
-			continue;
+			HealthSystem_DrawBar(&hs, barX, barY, barW, barH);
 		}
+	}
+
+	for (size_t i = 0; i < enemyArr.used; ++i)
+	{
+		ActiveEntity* ent = &enemyArr.ActiveEntityArr[i];
+		if (!ent->alive)
+			continue;
+
 		GameEntity* e = &ent->unit;
-		//if (e->isSel) { e->color.red = 255; e->color.green = 255; e->color.blue = 255; e->color.opacity = 255; }
 
 		CP_Settings_Fill(CP_Color_Create(e->color.red, e->color.green, e->color.blue, e->color.opacity));
 		CP_Graphics_DrawCircle(e->centerPos.x, e->centerPos.y, e->diameter);
 
-
 		{
-			HealthSystem hs = { 0 };                      
-			hs.maxhealth = (float)ent->maxHealth;       
+			HealthSystem hs = { 0 };
+			hs.maxhealth = (float)ent->maxHealth;
 			hs.health = (float)ent->health;
 
-			const float barW = 80.0f;                   
-			const float barH = 10.0f;                  
+			const float barW = 80.0f;
+			const float barH = 10.0f;
 			const float barX = e->centerPos.x - barW * 0.5f;
 			const float barY = e->centerPos.y - e->diameter * 0.75f;
 
@@ -271,6 +318,4 @@ void Draw_Entities() {
 	}
 
 	Draw_Bullets();
-
-	
 }

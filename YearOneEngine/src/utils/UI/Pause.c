@@ -12,9 +12,9 @@ static ButtonSound s_pauseSound;
 
 static float s_unit = 1.0f;
 
-#define PAUSE_N   "Assets/Buttons/pause/pause normal.png"
-#define PAUSE_H   "Assets/Buttons/pause/pause hover.png"
-#define PAUSE_C   "Assets/Buttons/pause/pause clicked.png"
+#define PAUSE_N   "Assets/Buttons/pause/PauseNormal.png"
+#define PAUSE_H   "Assets/Buttons/pause/PauseHighlight.png"
+#define PAUSE_C   "Assets/Buttons/pause/PauseClicked.png"
 
 #define RESUME_N  "Assets/Buttons/pause/resume normal.jpg"
 #define RESUME_H  "Assets/Buttons/pause/resume hover.jpg"
