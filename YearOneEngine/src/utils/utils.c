@@ -1,6 +1,6 @@
 #include <math.h>
 #include <stdio.h>
-
+#include "tile/tile.h"
 #include "test.h"
 #include "utils.h"
 
@@ -45,6 +45,10 @@ int IsCircleClicked(float circle_center_x, float circle_center_y, float diameter
 	return 0;
 }
 
+int EnemyCrossedLine(GameEntity* enemy) {
+	float rightmost_line = g_TileMap[0][TILE_COLUMNS - 1].endPos.x;
+	return enemy->centerPos.x <= rightmost_line;
+}
 
 //int IntitializeEntity(GameEntity* entity, int id, float pos_x, float pos_y, float rotation, CP_BOOL isPlayer) {
 //	if (entity == NULL) {
