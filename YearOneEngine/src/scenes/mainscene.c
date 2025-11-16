@@ -9,6 +9,7 @@
 #include "tile/tile.h"
 #include "entity/ent.h"
 #include "goal/goal.h"
+#include "nuke/nuke.h"
 
 /*Cleanup Xav*/
 //#include "test.h"
@@ -270,17 +271,7 @@ void Main_Scene_Update(void)
 
     if (TroopButton3.isClicked == 1)
     {
-        if (Purchase_System(&currentMoney, Scaling_Cost(troop3Count, 50)))
-        {
-            GameEntity player = Make_Template("player");
-            player.centerPos.x += playerArr.used * 70;
-
-            Arr_Insert(&playerArr, (ActiveEntity) { playerArr.used, 
-                player, (StateMachine) { .currState = IdleState },
-                .maxHealth = 100, .health = 100, .alive = 1, .hasScored = 0, .lastLeftmostX = 0
-            });
-            troop3Count += 1;
-        }
+        CP_Engine_SetNextGameState(Nuke_Init, Nuke_Update, Nuke_Exit);
     }
 
 
