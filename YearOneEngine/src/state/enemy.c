@@ -17,7 +17,7 @@ void Enemy_IdleUpdate(GameEntity* entity, StateMachine* sm, float dt) {
 	entity->stateTimer += dt;
 
 	// Example: Transition to Attack if "attack" input detected
-	//if (IsCircleClicked(entity->centerPos.x, entity->centerPos.y, entity->diameter, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
+	//if (Is_Mouse_Released(entity->centerPos.x, entity->centerPos.y, entity->diameter, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
 	//	//printf("STARTED ATTACK STATE FROM IDLE\n");
 	//	/*deselectEnt();*/
 	//	FSM_SetState(sm, Enemy_PickUpState, entity, dt);
@@ -48,7 +48,7 @@ void Enemy_PickedUpUpdate(GameEntity* entity, StateMachine* sm, float dt) {
 	entity->stateTimer += dt;
 	entity->centerPos = (CP_Vector){ CP_Input_GetMouseX(), CP_Input_GetMouseY() };
 	Hover_TileAt(entity, (CP_Vector) { CP_Input_GetMouseX(), CP_Input_GetMouseY() });
-	if (IsCircleClicked(entity->centerPos.x, entity->centerPos.y, entity->diameter, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
+	if (Is_Mouse_Released(entity->centerPos.x, entity->centerPos.y, entity->diameter, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
 		Set_OnTile(entity, (CP_Vector) { CP_Input_GetMouseX(), CP_Input_GetMouseY() });
 		FSM_SetState(sm, EnemyIdleState, entity, dt);
 		return;
@@ -82,7 +82,7 @@ void Enemy_SelUpdate(GameEntity* entity, StateMachine* sm, float dt) {
 	entity->stateTimer += dt;
 	Hover_TileAt(entity, (CP_Vector) { entity->centerPos.x, entity->centerPos.y });
 	//Container_Draw( getContainer(entity->label, &containersArr) );
-	if (0 == entity->isSel || IsCircleClicked(entity->centerPos.x, entity->centerPos.y, entity->diameter, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
+	if (0 == entity->isSel || Is_Mouse_Released(entity->centerPos.x, entity->centerPos.y, entity->diameter, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
 		FSM_SetState(sm, EnemyIdleState, entity, dt);
 		return;
 	}

@@ -45,7 +45,7 @@ void Idle_Update(GameEntity* entity, StateMachine* sm, float dt) {
 		FSM_SetState(sm, ShootState, entity, dt);
 		return;
 	}
-	if (IsCircleClicked(entity->centerPos.x, entity->centerPos.y, entity->diameter, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
+	if (Is_Mouse_Released(entity->centerPos.x, entity->centerPos.y, entity->diameter, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
 		//printf("STARTED ATTACK STATE FROM IDLE\n");
 		/*deselectEnt();*/
 		FSM_SetState(sm, PickUpState, entity, dt);
@@ -62,7 +62,6 @@ void PickedUp_Init(GameEntity* entity, StateMachine* sm, float dt) {
 
 	if (1 == entity->isItOnMap) { //When it is onMap -> SelectedState
 		FSM_SetState(sm, SelectedState, entity, dt);
-
 	} else {
 		entity->color.red = 0;
 		entity->color.green = 0;
@@ -80,7 +79,7 @@ void PickedUp_Update(GameEntity* entity, StateMachine* sm, float dt) {
 
 	Hover_TileAt(entity, (CP_Vector) { CP_Input_GetMouseX(), CP_Input_GetMouseY() });
 
-	if (IsCircleClicked(entity->centerPos.x, entity->centerPos.y, entity->diameter, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
+	if (!(Is_Mouse_Released(entity->centerPos.x, entity->centerPos.y, entity->diameter, CP_Input_GetMouseX(), CP_Input_GetMouseY()))) {
 		
 		if (Set_OnTile(entity, (CP_Vector) { CP_Input_GetMouseX(), CP_Input_GetMouseY() })) // Set_OnTile returns a tile that closley matches the curr Mouse Pos
 		{
@@ -122,7 +121,7 @@ void Sel_Init(GameEntity* entity, StateMachine* sm, float dt) {
 void Sel_Update(GameEntity* entity, StateMachine* sm, float dt) {
 	Hover_TileAt(entity, (CP_Vector) { entity->centerPos.x, entity->centerPos.y });
 	//Container_Draw( getContainer(entity->label, &containersArr) );
-	if (0==entity->isSel || IsCircleClicked(entity->centerPos.x, entity->centerPos.y, entity->diameter, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
+	if (0==entity->isSel || Is_Circle_Clicked(entity->centerPos.x, entity->centerPos.y, entity->diameter, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
 		FSM_SetState(sm, IdleState, entity, dt);
 		return;
 	}

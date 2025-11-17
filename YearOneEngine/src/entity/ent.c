@@ -345,39 +345,50 @@ void draw(float x, float y, float wdth, float height, int alpha) {
 	int h = CP_Image_GetHeight(baseTex);
 	float lx = CP_Input_GetMouseX();
 	float ly = CP_Input_GetMouseY();
+
+	float screenX = x * unit;
+	float screenY = y * unit;
+	float scaleX = (wdth * unit) / w;
+	float scaleY = (height * unit) / h;
+	
 	// Lighting per pixel 
-	for (int y = 0; y < h; y++) {
-		for (int x = 0; x < w; x++) {
-			int i = y * w + x;
+	for (int py = 0; py < h; py++) {
+		for (int px = 0; px < w; px++) {
+
+			int i = py * w + px;
 
 			CP_Color col = basePixels[i];
 			CP_Color n = normalPixels[i];
 
-			// Convert normal RGB -> [-1,1] for X/Y, 0..1 for Z
 			float nx = (n.r / 255.0f) * 2.0f - 1.0f;
 			float ny = (n.g / 255.0f) * 2.0f - 1.0f;
 			float nz = (n.b / 255.0f);
 
-			// Light direction (2D)
-			float dx = lx - ( w / 2 + x);
-			float dy = ly - ( h / 2 + y);
+			// Convert pixel to screen-space
+			float pixelX = screenX + px * scaleX;
+			float pixelY = screenY + py * scaleY;
+			
+
+			// Light direction
+			float dx = lx - pixelX;
+			float dy = ly - pixelY;
+
 			float len = sqrtf(dx * dx + dy * dy);
-			if (len < 0.0001f) len = 0.0001f;
+			if (len < 0.001f) len = 0.001f;
 			dx /= len;
 			dy /= len;
 
-			// Diffuse lighting
 			float diffuse = nx * dx + ny * dy + nz * 0.5f;
 			if (diffuse < 0) diffuse = 0;
 
-			// Apply diffuse to color
-			int r = (int)(col.r * diffuse + 0.5f);
-			int g = (int)(col.g * diffuse + 0.5f);
-			int b = (int)(col.b * diffuse + 0.5f);
+			int r = (int)(col.r * diffuse);
+			int g = (int)(col.g * diffuse);
+			int b = (int)(col.b * diffuse);
 
 			outPixels[i] = CP_Color_Create(r, g, b, col.a);
 		}
 	}
+
 
 	// Update the output image pixels
 	CP_Image_UpdatePixelData(imgOut, outPixels);
