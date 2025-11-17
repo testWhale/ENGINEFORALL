@@ -2,6 +2,9 @@
 #include "tile/tile.h"
 #include <stdlib.h>
 #include <time.h>
+wave = 0;
+waveFlag = 0;
+waveState = 0;
 
 GameEntity* Start_Wave(GameEntity* entity, float dt) {
 	int rndm = rand() % TILE_ROWS;

@@ -12,9 +12,7 @@
 #include "../economy/economyCode.h"
 #include "state/shoot.h"
 #include <math.h>
-extern int wave = 0;
-extern int waveFlag = 0;
-extern float waveState = 0;
+
 ButtonInfo NewWaveButton;
 ButtonSound defaultSound;
 

@@ -42,7 +42,7 @@ void Main_Scene_Init(void)
     myFont = CP_Font_Load("Assets/Fonts/QuinnDoodle.ttf");
     Background = CP_Image_Load("Assets/Misc/BackgroundArt.png");
     
-    setup("Assets/test.png", "Assets/normal.png");
+    //setup("Assets/NEW_FLOOR.jpg", "Assets/NEW_FLR_MAP.jpg");
     TileMap = CP_Image_Load("Assets/Misc/TileMap.jpg");
 
 
@@ -174,7 +174,7 @@ void Main_Scene_Update(void)
     CP_Image_Draw(Background, 0, 0, 192 * unit, 108 * unit, 255);
     CP_Settings_ImageMode(CP_POSITION_CENTER);
     CP_Image_Draw(TileMap, 120 * unit, 60 * unit, 108 * unit, 72 * unit, 255);
-    draw(120, 60, 108, 72, 255);
+    //draw(120, 60, 108, 72, 255);
     //Test_Update();
 
     Button_Behavior(&ClickerButton);
