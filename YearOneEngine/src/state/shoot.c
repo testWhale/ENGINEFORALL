@@ -73,7 +73,24 @@ void Shoot_Init( GameEntity* turret, StateMachine* SM, float dt)
 
 void Shoot_Update(GameEntity* turret, StateMachine* SM, float dt) {
 	turret->stateTimer += dt;
-	static float shootSpan = 3.0;
+	static float shootSpan;
+	Bullet b;
+	if (turret->label == "poison") {
+		b = Bullet_Template("poison");
+
+		shootSpan = 3.0;
+	}
+	if (turret->label == "stun") {
+		b = Bullet_Template("stun");
+
+		shootSpan = 1.0;
+	}
+	if (turret->label == "fire") {
+		b = Bullet_Template("normal");
+
+		shootSpan = 1.0;
+	}
+	
 	int crossedLine = 0;
 	int turretRow = (turret->centerPos.y - g_TileMap[0][0].startPos.y) / g_TileMap[0][0].dim.y;
 	if (IsCircleClicked(turret->centerPos.x, turret->centerPos.y, turret->diameter, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
@@ -94,22 +111,7 @@ void Shoot_Update(GameEntity* turret, StateMachine* SM, float dt) {
 
 	if (crossedLine && turret->stateTimer >= shootSpan) {
 		turret->stateTimer = 0;
-		Bullet b;
-		if(turret->label == "poison"){
-			b = Bullet_Template("poison");
-			
-
-		}
-		if (turret->label == "stun") {
-			b = Bullet_Template("stun");
 		
-
-		}
-		if (turret->label == "fire") {
-			b = Bullet_Template("normal");
-			
-
-		}
 		b.centerPos = turret->centerPos;
 		B_Arr_Insert(&(turret->bullets), b);
 		//Bullet b = { .id = 0, .centerPos = turret->centerPos, .velocity = {1,0}, .color = {0,255,0,255}, .diameter = 50 };
