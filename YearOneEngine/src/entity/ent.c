@@ -295,13 +295,13 @@ void setup(char* imgPath, char* normPath) {
 
 }
 
-void draw() {
+void draw(float x, float y, float wdth, float height, int alpha) {
 	
 	int w = CP_Image_GetWidth(baseTex);
 	int h = CP_Image_GetHeight(baseTex);
 	float lx = CP_Input_GetMouseX();
 	float ly = CP_Input_GetMouseY();
-	// --- Lighting per pixel ---
+	// Lighting per pixel 
 	for (int y = 0; y < h; y++) {
 		for (int x = 0; x < w; x++) {
 			int i = y * w + x;
@@ -335,12 +335,10 @@ void draw() {
 		}
 	}
 
-	// Update the output image pixels (fast)
+	// Update the output image pixels
 	CP_Image_UpdatePixelData(imgOut, outPixels);
 
-	// Draw output
-	CP_Image_Draw(imgOut, 400, 300, w, h, 255);
-
+	CP_Image_Draw(imgOut, x * unit, y * unit, wdth * unit, height * unit, alpha);
 
 
 }

@@ -43,8 +43,8 @@ void Main_Scene_Init(void)
     unit = CP_System_GetWindowWidth() / 192.0f;
     myFont = CP_Font_Load("Assets/Fonts/QuinnDoodle.ttf");
     Background = CP_Image_Load("Assets/Misc/BackgroundArt.png");
-    TileMap = CP_Image_Load("Assets/Misc/TileMap.jpg");
-    setup("Assets/Misc/TileMap.jpg", "Assets/Misc/norm.jpg");
+    TileMap = CP_Image_Load("Assets/test.png");
+    setup("Assets/test.png", "Assets/normal.png");
 
     Button_Sound_Load(&defaultSound,
         "Assets/soundTesters/ClickSound.wav",
@@ -174,6 +174,7 @@ void Main_Scene_Update(void)
     CP_Image_Draw(Background, 0, 0, 192 * unit, 108 * unit, 255);
     CP_Settings_ImageMode(CP_POSITION_CENTER);
     CP_Image_Draw(TileMap, 120 * unit, 60 * unit, 108 * unit, 72 * unit, 255);
+    draw(120, 60, 108, 72, 255);
     //Test_Update();
 
     Button_Behavior(&ClickerButton);
@@ -219,7 +220,7 @@ void Main_Scene_Update(void)
 
     Draw_TempText(dt); /* Flag check that displays a temporary msg/ reward */
     
-    draw();
+    
     if (ClickerButton.isClicked == 1) {
         One_Click(&currentMoney);
     }

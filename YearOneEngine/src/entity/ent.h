@@ -21,7 +21,7 @@ void Draw_Entities();
 
 void setup(char* imgPath, char* normPath);
 
-void draw();
+void draw(float x, float y, float w, float h, int alpha);
 
 void clean();
 #endif
