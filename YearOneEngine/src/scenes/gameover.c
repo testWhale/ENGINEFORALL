@@ -2,6 +2,7 @@
 #include "gameover.h"
 #include "scenes/mainscene.h"   
 #include "mainmenu.h"
+#include "../wave/wave.h"
 #include <math.h>
 #include <stdio.h>
 
@@ -48,17 +49,10 @@ void GameOver_Update(void) {
     CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
     CP_Font_DrawText("GAME OVER", W * 0.5f, H * 0.35f);
 
-    char line[64];
-    CP_Settings_TextSize(36.0f);
-
-    (void)snprintf(line, sizeof(line), "Wave survived: %f", GO_money); //Go_wave
-    CP_Font_DrawText(line, W * 0.5f, H * 0.45f);
-
-    (void)snprintf(line, sizeof(line), "Time: %.0f s", GO_finalTime);
-    CP_Font_DrawText(line, W * 0.5f, H * 0.52f);
-
-    (void)snprintf(line, sizeof(line), "Money: $%.0f", GO_money);
-    CP_Font_DrawText(line, W * 0.5f, H * 0.59f);
+    char line[64]; CP_Settings_TextSize(36.0f);
+    (void)snprintf(line, sizeof(line), "Wave survived: %d", wave);     CP_Font_DrawText(line, W * 0.5f, H * 0.45f);
+    (void)snprintf(line, sizeof(line), "Time: %.0f s", GO_finalTime);    CP_Font_DrawText(line, W * 0.5f, H * 0.52f);
+    (void)snprintf(line, sizeof(line), "Money earn: %d", GO_goals);     CP_Font_DrawText(line, W * 0.5f, H * 0.59f);
 
     float blink = 0.5f + 0.5f * sinf(6.0f * GO_timer);
     int alpha = (int)(130 + 100 * blink);

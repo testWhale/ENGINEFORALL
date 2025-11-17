@@ -9,6 +9,7 @@
 #include "entity/ent.h"
 #include "goal/goal.h"
 #include "Utils/UI/Pause.h"
+#include "nuke/nuke.h"
 #include "health.h"
 #include <stdio.h>
 #include <time.h>
@@ -35,6 +36,8 @@ void Main_Scene_Init(void)
     unit = CP_System_GetWindowWidth() / 192.0f;
     myFont = CP_Font_Load("Assets/Fonts/QuinnDoodle.ttf");
     Background = CP_Image_Load("Assets/Misc/BackgroundArt.png");
+    
+    //setup("Assets/NEW_FLOOR.jpg", "Assets/NEW_FLR_MAP.jpg");
     TileMap = CP_Image_Load("Assets/Misc/TileMap.jpg");
 
     Button_Sound_Load(&defaultSound,
@@ -148,6 +151,8 @@ void Main_Scene_Update(void)
 
     CP_Settings_ImageMode(CP_POSITION_CENTER);
     CP_Image_Draw(TileMap, 120 * unit, 60 * unit, 108 * unit, 72 * unit, 255);
+    //draw(120, 60, 108, 72, 255);
+    //Test_Update();
 
     Map_Update();      
     Draw_Entities();    
@@ -202,6 +207,16 @@ void Main_Scene_Update(void)
     CP_Font_DrawText(troop3Cost, 40 * unit, 95 * unit);
 
     if (!Pause_IsPaused())
+    Map_Update(); /*Tile Map*/
+
+    Draw_Entities(); /*Draw Players & Enemies*/
+
+    Draw_TempText(dt); /* Flag check that displays a temporary msg/ reward */
+    if (ClickerButton.isClicked == 1) {
+        One_Click(&currentMoney);
+    }
+
+    if (ClickerUpgrade1.isClicked == 1)
     {
         if (ClickerButton.isClicked == 1) {
             One_Click(&currentMoney);
@@ -293,7 +308,15 @@ void Main_Scene_Update(void)
         return;
     }
 
-    if (CP_Input_KeyDown(KEY_Q)) CP_Engine_Terminate();
+    if (TroopButton3.isClicked == 1)
+    {
+        CP_Engine_SetNextGameState(Nuke_Init, Nuke_Update, Nuke_Exit);
+    }
+
+
+
+    Passive_System(&currentMoney);
+    if (CP_Input_KeyDown(KEY_Q))CP_Engine_Terminate();
     if (CP_Input_KeyDown(KEY_W)) currentMoney += 1000;
 }
 

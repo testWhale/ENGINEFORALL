@@ -11,13 +11,17 @@
 #include "../scenes/mainmenu.h"
 #include "../economy/economyCode.h"
 #include "state/shoot.h"
-#include "utils/UI/Pause.h"
-extern int wave = 0;
-extern int waveFlag = 0;
-extern float waveState = 0;
+#include <math.h>
+
 ButtonInfo NewWaveButton;
 ButtonSound defaultSound;
 
+CP_Image baseTex;
+CP_Image normalTex;
+CP_Color* basePixels;
+CP_Color* normalPixels;
+CP_Color* outPixels;
+CP_Image imgOut;
 /*-------------Template Value--------------*/
 GameEntity Make_Template(const char* name) {
 	GameEntity e;
@@ -92,7 +96,6 @@ void Init_PlayerDemo() {
 		printf("turrent ID: %d", ae.id);
 		Arr_Insert(&playerArr, ae);
 		playerArr.ActiveEntityArr[i].unit.centerPos.x = player.centerPos.x + i * 100.0f;
-
 		//B_Arr_Init(10, &ae.unit.bullets);
 	}
 
@@ -112,6 +115,7 @@ void Init_PlayerDemo() {
 		ae.contactTime = 0.0f;
 		Arr_Insert(&enemyArr, ae);
 		Start_Wave(&enemyArr.ActiveEntityArr[i].unit, 0);
+
 		/*enemyArr.ActiveEntityArr[i].unit.centerPos.x += 200.0f;*/
 	}
 	//ContArr_Init(playerArr.used, &containersArr);
@@ -318,4 +322,91 @@ void Draw_Entities(void)
 	}
 
 	Draw_Bullets();
+	
 }
+
+void setup(char* imgPath, char* normPath) {
+	baseTex = CP_Image_Load(imgPath);
+	if (baseTex == NULL) { printf("BRoke at test.\n"); }
+	normalTex = CP_Image_Load(normPath);
+	if (normalTex == NULL) { printf("BRoke at normal.\n"); }
+	int w = CP_Image_GetWidth(baseTex);
+	int h = CP_Image_GetHeight(baseTex);
+	float lx = 500;
+	float ly = 10;
+	// Allocate pixel buffers (arrays with length: image width * height)
+	basePixels = (CP_Color*)malloc(sizeof(CP_Color) * w * h); //basePixels = pointer to first byte of memory block of baseImg
+	normalPixels = (CP_Color*)malloc(sizeof(CP_Color) * w * h);
+	outPixels = (CP_Color*)malloc(sizeof(CP_Color) * w * h);
+
+	/* Get an array of CP_Color variables from images */
+	CP_Image_GetPixelData(baseTex, basePixels); // Stores every pixel inside of this block 
+	CP_Image_GetPixelData(normalTex, normalPixels);
+	
+
+	//  Create output image from pixel buffer
+	imgOut = CP_Image_CreateFromData(w, h, (unsigned char*)outPixels);
+
+}
+
+void draw(float x, float y, float wdth, float height, int alpha) {
+	
+	int w = CP_Image_GetWidth(baseTex);
+	int h = CP_Image_GetHeight(baseTex);
+	float lx = CP_Input_GetMouseX();
+	float ly = CP_Input_GetMouseY();
+	// Lighting per pixel 
+	for (int y = 0; y < h; y++) {
+		for (int x = 0; x < w; x++) {
+			int i = y * w + x;
+
+			CP_Color col = basePixels[i];
+			CP_Color n = normalPixels[i];
+
+			// Convert normal RGB -> [-1,1] for X/Y, 0..1 for Z
+			float nx = (n.r / 255.0f) * 2.0f - 1.0f;
+			float ny = (n.g / 255.0f) * 2.0f - 1.0f;
+			float nz = (n.b / 255.0f);
+
+			// Light direction (2D)
+			float dx = lx - (400 - w / 2 + x);
+			float dy = ly - (300 - h / 2 + y);
+			float len = sqrtf(dx * dx + dy * dy);
+			if (len < 0.0001f) len = 0.0001f;
+			dx /= len;
+			dy /= len;
+
+			// Diffuse lighting
+			float diffuse = nx * dx + ny * dy + nz * 0.5f;
+			if (diffuse < 0) diffuse = 0;
+
+			// Apply diffuse to color
+			int r = (int)(col.r * diffuse + 0.5f);
+			int g = (int)(col.g * diffuse + 0.5f);
+			int b = (int)(col.b * diffuse + 0.5f);
+
+			outPixels[i] = CP_Color_Create(r, g, b, col.a);
+		}
+	}
+
+	// Update the output image pixels
+	CP_Image_UpdatePixelData(imgOut, outPixels);
+
+	CP_Image_Draw(imgOut, x * unit, y * unit, wdth * unit, height * unit, alpha);
+
+
+}
+
+
+void clean() {
+	//  Free memory
+	free(basePixels);
+	free(normalPixels);
+	free(outPixels);
+
+	// Optional: free output image if not reused
+	CP_Image_Free(baseTex);
+	CP_Image_Free(normalTex);
+	CP_Image_Free(imgOut);
+}
+
