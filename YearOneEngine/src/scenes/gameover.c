@@ -3,6 +3,7 @@
 #include "scenes/mainscene.h"   
 #include "mainmenu.h"
 #include "../wave/wave.h"
+#include "economy/economyCode.h"
 #include <math.h>
 #include <stdio.h>
    
@@ -79,6 +80,8 @@ void GameOver_Update(void) {
 
 
 void GameOver_Exit(void) {
+    wave = 0;
+    currentMoney = 0;
     if (GO_font) CP_Font_Free(GO_font);
     CP_Sound_Free(KO);
 }
