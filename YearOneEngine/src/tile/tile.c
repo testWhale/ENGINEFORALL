@@ -62,7 +62,7 @@ Tile* Set_OnTile(GameEntity* Entity, CP_Vector mouse) {
 	if (y < 0 || x < 0) { return; }
 	int row = (y) / g_TileMap[0][0].dim.y;
 	
-	int col = (x) / g_TileMap[0][0].dim.x;
+	int col = (x) / g_TileMap[0][0].dim.x; 
 	printf("ROW NOT GOOD: %d %d", row, col);
 	printf("The Value %f %f", mouse.x - g_TileMap[0][0].startPos.x, mouse.y - g_TileMap[0][0].startPos.y);
 	if (row < 0 || row > TILE_ROWS || col < 0 || col > TILE_COLUMNS) {  return 0; }
@@ -127,7 +127,9 @@ Tile* Hover_Tile_Exit() {
 		}
 	}
 }
-Tile* Sel_AfterPlaced(GameEntity* Entity, CP_Vector mouse) {
+
+
+void Sel_AfterPlaced(GameEntity* Entity, CP_Vector mouse) {
 	int row = mouse.y / g_TileMap[0][0].dim.y;
 	int col = mouse.x / g_TileMap[0][0].dim.x;
 	Tile* c_tile = &g_TileMap[row][col];
@@ -150,11 +152,8 @@ void Map_Update() {
 			else {
 				t_color = REALLYCLEAR; // NOT HOVERED = WHITE
 			}
-			//CP_Settings_Fill(CP_Color_Create(0, 255, 0, 255));
-			//CP_Graphics_DrawCircle(startPoint.x, startPoint.y, 10);
 
 			CP_Settings_Fill(CP_Color_Create(255, 255, 255, 150));
-			//CP_Graphics_DrawCircle(c_tile->centerPos.x, c_tile->centerPos.y, 10);
 			{ CP_Settings_Fill(CP_Color_Create(t_color.red, t_color.green, t_color.blue, t_color.opacity)); }
 			CP_Graphics_DrawRect(c_tile->startPos.x, c_tile->startPos.y, c_tile->dim.x - 2, c_tile->dim.y - 2);
 		}

@@ -19,4 +19,9 @@ void Print_BulletInfo(GameEntity* entity);
 
 void Draw_Entities();
 
+void setup(char* imgPath, char* normPath);
+
+void draw();
+
+void clean();
 #endif

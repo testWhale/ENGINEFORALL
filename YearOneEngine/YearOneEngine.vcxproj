@@ -54,6 +54,7 @@
     <ClInclude Include="src\scenes\gameover.h" />
     <ClInclude Include="src\scenes\mainmenu.h" />
     <ClInclude Include="src\scenes\mainscene.h" />
+    <ClInclude Include="src\scenes\mouse.h" />
     <ClInclude Include="src\state\enemy.h" />
     <ClInclude Include="src\state\shoot.h" />
     <ClInclude Include="src\test.h" />
