@@ -290,7 +290,7 @@ void Draw_Entities(void)
 			const float barW = 80.0f;
 			const float barH = 10.0f;
 			const float barX = p->centerPos.x - barW * 0.5f;
-			const float barY = p->centerPos.y - p->diameter * 0.75f;
+			const float barY = p->centerPos.y - p->diameter * 0.65f;
 
 			HealthSystem_DrawBar(&hs, barX, barY, barW, barH);
 		}
@@ -315,7 +315,7 @@ void Draw_Entities(void)
 			const float barW = 80.0f;
 			const float barH = 10.0f;
 			const float barX = e->centerPos.x - barW * 0.5f;
-			const float barY = e->centerPos.y - e->diameter * 0.75f;
+			const float barY = e->centerPos.y - e->diameter * 0.65f;
 
 			HealthSystem_DrawBar(&hs, barX, barY, barW, barH);
 		}

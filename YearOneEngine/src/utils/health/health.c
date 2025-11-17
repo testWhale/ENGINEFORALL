@@ -111,7 +111,7 @@ void HealthSystem_DrawHearts(const HealthSystem* hs)
     if (!hs) return;
 
     const float startX = 650.0f;
-    const float y = 50.0f;
+    const float y = 30.0f;
     const float gap = 60.0f;
     const float r = 20.0f;
 
@@ -215,7 +215,7 @@ void HealthSystem_DrawBar(const HealthSystem* hs,
     CP_Settings_Fill(CP_Color_Create(60, 60, 60, 255));
     CP_Graphics_DrawRect(x, y, width, height);
     float filledW = width * pct;
-    CP_Settings_Fill(CP_Color_Create(0, 255, 0, 255));
+    CP_Settings_Fill(CP_Color_Create(57, 255, 20, 255));
     CP_Graphics_DrawRect(x, y, filledW, height);
 }
 

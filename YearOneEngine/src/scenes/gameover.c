@@ -5,8 +5,7 @@
 #include "../wave/wave.h"
 #include <math.h>
 #include <stdio.h>
-
-static int   GO_wave = 0;     
+   
 static float GO_finalTime = 0.0f;  
 static float GO_money = 0.0f; 
 
@@ -16,9 +15,8 @@ static float GO_fade = 0.0f;
 static CP_Sound KO = 0;
 static CP_Font  GO_font = 0;
 
-void GameOver_SetData(float finalTime, float money) //add in int waveSurvived once code is read
+void GameOver_SetData(float finalTime, float money) 
 {
-    //GO_wave = waveSurvived;
     GO_finalTime = finalTime;
     GO_money = money;
 }
@@ -52,7 +50,7 @@ void GameOver_Update(void) {
     char line[64];
     CP_Settings_TextSize(36.0f);
 
-    (void)snprintf(line, sizeof(line), "Wave survived: %f", GO_money); //Go_wave
+    (void)snprintf(line, sizeof(line), "Wave survived: %d", wave); 
     CP_Font_DrawText(line, W * 0.5f, H * 0.45f);
 
     (void)snprintf(line, sizeof(line), "Time: %.0f s", GO_finalTime);
