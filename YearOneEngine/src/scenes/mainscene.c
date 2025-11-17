@@ -212,7 +212,7 @@ void Main_Scene_Update(void)
     CP_Font_DrawText("Cost 3", 40 * unit, 75 * unit);
     CP_Font_DrawText(troop1Cost, 10 * unit, 95 * unit);
     CP_Font_DrawText(troop2Cost, 25 * unit, 95 * unit);
-    CP_Font_DrawText(1000, 40 * unit, 95 * unit);
+    CP_Font_DrawText("1000", 40 * unit, 95 * unit);
 
     Map_Update(); /*Tile Map*/
 
@@ -273,7 +273,7 @@ void Main_Scene_Update(void)
 
     if (TroopButton3.isClicked == 1)
     {
-        if (Purchase_System(&currentMoney, Scaling_Cost(0, 1000)))
+        if (Purchase_System(&currentMoney, 1000))
         {
             CP_Engine_SetNextGameState(Nuke_Init, Nuke_Update, Nuke_Exit);
         }
