@@ -9,6 +9,7 @@
 #include "entity/ent.h"
 #include "goal/goal.h"
 #include "Utils/UI/Pause.h"
+#include "nuke/nuke.h"
 #include "health.h"
 #include <stdio.h>
 #include <time.h>
@@ -35,6 +36,8 @@ void Main_Scene_Init(void)
     unit = CP_System_GetWindowWidth() / 192.0f;
     myFont = CP_Font_Load("Assets/Fonts/QuinnDoodle.ttf");
     Background = CP_Image_Load("Assets/Misc/BackgroundArt.png");
+    
+    //setup("Assets/NEW_FLOOR.jpg", "Assets/NEW_FLR_MAP.jpg");
     TileMap = CP_Image_Load("Assets/Misc/TileMap.jpg");
 
     Button_Sound_Load(&defaultSound,
@@ -199,7 +202,7 @@ void Main_Scene_Update(void)
     CP_Font_DrawText("Cost 3", 40 * unit, 75 * unit);
     CP_Font_DrawText(troop1Cost, 10 * unit, 95 * unit);
     CP_Font_DrawText(troop2Cost, 25 * unit, 95 * unit);
-    CP_Font_DrawText(troop3Cost, 40 * unit, 95 * unit);
+    CP_Font_DrawText("1000", 40 * unit, 95 * unit);
 
     if (!Pause_IsPaused())
     {
@@ -251,22 +254,17 @@ void Main_Scene_Update(void)
             }
         }
 
-        if (TroopButton3.isClicked == 1) {
-            if (Purchase_System(&currentMoney, Scaling_Cost(troop3Count, 50))) {
-                GameEntity player = Make_Template("player");
-                player.centerPos.x += playerArr.used * 70;
-
-                Arr_Insert(&playerArr, (ActiveEntity) {
-                    playerArr.used,
-                        player, (StateMachine) { .currState = IdleState },
-                        .maxHealth = 100, .health = 100,
-                        .alive = 1, .hasScored = 0, .lastLeftmostX = 0
-                });
-                troop3Count += 1;
-            }
+        if (TroopButton3.isClicked == 1)
+    {
+        if (Purchase_System(&currentMoney, 1000))
+        {
+            CP_Engine_SetNextGameState(Nuke_Init, Nuke_Update, Nuke_Exit);
         }
-        Passive_System(&currentMoney);
     }
+    Passive_System(&currentMoney);
+    if (CP_Input_KeyDown(KEY_Q)) CP_Engine_Terminate();
+    if (CP_Input_KeyDown(KEY_W)) currentMoney += 1000;
+}
 
     if (HealthSystem_GetHearts(&gHealth) <= 0) {
         float finalTime = HealthSystem_GetTimer(&gHealth);
@@ -292,9 +290,6 @@ void Main_Scene_Update(void)
         CP_Engine_SetNextGameState(Main_Menu_Init, Main_Menu_Update, Main_Menu_Exit);
         return;
     }
-
-    if (CP_Input_KeyDown(KEY_Q)) CP_Engine_Terminate();
-    if (CP_Input_KeyDown(KEY_W)) currentMoney += 1000;
 }
 
 void Main_Scene_Exit(void)

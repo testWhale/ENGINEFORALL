@@ -22,7 +22,7 @@ Bullet Bullet_Template(const char* name) {
     if (strcmp(name, "poison") == 0) {
         bullet = (Bullet){
             .id = 0,
-            .centerPos = {100, 100},
+            .centerPos = {-100, -100},
             .velocity = {0, 0},
             .color = {255, 0, 255, 255},
             .diameter = 30,
@@ -36,7 +36,7 @@ Bullet Bullet_Template(const char* name) {
     else if (strcmp(name, "stun") == 0) {
         bullet = (Bullet){
             .id = 0,
-            .centerPos = {100, 100},
+            .centerPos = {-100, -100},
             .velocity = {0, 0},
             .color = {255, 255, 0, 255},
             .diameter = 30,
@@ -49,7 +49,7 @@ Bullet Bullet_Template(const char* name) {
     else { // default "normal"
         bullet = (Bullet){
             .id = 0,
-            .centerPos = {100, 100},
+            .centerPos = {-100, -100},
             .velocity = {0, 0},
             .color = {255, 0, 0, 255},
             .diameter = 30,

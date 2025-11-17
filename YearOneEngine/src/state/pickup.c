@@ -4,6 +4,7 @@
 #include "utils/container.h"
 #include "tile/tile.h"
 #include "shoot.h"
+#include "./scenes/mouse.h"
 int coun = 0;
 
 int Check_ForSel() {
@@ -14,7 +15,6 @@ int Check_ForSel() {
 			printf("YES\n");
 			return 1;
 		}
-
 	}
 	return 0;
 }
@@ -58,6 +58,7 @@ void Idle_Exit(GameEntity* entity, StateMachine* sm, float dt) {
 
 /*---------------------------------PickUp Functions-----------------------------*/
 void PickedUp_Init(GameEntity* entity, StateMachine* sm, float dt) {
+	cursor = 0; //mouse is not free to perform more actions on buttons
 
 	if (1 == entity->isItOnMap) { //When it is onMap -> SelectedState
 		FSM_SetState(sm, SelectedState, entity, dt);
@@ -72,12 +73,16 @@ void PickedUp_Init(GameEntity* entity, StateMachine* sm, float dt) {
 }
 void PickedUp_Update(GameEntity* entity, StateMachine* sm, float dt) {
 	/*//printf("UPDATING\n");*/
+	cursor = 0; //mouse is not free to perform more actions on buttons
+
 	entity->stateTimer += dt;
 	entity->centerPos = (CP_Vector){ CP_Input_GetMouseX(), CP_Input_GetMouseY() };
+
 	Hover_TileAt(entity, (CP_Vector) { CP_Input_GetMouseX(), CP_Input_GetMouseY() });
 
 	if (IsCircleClicked(entity->centerPos.x, entity->centerPos.y, entity->diameter, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
-		if (Set_OnTile(entity, (CP_Vector) { CP_Input_GetMouseX(), CP_Input_GetMouseY() }))
+		
+		if (Set_OnTile(entity, (CP_Vector) { CP_Input_GetMouseX(), CP_Input_GetMouseY() })) // Set_OnTile returns a tile that closley matches the curr Mouse Pos
 		{
 			FSM_SetState(sm, IdleState, entity, dt);
 		}
@@ -92,19 +97,24 @@ void PickedUp_Exit(GameEntity* entity, StateMachine* sm, float dt) {
 	if (entity->sound.soundPlace == NULL) {
 		printf("HELP");
 	} 
-	Hover_Tile_Exit(); 
+	Hover_Tile_Exit(); // Stop Highlighting the currTile
+	cursor = 1; //mouse is now free
 }
 
 /*---------------------------------SELECT FUNCTION-----------------------------*/
 void Sel_Init(GameEntity* entity, StateMachine* sm, float dt) {
-	Hover_Tile_Exit();
+	// ok inside of selectState:
+	/* 1. Exit out of all previous SelStates for every other entity. 
+	   2. Select this one Entity */
+	Hover_Tile_Exit(); //delete all other selections
+	deselectEnt();
 	//Sel_AfterPlaced(entity, entity->centerPos); //Select Function
 
 	entity->stateTimer = 0.0f;
 	CP_Sound_Play(entity->sound.soundPlace);
 
 	if (Check_ForSel()) { //check if other unit has been selected. Before Setting New isSel
-		deselectEnt();
+		
 	};
 	entity->isSel = 1;
 	
@@ -120,7 +130,7 @@ void Sel_Update(GameEntity* entity, StateMachine* sm, float dt) {
 }
 
 void Sel_Exit(GameEntity* entity, StateMachine* sm, float dt) {
-	printf("BYE SELECTION\n");
+	//printf("BYE SELECTION\n");
 	entity->isSel = 0;
 	Check_ForSel();
 	Hover_Tile_Exit();

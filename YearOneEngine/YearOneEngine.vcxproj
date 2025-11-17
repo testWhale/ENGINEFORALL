@@ -25,6 +25,7 @@
     <ClCompile Include="src\economy\economyCode.c" />
     <ClCompile Include="src\entity\ent.c" />
     <ClCompile Include="src\goal\goal.c" />
+    <ClCompile Include="src\Nuke\nuke.c" />
     <ClCompile Include="src\scenes\credits.c" />
     <ClCompile Include="src\scenes\gameover.c" />
     <ClCompile Include="src\scenes\mainmenu.c" />
@@ -48,10 +49,12 @@
     <ClInclude Include="src\economy\economyCode.h" />
     <ClInclude Include="src\entity\ent.h" />
     <ClInclude Include="src\goal\goal.h" />
+    <ClInclude Include="src\Nuke\nuke.h" />
     <ClInclude Include="src\scenes\credits.h" />
     <ClInclude Include="src\scenes\gameover.h" />
     <ClInclude Include="src\scenes\mainmenu.h" />
     <ClInclude Include="src\scenes\mainscene.h" />
+    <ClInclude Include="src\scenes\mouse.h" />
     <ClInclude Include="src\state\enemy.h" />
     <ClInclude Include="src\state\shoot.h" />
     <ClInclude Include="src\test.h" />

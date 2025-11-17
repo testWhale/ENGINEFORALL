@@ -2,6 +2,7 @@
 #include "gameover.h"
 #include "scenes/mainscene.h"   
 #include "mainmenu.h"
+#include "../wave/wave.h"
 #include <math.h>
 #include <stdio.h>
 

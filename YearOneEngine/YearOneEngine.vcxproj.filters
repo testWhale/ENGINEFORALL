@@ -1,198 +1,64 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="Source Files\src">
-      <UniqueIdentifier>{55309a7c-723b-4ab7-8361-f0b4ffd0f0f9}</UniqueIdentifier>
-    </Filter>
+    <ClCompile Include="src\bullet\bullet.c" />
+    <ClCompile Include="src\buttons\buttonCode.c" />
+    <ClCompile Include="src\clicker\clickCode.c" />
+    <ClCompile Include="src\economy\economyCode.c" />
+    <ClCompile Include="src\entity\ent.c" />
+    <ClCompile Include="src\goal\goal.c" />
+    <ClCompile Include="src\scenes\credits.c" />
+    <ClCompile Include="src\scenes\gameover.c" />
+    <ClCompile Include="src\scenes\mainmenu.c" />
+    <ClCompile Include="src\scenes\mainscene.c" />
+    <ClCompile Include="src\state\enemy.c" />
+    <ClCompile Include="src\state\pickup.c" />
+    <ClCompile Include="src\state\shoot.c" />
+    <ClCompile Include="src\tile\layout.c" />
+    <ClCompile Include="src\utils\arr.c" />
+    <ClCompile Include="src\utils\backend\containerStates.c" />
+    <ClCompile Include="src\utils\container.c" />
+    <ClCompile Include="src\utils\health\health.c" />
+    <ClCompile Include="src\utils\readTxt.c" />
+    <ClCompile Include="src\utils\arr\sample.c" />
+    <ClCompile Include="src\utils\SM.c" />
+    <ClCompile Include="src\utils\UI\Pause.c" />
+    <ClCompile Include="src\utils\wave\wave.c" />
+    <ClCompile Include="src\main.c" />
+    <ClCompile Include="src\test.c" />
+    <ClCompile Include="src\tile\tile.c" />
+    <ClCompile Include="src\utils\sound.h" />
+    <ClCompile Include="src\utils\arr\State.h" />
+    <ClCompile Include="src\utils\utils.c" />
+    <ClCompile Include="src\Nuke\nuke.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\main.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\utils\utils.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\test.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\utils\SM.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\state\pickup.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\tile\tile.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\tile\layout.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\utils\container.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\utils\arr.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\utils\backend\containerStates.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\utils\readTxt.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\utils\sound.h">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\utils\arr\State.h">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\utils\arr\sample.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\utils\wave\wave.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\utils\health\health.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\utils\UI\Pause.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\buttons\buttonCode.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\clicker\clickCode.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\economy\economyCode.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\scenes\mainmenu.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\scenes\mainscene.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\scenes\gameover.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\entity\ent.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\state\enemy.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\bullet\bullet.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\state\shoot.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\goal\goal.c">
-    <ClCompile Include="src\scenes\credits.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Button\button.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\utils\health\goal.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="DataTypes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\utils\utils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\utils\SM.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\state\pickup.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\tile\tile.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\utils\container.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\test.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\utils\arr.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\utils\backend\containerStates.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\utils\readTxt.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\utils\wave\wave.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\utils\UI\Pause.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\buttons\buttonCode.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\clicker\clickCode.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\economy\economyCode.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\scenes\mainmenu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\scenes\mainscene.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\scenes\gameover.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\state\enemy.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\bullet\bullet.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\entity\ent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\state\shoot.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\utils\health\health.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\goal\goal.h">
-    <ClInclude Include="src\scenes\credits.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Button\button.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\utils\health\goal.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\entity\ent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <ClInclude Include="src\bullet\bullet.h" />
+    <ClInclude Include="src\buttons\buttonCode.h" />
+    <ClInclude Include="src\clicker\clickCode.h" />
+    <ClInclude Include="src\economy\economyCode.h" />
+    <ClInclude Include="src\entity\ent.h" />
+    <ClInclude Include="src\goal\goal.h" />
+    <ClInclude Include="src\scenes\credits.h" />
+    <ClInclude Include="src\scenes\gameover.h" />
+    <ClInclude Include="src\scenes\mainmenu.h" />
+    <ClInclude Include="src\scenes\mainscene.h" />
+    <ClInclude Include="src\state\enemy.h" />
+    <ClInclude Include="src\state\shoot.h" />
+    <ClInclude Include="src\test.h" />
+    <ClInclude Include="src\utils\health\health.h" />
+    <ClInclude Include="src\utils\UI\Pause.h" />
+    <ClInclude Include="src\utils\wave\wave.h" />
+    <ClInclude Include="DataTypes.h" />
+    <ClInclude Include="src\state\pickup.h" />
+    <ClInclude Include="src\utils\arr.h" />
+    <ClInclude Include="src\utils\backend\containerStates.h" />
+    <ClInclude Include="src\utils\container.h" />
+    <ClInclude Include="src\utils\readTxt.h" />
+    <ClInclude Include="src\utils\SM.h" />
+    <ClInclude Include="src\tile\tile.h" />
+    <ClInclude Include="src\utils\utils.h" />
+    <ClInclude Include="src\Nuke\nuke.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="src\utils\backend\containers.txt" />
