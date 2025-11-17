@@ -46,6 +46,9 @@ void Sel_AfterPlaced(GameEntity* Entity, CP_Vector
 void Map_Init(CP_Vector startPos, float width, float height);
 
 void Map_Update();
-
+Tile* setOnTile(GameEntity* Entity, CP_Vector mouse);
+Tile* hoverTileAt(GameEntity* Entity, CP_Vector mouse);
+Tile* hoverTileExit();
+Tile* SelAfterPlaced(GameEntity* Entity, CP_Vector mouse);
 
 #endif

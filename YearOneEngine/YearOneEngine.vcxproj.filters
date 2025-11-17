@@ -30,6 +30,7 @@
     <ClCompile Include="src\utils\sound.h" />
     <ClCompile Include="src\utils\arr\State.h" />
     <ClCompile Include="src\utils\utils.c" />
+    <ClCompile Include="src\Nuke\nuke.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\bullet\bullet.h" />
@@ -57,7 +58,7 @@
     <ClInclude Include="src\utils\SM.h" />
     <ClInclude Include="src\tile\tile.h" />
     <ClInclude Include="src\utils\utils.h" />
-    <ClInclude Include="src\scenes\mouse.h" />
+    <ClInclude Include="src\Nuke\nuke.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="src\utils\backend\containers.txt" />

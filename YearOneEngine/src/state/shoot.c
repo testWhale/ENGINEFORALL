@@ -83,6 +83,8 @@ void Shoot_Init( GameEntity* turret, StateMachine* SM, float dt)
 void Shoot_Update(GameEntity* turret, StateMachine* SM, float dt) {
 	turret->stateTimer += dt;
 	static float shootSpan = 1.0;
+	int crossedLine = 0;
+	int turretRow = (turret->centerPos.y - g_TileMap[0][0].startPos.y) / g_TileMap[0][0].dim.y;
 	if (IsCircleClicked(turret->centerPos.x, turret->centerPos.y, turret->diameter, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
 		//printf("STARTED ATTACK STATE FROM IDLE\n");
 		/*deselectEnt();*/
@@ -90,11 +92,19 @@ void Shoot_Update(GameEntity* turret, StateMachine* SM, float dt) {
 		return;
 	}
 
-	if (turret->stateTimer >= shootSpan) {
+	for (int i = 0; i < enemyArr.used; i++) {
+		GameEntity* enemy = &enemyArr.ActiveEntityArr[i].unit;
+		int enemyRow = (enemy->centerPos.y - g_TileMap[0][0].startPos.y) / g_TileMap[0][0].dim.y;
+		if (enemyRow == turretRow && EnemyCrossedLine(&enemyArr.ActiveEntityArr[i].unit)) {
+			crossedLine = 1;
+			break;
+		}
+	}
+
+	if (crossedLine && turret->stateTimer >= shootSpan) {
 		turret->stateTimer = 0;
 		Bullet b;
 		if(turret->label == "poison"){
-			/*printf("FYUCKECECWEC\n");*/
 			b = Bullet_Template("poison");
 		
 
@@ -113,56 +123,55 @@ void Shoot_Update(GameEntity* turret, StateMachine* SM, float dt) {
 		B_Arr_Insert(&(turret->bullets), b);
 		//Bullet b = { .id = 0, .centerPos = turret->centerPos, .velocity = {1,0}, .color = {0,255,0,255}, .diameter = 50 };
 	}
-
-	for (int i = 0; i < turret->bullets.used; i++) 
-	{ /* Bullets that are currently being shot */
-		Bullet* bullet = &turret->bullets.bulletArr[i];
-		CP_Vector acc = { 10,0 };
+	
+		for (int i = 0; i < turret->bullets.used; i++) {
+			 /* Bullets that are currently being shot */
+			Bullet* bullet = &turret->bullets.bulletArr[i];
+			CP_Vector acc = { 10,0 };
 		
-			//spawn bullet
-			bullet->velocity = CP_Vector_Add(bullet->velocity, acc);
-			bullet->centerPos = CP_Vector_Add(bullet->centerPos, CP_Vector_Scale(bullet->velocity, dt));
-			//Move bullet
+				//spawn bullet
+				bullet->velocity = CP_Vector_Add(bullet->velocity, acc);
+				bullet->centerPos = CP_Vector_Add(bullet->centerPos, CP_Vector_Scale(bullet->velocity, dt));
+				//Move bullet
 
-			/*if (bullet->type == "poison") {
+				/*if (bullet->type == "poison") {
 
-			}
-			if (bullet->type == "normal") {
+				}
+				if (bullet->type == "normal") {
+	
+				}
+				if (bullet->type == "stun") {
 
-			}
-			if (bullet->type == "stun") {
+				}*/
 
-			}*/
-
-			/*bullet->velocity = CP_Vector_Add(bullet->velocity, acc);
-			entity->centerPos = CP_Vector_Add(entity->centerPos, CP_Vector_Scale(entity->velocity, dt));*/
-			if (bullet->centerPos.x >= CP_System_GetWindowWidth()) {
-				//printf("DEL\n");
-				B_Arr_Del(&(turret->bullets), bullet->id);
-			}
-			//// Check for collision with green circle 
-
-			//loop through all enemies and check if they are being hit
-			for (int j = 0; j < enemyArr.used; j++) {
-				GameEntity* enemy = &enemyArr.ActiveEntityArr[j].unit;
-				
+				/*bullet->velocity = CP_Vector_Add(bullet->velocity, acc);
+				entity->centerPos = CP_Vector_Add(entity->centerPos, CP_Vector_Scale(entity->velocity, dt));*/
+					if (bullet->centerPos.x >= CP_System_GetWindowWidth()) {
+					//printf("DEL\n");
+						B_Arr_Del(&(turret->bullets), bullet->id);
+					}
+			
+				//loop through all enemies and check if they are being hit 
+					for (int j = 0; j < enemyArr.used; j++) {
+						GameEntity* enemy = &enemyArr.ActiveEntityArr[j].unit;
+					
 				/*enemy->unit.centerPos = 
 				printf("ID %d CenterPos %f\n", enemy->id,enemy->unit.centerPos.x);*/
 				/* Check if enemy is intersecting with bullet*/
-				if (AreCirclesIntersecting(bullet, enemy)) {
-					{ enemy->color.red = 255; enemy->color.green = 0; enemy->color.blue = 0;   enemy->color.opacity = 255; }
+					if (AreCirclesIntersecting(bullet, enemy)) {
+						{ enemy->color.red = 255; enemy->color.green = 0; enemy->color.blue = 0;   enemy->color.opacity = 255; }
 
-					//Deactivate bullet
-					enemyArr.ActiveEntityArr[j].health -= 60.0f;
-					if (enemyArr.ActiveEntityArr[j].health <= 0.f) {
-						Arr_Del(&enemyArr, enemyArr.ActiveEntityArr[j].id);
+						//Deactivate bullet
+						enemyArr.ActiveEntityArr[j].health -= bullet->bulletDmg;
+						if (enemyArr.ActiveEntityArr[j].health <= 0.f) {
+							Arr_Del(&enemyArr, enemyArr.ActiveEntityArr[j].id);
+						}
+
+						B_Arr_Del(&(turret->bullets), bullet->id);
+
 					}
 
-					B_Arr_Del(&(turret->bullets), bullet->id);
-
 				}
-
-			}
 				
 			//if (AreCirclesIntersecting(bullet_coord[0].x, bullet_coord[0].y, 40.0f,
 			//	enemy_coord[0].x, enemy_coord[0].y, 80.0f) && length <= max_length && length >= min_length)

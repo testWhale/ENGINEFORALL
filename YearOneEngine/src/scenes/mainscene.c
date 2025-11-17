@@ -9,8 +9,7 @@
 #include "tile/tile.h"
 #include "entity/ent.h"
 #include "goal/goal.h"
-
-#include "mouse.h"
+#include "nuke/nuke.h"
 
 /*Cleanup Xav*/
 //#include "test.h"
@@ -33,7 +32,6 @@ float g_goalRadius = 0.0f;
 
 void Main_Scene_Init(void)
 {
-    cursor = 1; //free up mouse for 1 action.
     //CP_System_Fullscreen();
     srand((unsigned)time(NULL));
     /*CP_System_Fullscreen();*/
@@ -43,8 +41,10 @@ void Main_Scene_Init(void)
     unit = CP_System_GetWindowWidth() / 192.0f;
     myFont = CP_Font_Load("Assets/Fonts/QuinnDoodle.ttf");
     Background = CP_Image_Load("Assets/Misc/BackgroundArt.png");
-    TileMap = CP_Image_Load("Assets/test.png");
+    
     setup("Assets/test.png", "Assets/normal.png");
+    TileMap = CP_Image_Load("Assets/Misc/TileMap.jpg");
+
 
     Button_Sound_Load(&defaultSound,
         "Assets/soundTesters/ClickSound.wav",
@@ -134,7 +134,7 @@ void Main_Scene_Init(void)
     HealthTimer_Reset();
     setGoal();
     /*Test_Init();*/
-   
+
 }
 
 
@@ -219,8 +219,6 @@ void Main_Scene_Update(void)
     Draw_Entities(); /*Draw Players & Enemies*/
 
     Draw_TempText(dt); /* Flag check that displays a temporary msg/ reward */
-    
-    
     if (ClickerButton.isClicked == 1) {
         One_Click(&currentMoney);
     }
@@ -242,53 +240,40 @@ void Main_Scene_Update(void)
             Passive_Upgrade();
         }
     }
-    if (TroopButton1.isClicked == 1 && cursor)
+    if (TroopButton1.isClicked == 1)
     {
         if (Purchase_System(&currentMoney, Scaling_Cost(troop1Count, 50)))
         {
             GameEntity player = Make_Template("poison");
-            player.centerPos.x = CP_Input_GetMouseX();
-            player.centerPos.y = CP_Input_GetMouseY();
+            player.centerPos.x += playerArr.used * 50;
+           
             
             Arr_Insert(&playerArr, (ActiveEntity) {
                 playerArr.used,
-                    player, (StateMachine) { .currState = PickUpState },
+                    player, (StateMachine) { .currState = IdleState },
                     .maxHealth = 100, .health = 100, .alive = 1, .hasScored = 0, .lastLeftmostX = 0
             });
             troop1Count += 1;
         }
     }
 
-    if (TroopButton2.isClicked == 1 && cursor)
+    if (TroopButton2.isClicked == 1)
     {
         if (Purchase_System(&currentMoney, Scaling_Cost(troop2Count, 50)))
         {
             GameEntity player = Make_Template("player");
-            player.centerPos.x = CP_Input_GetMouseX();
-            player.centerPos.y = CP_Input_GetMouseY();
+            player.centerPos.x += playerArr.used * 60;
             Arr_Insert(&playerArr, (ActiveEntity) { playerArr.used, 
-                player, (StateMachine) { .currState = PickUpState },
+                player, (StateMachine) { .currState = IdleState },
                 .maxHealth = 100, .health = 100, .alive = 1, .hasScored = 0, .lastLeftmostX = 0
             });
             troop2Count += 1;
         }
     }
 
-    if (TroopButton3.isClicked == 1 && cursor)
+    if (TroopButton3.isClicked == 1)
     {
-        if (Purchase_System(&currentMoney, Scaling_Cost(troop3Count, 50)))
-        {
-            GameEntity player = Make_Template("player");
-            player.centerPos.x = CP_Input_GetMouseX();
-            player.centerPos.y = CP_Input_GetMouseY();
-
-
-            Arr_Insert(&playerArr, (ActiveEntity) { playerArr.used, 
-                player, (StateMachine) { .currState = PickUpState },
-                .maxHealth = 100, .health = 100, .alive = 1, .hasScored = 0, .lastLeftmostX = 0
-            });
-            troop3Count += 1;
-        }
+        CP_Engine_SetNextGameState(Nuke_Init, Nuke_Update, Nuke_Exit);
     }
 
 
@@ -313,7 +298,6 @@ void Main_Scene_Exit(void)
     Button_Free(&TroopButton2);
     Button_Free(&TroopButton3);
     Button_Sound_Free(&defaultSound);
-    clean();
 
     /* Delete Temporary Text */
     Del_TempText();
