@@ -55,7 +55,7 @@ Bullet Bullet_Template(const char* name) {
             .diameter = 30,
             .opacity = 0,
             .type = "normal",
-            .bulletDmg = 10.0f
+            .bulletDmg = 35.0f
         };
     }
 
