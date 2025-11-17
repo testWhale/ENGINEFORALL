@@ -30,7 +30,7 @@ Bullet Bullet_Template(const char* name) {
             .type = "poison",
             .bulletDmg = 2.0f,
             .poisonDmg = 20.0f,
-            .poisonDecayTimer = 3.0f
+            .poisonDecayTimer = 10.0f
         };
        
     }

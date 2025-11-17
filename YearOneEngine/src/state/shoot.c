@@ -73,7 +73,7 @@ void Shoot_Init( GameEntity* turret, StateMachine* SM, float dt)
 
 void Shoot_Update(GameEntity* turret, StateMachine* SM, float dt) {
 	turret->stateTimer += dt;
-	static float shootSpan = 1.0;
+	static float shootSpan = 3.0;
 	int crossedLine = 0;
 	int turretRow = (turret->centerPos.y - g_TileMap[0][0].startPos.y) / g_TileMap[0][0].dim.y;
 	if (IsCircleClicked(turret->centerPos.x, turret->centerPos.y, turret->diameter, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
@@ -148,9 +148,12 @@ void Shoot_Update(GameEntity* turret, StateMachine* SM, float dt) {
 
 
 						if (strcmp(bullet->type, "poison")==0) {
-							enemy->isPoisoned = 1;
-							enemy->poisonDamage = bullet->poisonDmg;
-							enemy->poisonTimerDecay = bullet->poisonDecayTimer;
+							if (!enemy->isPoisoned) {
+								enemy->isPoisoned = 1;
+								enemy->poisonDamage = bullet->poisonDmg;
+								enemy->poisonTimerDecay = bullet->poisonDecayTimer;
+								enemyArr.ActiveEntityArr[j].health -= enemy->poisonDamage;
+							}
 						}
 
 						if (strcmp(bullet->type, "normal") == 0) {
