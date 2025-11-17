@@ -25,6 +25,9 @@ struct GameEntity {
 	/*Generic Values*/
 	CP_Vector centerPos; float rotation; CP_BOOL isPlayer; 
 	CP_Vector forwardVector, velocity; Color color; float diameter; float stateTimer; 
+	int isPoisoned;
+	float poisonTimerDecay;
+	float poisonDamage;
 
 	/*Check Values*/
 	int isItOnMap; int isSel; char* label; entSound sound;

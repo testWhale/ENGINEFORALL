@@ -29,9 +29,10 @@ Bullet Bullet_Template(const char* name) {
             .opacity = 0,
             .type = "poison",
             .bulletDmg = 2.0f,
-            .poisonDmg = 10.0f
+            .poisonDmg = 20.0f,
+            .poisonDecayTimer = 3.0f
         };
-        bullet.bulletDmg += bullet.poisonDmg * dt;
+       
     }
     else if (strcmp(name, "stun") == 0) {
         bullet = (Bullet){

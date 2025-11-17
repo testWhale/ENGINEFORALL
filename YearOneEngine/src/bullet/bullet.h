@@ -14,6 +14,8 @@ typedef struct Bullet {
 	float bulletDmg;
 	float stunTimer;
 	float poisonDmg;
+	int isPoisoned;
+	float poisonDecayTimer;
 	CP_BOOL isActive; char* type;
 }Bullet;
 

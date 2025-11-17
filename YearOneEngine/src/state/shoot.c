@@ -44,15 +44,6 @@ void Shoot(GameEntity* turret, StateMachine* SM, float dt)
 		bullet->centerPos = CP_Vector_Add(bullet->centerPos, CP_Vector_Scale(bullet->velocity, dt));
 		//Move bullet
 
-		/*if (bullet->type == "poison") {
-
-		}
-		if (bullet->type == "normal") {
-
-		}
-		if (bullet->type == "stun") {
-
-		}*/
 
 		if (bullet->centerPos.x >= CP_System_GetWindowWidth())
 		{
@@ -106,7 +97,7 @@ void Shoot_Update(GameEntity* turret, StateMachine* SM, float dt) {
 		Bullet b;
 		if(turret->label == "poison"){
 			b = Bullet_Template("poison");
-		
+			
 
 		}
 		if (turret->label == "stun") {
@@ -134,15 +125,7 @@ void Shoot_Update(GameEntity* turret, StateMachine* SM, float dt) {
 				bullet->centerPos = CP_Vector_Add(bullet->centerPos, CP_Vector_Scale(bullet->velocity, dt));
 				//Move bullet
 
-				/*if (bullet->type == "poison") {
-
-				}
-				if (bullet->type == "normal") {
-	
-				}
-				if (bullet->type == "stun") {
-
-				}*/
+				
 
 				/*bullet->velocity = CP_Vector_Add(bullet->velocity, acc);
 				entity->centerPos = CP_Vector_Add(entity->centerPos, CP_Vector_Scale(entity->velocity, dt));*/
@@ -155,20 +138,46 @@ void Shoot_Update(GameEntity* turret, StateMachine* SM, float dt) {
 					for (int j = 0; j < enemyArr.used; j++) {
 						GameEntity* enemy = &enemyArr.ActiveEntityArr[j].unit;
 					
-				/*enemy->unit.centerPos = 
-				printf("ID %d CenterPos %f\n", enemy->id,enemy->unit.centerPos.x);*/
+				
 				/* Check if enemy is intersecting with bullet*/
 					if (AreCirclesIntersecting(bullet, enemy)) {
 						{ enemy->color.red = 255; enemy->color.green = 0; enemy->color.blue = 0;   enemy->color.opacity = 255; }
 
 						//Deactivate bullet
-						enemyArr.ActiveEntityArr[j].health -= bullet->bulletDmg;
+						
+
+
+						if (strcmp(bullet->type, "poison")==0) {
+							enemy->isPoisoned = 1;
+							enemy->poisonDamage = bullet->poisonDmg;
+							enemy->poisonTimerDecay = bullet->poisonDecayTimer;
+						}
+
+						if (strcmp(bullet->type, "normal") == 0) {
+							enemyArr.ActiveEntityArr[j].health -= bullet->bulletDmg;
+						}
+
+						/*if (bullet->type == "stun") {
+
+						}*/
+
+						B_Arr_Del(&(turret->bullets), bullet->id);
+						
 						if (enemyArr.ActiveEntityArr[j].health <= 0.f) {
 							Arr_Del(&enemyArr, enemyArr.ActiveEntityArr[j].id);
 						}
 
-						B_Arr_Del(&(turret->bullets), bullet->id);
+						
 
+					}
+					if (enemy->isPoisoned) {
+						enemyArr.ActiveEntityArr[j].health -= enemy->poisonDamage * dt;
+						enemy->poisonTimerDecay -= dt;
+
+						if (enemy->poisonTimerDecay <= 0) {
+							enemy->isPoisoned = 0;
+							enemy->poisonTimerDecay = 0;
+						}
 					}
 
 				}
