@@ -94,7 +94,7 @@ void Shoot_Update(GameEntity* turret, StateMachine* SM, float dt) {
 		turret->stateTimer = 0;
 		Bullet b;
 		if(turret->label == "poison"){
-			printf("FYUCKECECWEC\n");
+			/*printf("FYUCKECECWEC\n");*/
 			b = Bullet_Template("poison");
 		
 
