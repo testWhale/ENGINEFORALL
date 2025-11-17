@@ -50,9 +50,9 @@ void GameOver_Update(void) {
     CP_Font_DrawText("GAME OVER", W * 0.5f, H * 0.35f);
 
     char line[64]; CP_Settings_TextSize(36.0f);
-    (void)snprintf(line, sizeof(line), "Wave survived: %d", wave);     CP_Font_DrawText(line, W * 0.5f, H * 0.45f);
+    (void)snprintf(line, sizeof(line), "Wave survived: %d", GO_wave);     CP_Font_DrawText(line, W * 0.5f, H * 0.45f);
     (void)snprintf(line, sizeof(line), "Time: %.0f s", GO_finalTime);    CP_Font_DrawText(line, W * 0.5f, H * 0.52f);
-    (void)snprintf(line, sizeof(line), "Money earn: %d", GO_goals);     CP_Font_DrawText(line, W * 0.5f, H * 0.59f);
+    (void)snprintf(line, sizeof(line), "Money earn: %d", GO_money);     CP_Font_DrawText(line, W * 0.5f, H * 0.59f);
 
     float blink = 0.5f + 0.5f * sinf(6.0f * GO_timer);
     int alpha = (int)(130 + 100 * blink);

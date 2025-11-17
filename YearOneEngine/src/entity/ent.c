@@ -212,47 +212,47 @@ void Draw_Entities(void)
 {
 	float dt = CP_System_GetDt();
 
-	if (!Pause_IsPaused())
-	{
-		for (size_t i = 0; i < playerArr.used; ++i)
-		{
-			ActiveEntity* ent = &playerArr.ActiveEntityArr[i];
-			if (!ent->alive)
-				continue;
+	//if (!Pause_IsPaused())
+	//{
+	//	for (size_t i = 0; i < playerArr.used; ++i)
+	//	{
+	//		ActiveEntity* ent = &playerArr.ActiveEntityArr[i];
+	//		if (!ent->alive)
+	//			continue;
 
-			FSM_Update(&ent->fsm, &ent->unit, dt);
-		}
+	//		FSM_Update(&ent->fsm, &ent->unit, dt);
+	//	}
 
-		if (enemyArr.used <= 0)
-		{
-			Init_NewWave(wave++);
-		}
+	//	if (enemyArr.used <= 0)
+	//	{
+	//		Init_NewWave(wave++);
+	//	}
 
-		/* ----------------- ENEMIES ----------------- */
-		for (size_t i = 0; i < enemyArr.used; )
-		{
-			ActiveEntity* ent = &enemyArr.ActiveEntityArr[i];
-			if (!ent->alive)
-			{
-				++i;
-				continue;
-			}
-			if (!ent->isHitting)
-			{
-				Move_Wave(&ent->unit, dt);
-			}
+	//	/* ----------------- ENEMIES ----------------- */
+	//	for (size_t i = 0; i < enemyArr.used; )
+	//	{
+	//		ActiveEntity* ent = &enemyArr.ActiveEntityArr[i];
+	//		if (!ent->alive)
+	//		{
+	//			++i;
+	//			continue;
+	//		}
+	//		if (!ent->isHitting)
+	//		{
+	//			Move_Wave(&ent->unit, dt);
+	//		}
 
-			FSM_Update(&ent->fsm, &ent->unit, dt);
+	//		FSM_Update(&ent->fsm, &ent->unit, dt);
 
-			if (ent->health <= 0.0f)
-			{
-				Arr_Del(&enemyArr, ent->id);
-				continue;      
-			}
+	//		if (ent->health <= 0.0f)
+	//		{
+	//			Arr_Del(&enemyArr, ent->id);
+	//			continue;      
+	//		}
 
-			++i;
-		}
-	}
+	//		++i;
+	//	}
+	//}
 
 
 
@@ -262,9 +262,12 @@ void Draw_Entities(void)
 	for (size_t i = 0; i < playerArr.used; ++i)
 	{
 		ActiveEntity* ent = &playerArr.ActiveEntityArr[i];
+		
+		FSM_Update(&ent->fsm, &ent->unit, dt);
 		if (!ent->alive)
 			continue;
-
+		
+		
 		GameEntity* p = &ent->unit;
 		CP_Vector shadowOffset = CP_Vector_Scale(lightDir, -50.0f);
 		CP_Vector shadowPos = CP_Vector_Add(p->centerPos, shadowOffset);
@@ -299,11 +302,12 @@ void Draw_Entities(void)
 	for (size_t i = 0; i < enemyArr.used; ++i)
 	{
 		ActiveEntity* ent = &enemyArr.ActiveEntityArr[i];
+		FSM_Update(&ent->fsm, &ent->unit, dt);
+
 		if (!ent->alive)
 			continue;
 
 		GameEntity* e = &ent->unit;
-
 		CP_Settings_Fill(CP_Color_Create(e->color.red, e->color.green, e->color.blue, e->color.opacity));
 		CP_Graphics_DrawCircle(e->centerPos.x, e->centerPos.y, e->diameter);
 

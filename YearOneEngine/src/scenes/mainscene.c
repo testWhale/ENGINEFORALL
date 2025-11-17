@@ -207,6 +207,7 @@ void Main_Scene_Update(void)
     CP_Font_DrawText(troop3Cost, 40 * unit, 95 * unit);
 
     if (!Pause_IsPaused())
+
     Map_Update(); /*Tile Map*/
 
     Draw_Entities(); /*Draw Players & Enemies*/
