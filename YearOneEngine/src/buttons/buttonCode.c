@@ -51,12 +51,12 @@ void Button_Load(ButtonInfo* newBtn,
 
 void Button_Free(ButtonInfo* newBtn)
 {
-	CP_Image_Free(newBtn->buttonNormal);
-	CP_Image_Free(newBtn->buttonFeedback);
-	CP_Image_Free(newBtn->buttonHighlight);
+	//CP_Image_Free(newBtn->buttonNormal);
+	//CP_Image_Free(newBtn->buttonFeedback);
+	/*CP_Image_Free(newBtn->buttonHighlight);
 	CP_Sound_Free(newBtn->soundEffect->onClick);
 	CP_Sound_Free(newBtn->soundEffect->onHover);
-	CP_Sound_Free(newBtn->soundEffect->onRelease);
+	CP_Sound_Free(newBtn->soundEffect->onRelease);*/
 }
 
 void Button_Sound_Load
