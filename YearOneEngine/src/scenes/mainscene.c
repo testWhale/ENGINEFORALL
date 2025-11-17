@@ -19,6 +19,7 @@
 
 CP_Image Overlay;
 CP_Image Background, TileMap;
+CP_Image ClickerInfo,PassiveInfo,BlankInfo,PoisonInfo,NormalInfo,WinInfo;
 
 ButtonInfo ClickerButton, PauseButton;
 ButtonInfo ClickerUpgrade1, ClickerUpgrade2, ClickerUpgrade3;
@@ -36,9 +37,14 @@ void Main_Scene_Init(void)
     unit = CP_System_GetWindowWidth() / 192.0f;
     myFont = CP_Font_Load("Assets/Fonts/QuinnDoodle.ttf");
     Background = CP_Image_Load("Assets/Misc/BackgroundArt.png");
-    
-    //setup("Assets/NEW_FLOOR.jpg", "Assets/NEW_FLR_MAP.jpg");
     TileMap = CP_Image_Load("Assets/Misc/TileMap.jpg");
+
+    ClickerInfo = CP_Image_Load("Assets/Misc/InfoBoxes/ClickPowerInfo.png");
+    PassiveInfo = CP_Image_Load("Assets/Misc/InfoBoxes/PassivePowerInfo.png");
+    BlankInfo = CP_Image_Load("Assets/Misc/InfoBoxes/EMPTYINFO.png");
+    PoisonInfo = CP_Image_Load("Assets/Misc/InfoBoxes/PoisonCatInfo.png");
+    NormalInfo = CP_Image_Load("Assets/Misc/InfoBoxes/NormalCatInfo.png");
+    WinInfo = CP_Image_Load("Assets/Misc/InfoBoxes/WinInfo.png");
 
     Button_Sound_Load(&defaultSound,
         "Assets/soundTesters/ClickSound.wav",
@@ -187,7 +193,7 @@ void Main_Scene_Update(void)
     CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_BOTTOM);
     CP_Settings_TextSize(4 * unit);
     sprintf_s(statisticString, 100, "Click Power : %d ", clickPower);
-    sprintf_s(statisticString2, 100, "Passive Income : %.1f", passiveIncome / 5);
+    sprintf_s(statisticString2, 100, "Passive Income : %.1f", passiveIncome);
     CP_Font_DrawText(statisticString, 24 * unit, 65 * unit);
     CP_Font_DrawText(statisticString2, 24 * unit, 70 * unit);
 
@@ -206,6 +212,42 @@ void Main_Scene_Update(void)
 
     if (!Pause_IsPaused())
     {
+        if (ClickerUpgrade1.isSel == 1)
+        {
+            CP_Settings_ImageMode(CP_POSITION_CENTER);
+            CP_Image_Draw(ClickerInfo, 30 * unit, 75 * unit, 32 * unit, 21 * unit, 255);
+        }
+
+        if (ClickerUpgrade2.isSel == 1)
+        {
+            CP_Settings_ImageMode(CP_POSITION_CENTER);
+            CP_Image_Draw(PassiveInfo, 45 * unit, 75 * unit, 32 * unit, 21 * unit, 255);
+        }
+
+        if (ClickerUpgrade3.isSel == 1)
+        {
+            CP_Settings_ImageMode(CP_POSITION_CENTER);
+            CP_Image_Draw(BlankInfo, 60 * unit, 75 * unit, 32 * unit, 21 * unit, 255);
+        }
+
+        if (TroopButton1.isSel == 1)
+        {
+            CP_Settings_ImageMode(CP_POSITION_CENTER);
+            CP_Image_Draw(PoisonInfo, 30 * unit, 95 * unit, 32 * unit, 21 * unit, 255);
+        }
+
+        if (TroopButton2.isSel == 1)
+        {
+            CP_Settings_ImageMode(CP_POSITION_CENTER);
+            CP_Image_Draw(NormalInfo, 45 * unit, 95 * unit, 32 * unit, 21 * unit, 255);
+        }
+
+        if (TroopButton3.isSel == 1)
+        {
+            CP_Settings_ImageMode(CP_POSITION_CENTER);
+            CP_Image_Draw(WinInfo, 60 * unit, 95 * unit, 32 * unit, 21 * unit, 255);
+        }
+
         if (ClickerButton.isClicked == 1) {
             One_Click(&currentMoney);
         }
