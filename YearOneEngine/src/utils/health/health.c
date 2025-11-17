@@ -110,7 +110,7 @@ void HealthSystem_DrawHearts(const HealthSystem* hs)
 {
     if (!hs) return;
 
-    const float startX = 50.0f;
+    const float startX = 650.0f;
     const float y = 50.0f;
     const float gap = 60.0f;
     const float r = 20.0f;

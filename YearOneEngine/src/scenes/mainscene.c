@@ -285,7 +285,7 @@ void Main_Scene_Update(void)
 
     char tbuf[48];
     snprintf(tbuf, sizeof(tbuf), "Time: %.1fs", HealthSystem_GetTimer(&gHealth));
-    CP_Font_DrawText(tbuf, (float)CP_System_GetWindowWidth() * 0.7f, 8.0f);
+    CP_Font_DrawText(tbuf, (float)CP_System_GetWindowWidth() * 0.6f, 8.0f);
 
     Pause_UpdateAndDraw();
     if (Pause_TakeMenuRequest()) {
