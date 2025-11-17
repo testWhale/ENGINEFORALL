@@ -128,6 +128,7 @@ void Main_Scene_Init(void)
     Goal_InitFromTileMap(0.45f, 0.25f);
 
     Pause_Init();
+    setup("Assets/Map/TileMap.png", "Assets/Map/NormalTileMap2.png");
 }
 
 void Main_Scene_Update(void)
@@ -158,7 +159,9 @@ void Main_Scene_Update(void)
     CP_Settings_ImageMode(CP_POSITION_CENTER);
     CP_Image_Draw(TileMap, 120 * unit, 60 * unit, 108 * unit, 72 * unit, 255);
 
-    Map_Update();      
+    Map_Update();
+    draw(120, 60, 108, 72, 255);
+
     Draw_Entities();    
     Draw_TempText(dt);
 

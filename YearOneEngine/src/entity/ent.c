@@ -40,8 +40,7 @@ GameEntity Make_Template(const char* name) {
 		.centerPos = {400, 150}, .rotation = 0, .isPlayer = 0, .forwardVector = {0, 0}, .color = {255,0,255,255},
 		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "poison" , .bullets = {0} };
 		B_Arr_Insert(&e.bullets, temp);
-		/*B_Arr_Init(2, &e.bullets);
-		B_Arr_Insert(&e.bullets, temp);*/
+
 	}
 
 	if (name == "stun")
@@ -50,25 +49,18 @@ GameEntity Make_Template(const char* name) {
 		e = (GameEntity){
 		.centerPos = {500, 100}, .rotation = 0, .isPlayer = 0, .forwardVector = {0, 0}, .color = {255,0,0,255},
 		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "fire" , .bullets = {0} };
-		/*B_Arr_Init(2, &e.bullets);
-		B_Arr_Insert(&e.bullets, temp);*/
+
 	}
 
 	if (name == "enemy")
 	{
-
 		e = (GameEntity){
 		.centerPos = {100, 400}, .rotation = 0, .isPlayer = 0, .forwardVector = {0, 0}, .color = {255,255,0,255},
 		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "enemy" , .bullets = {0} };
 
 	}
-	//do not assign any pointers here as it will point to the same address
-	/* aka:
-	B_Arr_Init(10, &e.bullets);
-	...
-	GameEntity player = e
-	GameEntity enemy = e
-	both point to the same bullet array STOP */
+	
+	
 	return e;
 }
 
@@ -96,7 +88,7 @@ void Init_PlayerDemo() {
 		printf("turrent ID: %d", ae.id);
 		Arr_Insert(&playerArr, ae);
 		playerArr.ActiveEntityArr[i].unit.centerPos.x = player.centerPos.x + i * 100.0f;
-		//B_Arr_Init(10, &ae.unit.bullets);
+
 	}
 
 
@@ -116,7 +108,6 @@ void Init_PlayerDemo() {
 		Arr_Insert(&enemyArr, ae);
 		Start_Wave(&enemyArr.ActiveEntityArr[i].unit, 0);
 
-		/*enemyArr.ActiveEntityArr[i].unit.centerPos.x += 200.0f;*/
 	}
 	//ContArr_Init(playerArr.used, &containersArr);
 	//Read_File("Assets/containers");
@@ -142,7 +133,6 @@ void Init_NewWave(int currWave) {
 		Arr_Insert(&enemyArr, ae);
 		Start_Wave(&enemyArr.ActiveEntityArr[i].unit, (int)2);
 
-		/*enemyArr.ActiveEntityArr[i].unit.centerPos.x += 200.0f;*/
 	}
 }
 
@@ -200,7 +190,7 @@ void Draw_Bullets() {
 			{
 				if (pew->type == "poison") { 
 					pew->color.red = 255; pew->color.green = 0; pew->color.blue = 255; pew->color.opacity = 255; }
-				//printf("%s\n", pew->type);
+				
 				CP_Settings_Fill(CP_Color_Create(pew->color.red, pew->color.green, pew->color.blue, pew->opacity));
 				CP_Graphics_DrawCircle(pew->centerPos.x, pew->centerPos.y, pew->diameter);
 			}
@@ -369,8 +359,8 @@ void draw(float x, float y, float wdth, float height, int alpha) {
 			float nz = (n.b / 255.0f);
 
 			// Light direction (2D)
-			float dx = lx - (400 - w / 2 + x);
-			float dy = ly - (300 - h / 2 + y);
+			float dx = lx - ( w / 2 + x);
+			float dy = ly - ( h / 2 + y);
 			float len = sqrtf(dx * dx + dy * dy);
 			if (len < 0.0001f) len = 0.0001f;
 			dx /= len;

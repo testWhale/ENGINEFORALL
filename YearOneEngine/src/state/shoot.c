@@ -94,8 +94,6 @@ void Shoot_Update(GameEntity* turret, StateMachine* SM, float dt) {
 	int crossedLine = 0;
 	int turretRow = (turret->centerPos.y - g_TileMap[0][0].startPos.y) / g_TileMap[0][0].dim.y;
 	if (IsCircleClicked(turret->centerPos.x, turret->centerPos.y, turret->diameter, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
-		//printf("STARTED ATTACK STATE FROM IDLE\n");
-		/*deselectEnt();*/
 		FSM_SetState(SM, SelectedState, turret, dt);
 		return;
 	}
@@ -114,7 +112,7 @@ void Shoot_Update(GameEntity* turret, StateMachine* SM, float dt) {
 		
 		b.centerPos = turret->centerPos;
 		B_Arr_Insert(&(turret->bullets), b);
-		//Bullet b = { .id = 0, .centerPos = turret->centerPos, .velocity = {1,0}, .color = {0,255,0,255}, .diameter = 50 };
+		
 	}
 	
 		for (int i = 0; i < turret->bullets.used; i++) {

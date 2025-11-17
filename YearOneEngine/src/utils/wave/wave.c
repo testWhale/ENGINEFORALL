@@ -6,24 +6,25 @@ wave = 0;
 waveFlag = 0;
 waveState = 0;
 
+/* Start_Wave()
+Input: Either player or enemy pointer
+Output: pointer to the GameEntity */
 GameEntity* Start_Wave(GameEntity* entity, float dt) {
 	int rndm = rand() % TILE_ROWS;
 	int tes=rndm;
 	if (tes == rndm) { rndm = rand() % TILE_ROWS;  }
-	//printf("RNDM: %d %d\n", rndm, entity->id);
-	//printf("X POS: %d || Y POS: %d\n", entity->centerPos.x, entity->centerPos.y);
-	//printf("rndm=%d, tileY=%f\n", rndm, g_TileMap[rndm][11].centerPos.y);
+	
 	entity->centerPos.y = g_TileMap[rndm][TILE_COLUMNS-1].centerPos.y;
 	entity->centerPos.x = g_TileMap[rndm][(rand() % TILE_COLUMNS)].centerPos.x ;
 	entity->centerPos.x += 2000;
 
 }
+
+/* MoveWave()
+Input: Either player or enemy 
+Output: pointer to the GameEntity */
 GameEntity* Move_Wave(GameEntity* entity, float dt) {
-	/*srand(time(0));
-	int rndm = rand() % ((TILE_ROWS - 1) - 0 + 1) + 0;
-	printf("RNDM: %d\n", rndm);*/
-	//entity->centerPos.y = g_TileMap[rndm][11].centerPos.y;
-	//printf("ID:%d MOVING:%d\n", entity->id, entity->centerPos.x); 
+	 
 	int rndm = rand() % 99;
 	CP_Vector acc = { -4 * dt,0 };
 	
@@ -33,16 +34,14 @@ GameEntity* Move_Wave(GameEntity* entity, float dt) {
 		entity->centerPos = CP_Vector_Add(entity->centerPos, CP_Vector_Scale(entity->velocity, dt));
 		return 1;
 	}
+
 	if (rndm == 3) {
 		acc.x = -1;
 		entity->velocity = CP_Vector_Add(entity->velocity, acc);
-		//entity->color = (Color){1,1,1,255};
 		entity->centerPos = CP_Vector_Add(entity->centerPos, CP_Vector_Scale(entity->velocity, dt));
 		return 1;
 	}
 
 	entity->velocity = CP_Vector_Add(entity->velocity, acc);
 	entity->centerPos = CP_Vector_Add(entity->centerPos,CP_Vector_Scale(entity->velocity, dt));
-
-
 }
