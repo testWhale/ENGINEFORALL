@@ -32,6 +32,8 @@ struct GameEntity {
 	/*Check Values*/
 	int isItOnMap; int isSel; char* label; entSound sound;
 	BulletArr bullets;
+
+	CP_Image sprite;
 }; //Base For all Entities
 
 // Step 1: State function pointer type:

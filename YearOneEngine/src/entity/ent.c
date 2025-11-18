@@ -24,22 +24,24 @@ CP_Color* outPixels;
 CP_Image imgOut;
 /*-------------Template Value--------------*/
 GameEntity Make_Template(const char* name) {
-	GameEntity e;
+	GameEntity e; char* spritePath = "Assets/Cats/n.png";
 	if (name == "player")
 	{
+		spritePath = "Assets/Cats/n.png";
 		e = (GameEntity){
 		.centerPos = {400, 100}, .rotation = 0, .isPlayer = 1, .forwardVector = {0, 0}, .color = {255,0,0,255},
-		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "fire", .bullets = {0 } };
+		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "fire", .bullets = {0 }, .sprite = "Assets/Cats/n.png" };
 	}
 
 
 	if (name == "poison")
 	{
 		Bullet temp = Bullet_Template("poison");
+		spritePath = "Assets/Cats/p.png";
 		e = (GameEntity){
 		.centerPos = {400, 150}, .rotation = 0, .isPlayer = 0, .forwardVector = {0, 0}, .color = {255,0,255,255},
-		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "poison" , .bullets = {0} };
-		B_Arr_Insert(&e.bullets, temp);
+		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "poison" , .bullets = {0}, .sprite = "Assets/Cats/p.png"};
+		//B_Arr_Insert(&e.bullets, temp);
 
 	}
 
@@ -59,7 +61,7 @@ GameEntity Make_Template(const char* name) {
 		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "enemy" , .bullets = {0} };
 
 	}
-	
+	e.sprite = CP_Image_Load(spritePath);
 	
 	return e;
 }
@@ -271,6 +273,8 @@ void Draw_Entities(void)
 
 		CP_Settings_Fill(CP_Color_Create(p->color.red, p->color.green, p->color.blue, p->color.opacity));
 		CP_Graphics_DrawCircle(p->centerPos.x, p->centerPos.y, p->diameter);
+		CP_Image_Draw(p->sprite, p->centerPos.x, p->centerPos.y, p->diameter, p->diameter, 255);
+		
 
 		{
 			HealthSystem hs = { 0 };
@@ -346,8 +350,8 @@ void draw(float x, float y, float wdth, float height, int alpha) {
 	float lx = CP_Input_GetMouseX();
 	float ly = CP_Input_GetMouseY();
 
-	float screenX = x * unit;
-	float screenY = y * unit;
+	float screenX = x * unit - (wdth * unit) * 0.5f;
+	float screenY = y * unit - (height * unit) * 0.5f;
 	float scaleX = (wdth * unit) / w;
 	float scaleY = (height * unit) / h;
 	
@@ -365,8 +369,8 @@ void draw(float x, float y, float wdth, float height, int alpha) {
 			float nz = (n.b / 255.0f);
 
 			// Convert pixel to screen-space
-			float pixelX = screenX + px * scaleX;
-			float pixelY = screenY + py * scaleY;
+			float pixelX = screenX + px * scaleX + scaleX * 0.5f;
+			float pixelY = screenY + py * scaleY + scaleY * 0.5f;
 			
 
 			// Light direction
