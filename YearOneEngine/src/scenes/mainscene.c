@@ -42,7 +42,7 @@ void Main_Scene_Init(void)
     ClickerInfo = CP_Image_Load("Assets/Misc/InfoBoxes/ClickPowerInfo.png");
     PassiveInfo = CP_Image_Load("Assets/Misc/InfoBoxes/PassivePowerInfo.png");
     BlankInfo = CP_Image_Load("Assets/Misc/InfoBoxes/EMPTYINFO.png");
-    PoisonInfo = CP_Image_Load("Assets/Misc/InfoBoxes/PoisonCatInfo.png");
+    PoisonInfo = CP_Image_Load("Assets/Misc/InfoBoxes/RadioCat.png");
     NormalInfo = CP_Image_Load("Assets/Misc/InfoBoxes/NormalCatInfo.png");
     WinInfo = CP_Image_Load("Assets/Misc/InfoBoxes/WinInfo.png");
 
@@ -71,9 +71,9 @@ void Main_Scene_Init(void)
         10 * unit, 80 * unit,
         10 * unit, 10 * unit,
         0 * unit,
-        "Assets/Buttons/ClickerUpgrade1/ClickerUpgrade1Normal.png",
-        "Assets/Buttons/ClickerUpgrade1/ClickerUpgrade1Highlight.png",
-        "Assets/Buttons/ClickerUpgrade1/ClickerUpgrade1Clicked.png", 1);
+        "Assets/Buttons/ClickerUpgrade1/ClickerUpgradeNormal.png",
+        "Assets/Buttons/ClickerUpgrade1/ClickerUpgradeHighlight.png",
+        "Assets/Buttons/ClickerUpgrade1/ClickerUpgradeClicked.png", 1);
 
     Button_Load(&ClickerUpgrade2, &defaultSound,
         25 * unit, 80 * unit,
@@ -87,9 +87,9 @@ void Main_Scene_Init(void)
         40 * unit, 80 * unit,
         10 * unit, 10 * unit,
         0 * unit,
-        "Assets/Buttons/ClickerUpgrade3/ClickerUpgrade3Normal.png",
-        "Assets/Buttons/ClickerUpgrade3/ClickerUpgrade3Highlight.png",
-        "Assets/Buttons/ClickerUpgrade3/ClickerUpgrade3Clicked.png", 1);
+        "Assets/Buttons/ClickerUpgrade3/NukeNormal.png",
+        "Assets/Buttons/ClickerUpgrade3/NukeHighlight.png",
+        "Assets/Buttons/ClickerUpgrade3/NukeClicked.png", 1);
 
     Button_Load(&TroopButton1, &defaultSound,
         10 * unit, 100 * unit,
