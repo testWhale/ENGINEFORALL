@@ -288,8 +288,16 @@ void Main_Scene_Update(void)
         if (TroopButton1.isClicked == 1) {
             if (Purchase_System(&currentMoney, Scaling_Cost(troop1Count, 50))) {
                 GameEntity player = Make_Template("poison");
-                player.centerPos.x += playerArr.used * 50;
-                player.centerPos.y = 50;
+                // compute layout
+                int spacing = 60;
+                int iconsPerRow = 12;
+
+                int offset = playerArr.used;
+                int row = offset % 3;
+                int col = offset / 3;
+
+                player.centerPos.x = 550 + col * spacing;
+                player.centerPos.y = 50 + row * 50;
 
                 Arr_Insert(&playerArr, (ActiveEntity) {
                     playerArr.used,
@@ -306,8 +314,16 @@ void Main_Scene_Update(void)
             if (Purchase_System(&currentMoney, Scaling_Cost(troop2Count, 50))) {
                 GameEntity player = Make_Template("player");
 
-                player.centerPos.x += playerArr.used * 50;
-                player.centerPos.y = 100;
+                // compute layout
+                int spacing = 60;
+                int iconsPerRow = 12;
+
+                int offset = playerArr.used;
+                int row = offset % 3;
+                int col = offset / 3;
+
+                player.centerPos.x = 550 + col * spacing;
+                player.centerPos.y = 50 + row * 50;
 
                 Arr_Insert(&playerArr, (ActiveEntity) {
                     playerArr.used,
@@ -324,8 +340,16 @@ void Main_Scene_Update(void)
             if (Purchase_System(&currentMoney, Scaling_Cost(troop3Count, 50))) {
                 printf("WORDS\n");
                 GameEntity player = Make_Template("stun");
-                player.centerPos.x += playerArr.used * 50;
-                player.centerPos.y = 150;
+                // compute layout
+                int spacing = 60;
+                int iconsPerRow = 12;
+
+                int offset = playerArr.used;
+                int row = offset % 3;
+                int col = offset / 3;
+
+                player.centerPos.x = 550 + col * spacing;
+                player.centerPos.y = 50 + row * 50;
 
                 Arr_Insert(&playerArr, (ActiveEntity) {
                     playerArr.used,
