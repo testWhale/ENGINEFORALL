@@ -33,7 +33,7 @@ struct GameEntity {
 	int isItOnMap; int isSel; char* label; entSound sound;
 	BulletArr bullets;
 
-	CP_Image sprite;
+	CP_Image sprite, shadow;
 }; //Base For all Entities
 
 // Step 1: State function pointer type:

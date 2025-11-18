@@ -24,10 +24,11 @@ CP_Color* outPixels;
 CP_Image imgOut;
 /*-------------Template Value--------------*/
 GameEntity Make_Template(const char* name) {
-	GameEntity e; char* spritePath = "Assets/Cats/n.png";
+	GameEntity e; char* spritePath = "Assets/Cats/n.png"; char* shadowPath = "Assets/Cats/n_s.png";
 	if (name == "player")
 	{
 		spritePath = "Assets/Cats/n.png";
+		shadowPath = "Assets/Cats/n_s.png";
 		e = (GameEntity){
 		.centerPos = {400, 100}, .rotation = 0, .isPlayer = 1, .forwardVector = {0, 0}, .color = {255,0,0,255},
 		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "fire", .bullets = {0 }, .sprite = "Assets/Cats/n.png" };
@@ -38,6 +39,7 @@ GameEntity Make_Template(const char* name) {
 	{
 		Bullet temp = Bullet_Template("poison");
 		spritePath = "Assets/Cats/p.png";
+		shadowPath = "Assets/Cats/n_s.png";
 		e = (GameEntity){
 		.centerPos = {400, 150}, .rotation = 0, .isPlayer = 0, .forwardVector = {0, 0}, .color = {255,0,255,255},
 		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "poison" , .bullets = {0}, .sprite = "Assets/Cats/p.png"};
@@ -62,7 +64,7 @@ GameEntity Make_Template(const char* name) {
 
 	}
 	e.sprite = CP_Image_Load(spritePath);
-	
+	e.shadow = CP_Image_Load(shadowPath);
 	return e;
 }
 
@@ -262,14 +264,18 @@ void Draw_Entities(void)
 		CP_Vector shadowPos = CP_Vector_Add(p->centerPos, shadowOffset);
 
 		CP_Settings_Fill(CP_Color_Create(0, 0, 0, 100));
-		CP_Graphics_DrawEllipse(
-			shadowPos.x, shadowPos.y,
+		CP_Image_Draw(p->shadow, shadowPos.x, shadowPos.y,
 			p->diameter,
-			p->diameter * shadowScaleY);
+			p->diameter * shadowScaleY, 100);
 
-		if (p->label == "poison") { p->color.red = 255; p->color.green = 0;   p->color.blue = 255; p->color.opacity = 255; }
-		if (p->label == "fire") { p->color.red = 255; p->color.green = 0;   p->color.blue = 0;   p->color.opacity = 255; }
-		if (p->isSel) { p->color.red = 0;   p->color.green = 0;   p->color.blue = 255; p->color.opacity = 255; }
+		//CP_Graphics_DrawEllipse(
+		//	shadowPos.x, shadowPos.y,
+		//	p->diameter,
+		//	p->diameter * shadowScaleY);
+
+		if (p->label == "poison") { p->color.red = 255; p->color.green = 0;   p->color.blue = 255; p->color.opacity = 100; }
+		if (p->label == "fire") { p->color.red = 255; p->color.green = 0;   p->color.blue = 0;   p->color.opacity = 100; }
+		if (p->isSel) { p->color.red = 0;   p->color.green = 0;   p->color.blue = 255; p->color.opacity = 100; }
 
 		CP_Settings_Fill(CP_Color_Create(p->color.red, p->color.green, p->color.blue, p->color.opacity));
 		CP_Graphics_DrawCircle(p->centerPos.x, p->centerPos.y, p->diameter);

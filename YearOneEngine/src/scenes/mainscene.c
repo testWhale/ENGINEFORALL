@@ -160,7 +160,7 @@ void Main_Scene_Update(void)
     CP_Image_Draw(TileMap, 120 * unit, 60 * unit, 108 * unit, 72 * unit, 255);
 
     Map_Update();
-    draw(120, 60, 108, 72, 255);
+    //draw(120, 60, 108, 72, 255);
 
     Draw_Entities();    
     Draw_TempText(dt);
