@@ -14,6 +14,7 @@
 #include <math.h>
 
 ButtonInfo NewWaveButton;
+ButtonInfo NewWave2Button;
 ButtonSound defaultSound;
 
 CP_Image baseTex;
@@ -155,17 +156,26 @@ void Init_NewWave(int currWave) {
 		}
 	}
 }
+
+/* Completely Kills all active Enemies */
 void Kill_NewWave() {
 	{
 		printf("test;");
 		while(enemyArr.used > 0) {
 			Arr_Del(&(enemyArr), enemyArr.ActiveEntityArr->id);
-
 		}
 	}
 }
 
 void Load_TempText() {
+	Button_Load(&NewWave2Button, &defaultSound,
+		96 * unit, 10 * unit,
+		155 * unit, 60 * unit,
+		0 * unit,
+		"Assets/Buttons/Ribbon.png",
+		"Assets/Buttons/Ribbon.png",
+		"Assets/Buttons/Ribbon.png", 0);
+
 	Button_Load(&NewWaveButton, &defaultSound,
 		96 * unit, 92 * unit,
 		20 * unit, 20 * unit,
@@ -180,9 +190,13 @@ void Draw_TempText(float dt) {
 		waveState += (dt * 2);
 		//printf("DT: %f\n", waveState);
 		CP_Graphics_DrawRect(CP_Input_GetMouseX(), CP_Input_GetMouseY(), 50, 50);
-		NewWaveButton.alive = 1;
+		NewWaveButton.alive = 1; NewWave2Button.alive = 1;
 		Button_Behavior(&NewWaveButton);
 		if (NewWaveButton.isClicked)
+		{
+			Reward_Click(&currentMoney);
+		}
+		Button_Behavior(&NewWave2Button);
 		{
 			Reward_Click(&currentMoney);
 		}
@@ -190,12 +204,13 @@ void Draw_TempText(float dt) {
 		if (waveState > 4 && (NewWaveButton.alive==1)) {
 			waveFlag = 0; waveState = 0;
 			NewWaveButton.alive = 0;
-			
+			NewWave2Button.alive = 0;
 		}
 	}
 }
 void Del_TempText() {
 	Button_Free(&NewWaveButton);
+	Button_Free(&NewWave2Button);
 }
 
 void Print_BulletInfo(GameEntity* entity) {
