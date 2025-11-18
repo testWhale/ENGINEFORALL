@@ -53,7 +53,7 @@ GameEntity Make_Template(const char* name) {
 		Bullet temp = Bullet_Template("stun");
 		e = (GameEntity){
 		.centerPos = {500, 100}, .rotation = 0, .isPlayer = 0, .forwardVector = {0, 0}, .color = {255,0,0,255},
-		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "fire" , .bullets = {0} };
+		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "stun" , .bullets = {0} };
 
 	}
 
@@ -279,7 +279,17 @@ void Draw_Entities(void)
 			}
 			if (!ent->isHitting)
 			{
-				Move_Wave(&ent->unit, dt);
+				if (ent->unit.isStunned) {
+					ent->unit.stunTimer -= dt;
+
+					if (ent->unit.stunTimer <= 0) {
+						ent->unit.isStunned = 0;
+						ent->unit.stunTimer = 0;
+					}
+				}
+				else {
+					Move_Wave(&ent->unit, dt);
+				}
 			}
 
 			FSM_Update(&ent->fsm, &ent->unit, dt);

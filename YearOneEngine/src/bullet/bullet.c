@@ -43,7 +43,7 @@ Bullet Bullet_Template(const char* name) {
             .diameter = 30,
             .opacity = 0,
             .type = "stun",
-            .bulletDmg = 10.0f,
+            .bulletDmg = 1.0f,
             .stunTimer = 1.0f
         };
     }
