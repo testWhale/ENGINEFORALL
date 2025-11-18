@@ -12,10 +12,12 @@ typedef struct Bullet {
 	float diameter; float stateTimer;
 	int opacity;
 	float bulletDmg;
-	float stunTimer;
 	float poisonDmg;
 	int isPoisoned;
 	float poisonDecayTimer;
+	int isStunned;
+	float stunTimer;
+
 	CP_BOOL isActive; char* type;
 }Bullet;
 

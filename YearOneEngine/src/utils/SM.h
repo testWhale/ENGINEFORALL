@@ -28,6 +28,8 @@ struct GameEntity {
 	int isPoisoned;
 	float poisonTimerDecay;
 	float poisonDamage;
+	int isStunned;
+	float stunTimer;
 
 	/*Check Values*/
 	int isItOnMap; int isSel; char* label; entSound sound;
