@@ -95,17 +95,17 @@ void Main_Scene_Init(void)
         10 * unit, 100 * unit,
         10 * unit, 10 * unit,
         0 * unit,
-        "Assets/Buttons/Troops1/Troops1Normal.png",
-        "Assets/Buttons/Troops1/Troops1Highlight.png",
-        "Assets/Buttons/Troops1/Troops1Clicked.png", 1);
+        "Assets/Buttons/Troops1/PoisonCatNormal.png",
+        "Assets/Buttons/Troops1/PoisonCatHighlight.png",
+        "Assets/Buttons/Troops1/PoisonCatClicked.png", 1);
 
     Button_Load(&TroopButton2, &defaultSound,
         25 * unit, 100 * unit,
         10 * unit, 10 * unit,
         0 * unit,
-        "Assets/Buttons/Troops2/Troops2Normal.png",
-        "Assets/Buttons/Troops2/Troops2Highlight.png",
-        "Assets/Buttons/Troops2/Troops2Clicked.png", 1);
+        "Assets/Buttons/Troops2/NormalCatNormal.png",
+        "Assets/Buttons/Troops2/NormalCatHighlight.png",
+        "Assets/Buttons/Troops2/NormalCatClicked.png", 1);
 
     Button_Load(&TroopButton3, &defaultSound,
         40 * unit, 100 * unit,
