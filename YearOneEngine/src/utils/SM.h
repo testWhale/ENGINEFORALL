@@ -9,7 +9,7 @@
 #define Left 0.0
 #define Down 270.0
 #define Right 180.0
-#define MAX_ENTITIES 10
+#define MAX_ENTITIES 50
 #define RED   (Color){ 255, 0,   0,   255 }
 #define BLUE  (Color){ 0,   0, 255, 255 }
 #define GREEN (Color){ 0, 255,  0,  255 }
@@ -34,6 +34,7 @@ struct GameEntity {
 	BulletArr bullets;
 
 	CP_Image sprite, shadow;
+	CP_Vector accel;
 }; //Base For all Entities
 
 // Step 1: State function pointer type:

@@ -11,6 +11,7 @@
 #include "Utils/UI/Pause.h"
 #include "nuke/nuke.h"
 #include "health.h"
+#include "utils/wave/wave.h"
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
@@ -163,8 +164,12 @@ void Main_Scene_Update(void)
     //draw(120, 60, 108, 72, 255);
 
     Draw_Entities();    
-    Draw_TempText(dt);
 
+
+    if (CP_Input_KeyDown(KEY_T))
+    {
+        Kill_NewWave();
+    }
     if (!Pause_IsPaused())
     {
         Button_Behavior(&ClickerButton);
@@ -307,9 +312,10 @@ void Main_Scene_Update(void)
         }
     }
     Passive_System(&currentMoney);
-    if (CP_Input_KeyDown(KEY_Q)) CP_Engine_Terminate();
+
+    if (CP_Input_KeyDown(KEY_Q)) CP_Engine_Terminate();  
     if (CP_Input_KeyDown(KEY_W)) currentMoney += 1000;
-}
+}   
 
     if (HealthSystem_GetHearts(&gHealth) <= 0) {
         float finalTime = HealthSystem_GetTimer(&gHealth);
@@ -335,6 +341,12 @@ void Main_Scene_Update(void)
         CP_Engine_SetNextGameState(Main_Menu_Init, Main_Menu_Update, Main_Menu_Exit);
         return;
     }
+
+    /* UI ELEMENTS */
+    Draw_WaveCounter();
+
+    /* POPUPS DOWN Here */
+    Draw_TempText(dt);
 }
 
 void Main_Scene_Exit(void)
