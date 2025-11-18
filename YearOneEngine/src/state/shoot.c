@@ -1,3 +1,14 @@
+//---------------------------------------------------------
+// file:	shoot.c
+// author:	[Zachary Ng]
+// email:	[zacharyhuaen.n@digipen.edu]
+//
+// brief:	Main entry point for the sample project
+//			of the CProcessing library
+//
+// Copyright 2020 DigiPen, All rights reserved.
+//---------------------------------------------------------
+
 #include "shoot.h"
 #include "utils/utils.h"
 #include "utils/arr.h"
