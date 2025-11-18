@@ -89,7 +89,8 @@ void Init_PlayerDemo() {
 		ae.alive = 1;
 		ae.hasScored = 0;
 		ae.lastLeftmostX = 0.0f;
-		printf("turrent ID: %d", ae.id);
+		//printf("turrent ID: %d", ae.id);
+
 		Arr_Insert(&playerArr, ae);
 		playerArr.ActiveEntityArr[i].unit.centerPos.x = player.centerPos.x + i * 100.0f;
 
@@ -136,7 +137,7 @@ void Init_NewWave(int currWave) {
 		/* Difficulty Curving */
 		ae.maxHealth = 100 + pow(currWave, 3/2);
 		ae.health = 100 + pow(currWave, 3/2);
-		printf(" health %f\n", enemyArr.ActiveEntityArr[i].health);
+		printf("health %f\n", enemyArr.ActiveEntityArr[i].health);
 		ae.alive = 1;
 		ae.hasScored = 0;
 		ae.lastLeftmostX = 0.0f;
@@ -150,7 +151,16 @@ void Init_NewWave(int currWave) {
 		if (enemyArr.ActiveEntityArr[i].unit.accel.x > -0.4) {
 			enemyArr.ActiveEntityArr[i].maxHealth += 1005 * -enemyArr.ActiveEntityArr[i].unit.accel.x;
 			enemyArr.ActiveEntityArr[i].health += 1005 * -enemyArr.ActiveEntityArr[i].unit.accel.x;
-			printf("THis enemy has more health %f\n", enemyArr.ActiveEntityArr[i].health);
+			printf("Tank HP %f\n", enemyArr.ActiveEntityArr[i].health);
+		}
+	}
+}
+void Kill_NewWave() {
+	{
+		printf("test;");
+		while(enemyArr.used > 0) {
+			Arr_Del(&(enemyArr), enemyArr.ActiveEntityArr->id);
+
 		}
 	}
 }
@@ -168,7 +178,7 @@ void Load_TempText() {
 void Draw_TempText(float dt) {
 	if (waveFlag) {
 		waveState += (dt * 2);
-		printf("DT: %f\n", waveState);
+		//printf("DT: %f\n", waveState);
 		CP_Graphics_DrawRect(CP_Input_GetMouseX(), CP_Input_GetMouseY(), 50, 50);
 		NewWaveButton.alive = 1;
 		Button_Behavior(&NewWaveButton);
@@ -193,7 +203,7 @@ void Print_BulletInfo(GameEntity* entity) {
 
 		for (size_t i = 0; i < entity->bullets.used; i++) {
 			Bullet* b = &entity->bullets.bulletArr[i];
-			printf("  Bullet %d at (%.1f, %.1f)\n", b->id, b->centerPos.x, b->centerPos.y);
+			//printf("  Bullet %d at (%.1f, %.1f)\n", b->id, b->centerPos.x, b->centerPos.y);
 		}
 	}
 }

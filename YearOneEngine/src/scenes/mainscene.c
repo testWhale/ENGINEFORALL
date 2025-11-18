@@ -165,6 +165,10 @@ void Main_Scene_Update(void)
     Draw_Entities();    
     Draw_TempText(dt);
 
+    if (CP_Input_KeyDown(KEY_T))
+    {
+        Kill_NewWave();
+    }
     if (!Pause_IsPaused())
     {
         Button_Behavior(&ClickerButton);
@@ -307,9 +311,10 @@ void Main_Scene_Update(void)
         }
     }
     Passive_System(&currentMoney);
-    if (CP_Input_KeyDown(KEY_Q)) CP_Engine_Terminate();
+
+    if (CP_Input_KeyDown(KEY_Q)) CP_Engine_Terminate();  
     if (CP_Input_KeyDown(KEY_W)) currentMoney += 1000;
-}
+}   
 
     if (HealthSystem_GetHearts(&gHealth) <= 0) {
         float finalTime = HealthSystem_GetTimer(&gHealth);

@@ -77,8 +77,10 @@ void Arr_Del(TestArr* A, int id) {
     for (size_t i = 0; i < A->used; ++i)
         if (A->ActiveEntityArr[i].id == id) { idx = i; break; }
     if (idx == A->used) return;
+   
     A->ActiveEntityArr[idx] = A->ActiveEntityArr[A->used - 1];
     --A->used;
+   
 }
 
 void Arr_Free(TestArr* A) {
