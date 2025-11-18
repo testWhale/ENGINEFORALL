@@ -107,7 +107,7 @@ void Shoot_Update(GameEntity* turret, StateMachine* SM, float dt) {
 	int turretRow = (turret->centerPos.y - g_TileMap[0][0].startPos.y) / g_TileMap[0][0].dim.y;
 
 	if (Is_Circle_Clicked(turret->centerPos.x, turret->centerPos.y, turret->diameter, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
-		FSM_SetState(SM, SelectedState, turret, dt);
+		//FSM_SetState(SM, SelectedState, turret, dt);
 		return;
 	}
 

@@ -61,7 +61,7 @@ void PickedUp_Init(GameEntity* entity, StateMachine* sm, float dt) {
 	cursor = 0; //mouse is not free to perform more actions on buttons
 
 	if (1 == entity->isItOnMap) { //When it is onMap -> SelectedState
-		FSM_SetState(sm, SelectedState, entity, dt);
+		//FSM_SetState(sm, SelectedState, entity, dt);
 	} else {
 		entity->color.red = 0;
 		entity->color.green = 0;
