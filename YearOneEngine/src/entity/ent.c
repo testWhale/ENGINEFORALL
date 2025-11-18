@@ -169,12 +169,12 @@ void Kill_NewWave() {
 
 void Load_TempText() {
 	Button_Load(&NewWave2Button, &defaultSound,
-		96 * unit, 10 * unit,
-		155 * unit, 60 * unit,
+		96 * unit, 60 * unit,
+		143 * unit, 60 * unit,
 		0 * unit,
-		"Assets/Buttons/Ribbon.png",
-		"Assets/Buttons/Ribbon.png",
-		"Assets/Buttons/Ribbon.png", 0);
+		"Assets/Buttons/Ribbon/Ribbon.png",
+		"Assets/Buttons/Ribbon/Ribbon.png",
+		"Assets/Buttons/Ribbon/Ribbon.png", 0);
 
 	Button_Load(&NewWaveButton, &defaultSound,
 		96 * unit, 92 * unit,
@@ -245,6 +245,8 @@ void Draw_Bullets() {
 void Draw_Entities(void)
 {
 	float dt = CP_System_GetDt();
+
+	
 	CP_Settings_NoStroke();
 	if (!Pause_IsPaused())
 	{
