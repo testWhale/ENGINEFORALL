@@ -17,6 +17,7 @@
 #include <stdlib.h>
 #include "gameover.h"
 #include "mainmenu.h"
+#include "mouse.h"
 
 CP_Image Overlay;
 CP_Image Background, TileMap;
@@ -162,8 +163,9 @@ void Main_Scene_Update(void)
 
     Map_Update();
     //draw(120, 60, 108, 72, 255);
-
-    Draw_Entities();    
+    /* REFRESH MOUSE HOLDER */
+ 
+    
 
 
     if (CP_Input_KeyDown(KEY_T))
@@ -289,15 +291,8 @@ void Main_Scene_Update(void)
             if (Purchase_System(&currentMoney,  50)) {
                 GameEntity player = Make_Template("poison");
                 // compute layout
-                int spacing = 60;
-                int iconsPerRow = 12;
-
-                int offset = playerArr.used;
-                int row = offset % 3;
-                int col = offset / 3;
-
-                player.centerPos.x = 550 + col * spacing;
-                player.centerPos.y = 50 + row * 50;
+                player.centerPos.x = CP_Input_GetMouseX();
+                player.centerPos.y = CP_Input_GetMouseY();
 
                 Arr_Insert(&playerArr, (ActiveEntity) {
                     playerArr.used,
@@ -314,25 +309,21 @@ void Main_Scene_Update(void)
             if (Purchase_System(&currentMoney, 50)) {
                 GameEntity player = Make_Template("player");
 
-                // compute layout
-                int spacing = 60;
-                int iconsPerRow = 12;
 
-                int offset = playerArr.used;
-                int row = offset % 3;
-                int col = offset / 3;
-
-                player.centerPos.x = 550 + col * spacing;
-                player.centerPos.y = 50 + row * 50;
-
+                player.centerPos.x = CP_Input_GetMouseX();
+                player.centerPos.y = CP_Input_GetMouseY();
+                player.pickUpIndex = Mouse_GetPickupCount(); // gives first pickup id: 1 
+                Mouse_AddPickup();
                 Arr_Insert(&playerArr, (ActiveEntity) {
                     playerArr.used,
-                        player, (StateMachine) { .currState = IdleState },
+                        player, (StateMachine) { .currState = PickUpState },
                         .maxHealth = 100, .health = 100,
                         .alive = 1, .hasScored = 0, .lastLeftmostX = 0
                 });
                 troop2Count += 1;
+
             }
+
         }
 
         //stun turret
@@ -341,19 +332,13 @@ void Main_Scene_Update(void)
                 printf("WORDS\n");
                 GameEntity player = Make_Template("stun");
                 // compute layout
-                int spacing = 60;
-                int iconsPerRow = 12;
-
-                int offset = playerArr.used;
-                int row = offset % 3;
-                int col = offset / 3;
-
-                player.centerPos.x = 550 + col * spacing;
-                player.centerPos.y = 50 + row * 50;
+                player.centerPos.x = CP_Input_GetMouseX();
+                player.centerPos.y = CP_Input_GetMouseY();
 
                 Arr_Insert(&playerArr, (ActiveEntity) {
                     playerArr.used,
-                        player, (StateMachine) { .currState = IdleState },
+                        player, (StateMachine) { .currState = PickUpState
+                    },
                         .maxHealth = 100, .health = 100,
                         .alive = 1, .hasScored = 0, .lastLeftmostX = 0
                 });
@@ -390,7 +375,9 @@ void Main_Scene_Update(void)
         CP_Engine_SetNextGameState(Main_Menu_Init, Main_Menu_Update, Main_Menu_Exit);
         return;
     }
-
+    
+    Draw_Entities();
+    LateUpdate_Pickups();
     /* UI ELEMENTS */
     Draw_WaveCounter();
 

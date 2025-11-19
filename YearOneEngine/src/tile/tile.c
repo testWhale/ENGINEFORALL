@@ -73,13 +73,13 @@ Tile* Set_OnTile(GameEntity* Entity, CP_Vector mouse) {
 	if (1 == c_tile->hasEntity) {
 		//printf("Cannot Place Unit Here.\n");
 		CP_Settings_Fill(CP_Color_Create(255, 0, 0, 255));
-		Entity->centerPos = (CP_Vector){ 0,0 };
+		//Entity->centerPos = (CP_Vector){ 0,0 };
 		return NULL;
 	}
 	if (1 == c_tile->nextTileCheck) {
 		//printf("Cannot Place, Enemy Too Close.\n");
 		CP_Settings_Fill(CP_Color_Create(255, 0, 0, 255));
-		Entity->centerPos = (CP_Vector){ 0,0 };
+		//Entity->centerPos = (CP_Vector){ 0,0 };
 		return NULL;
 	}
 	else {
