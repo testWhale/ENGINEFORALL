@@ -43,6 +43,9 @@ int Mouse_GetPickupCount(void)
 {
     return pickupCount;
 }
+void Free_Pickup() {
+    pickupCount = 0;
+}
 
 //bool Is_Mouse_Released(float cx, float cy, float radius, float mx, float my)
 //{
