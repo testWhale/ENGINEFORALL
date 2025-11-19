@@ -235,7 +235,7 @@ void Main_Scene_Update(void)
         if (ClickerUpgrade3.isSel == 1)
         {
             CP_Settings_ImageMode(CP_POSITION_CENTER);
-            CP_Image_Draw(BlankInfo, 60 * unit, 75 * unit, 32 * unit, 21 * unit, 255);
+            CP_Image_Draw(WinInfo, 60 * unit, 75 * unit, 32 * unit, 21 * unit, 255);
         }
 
         if (TroopButton1.isSel == 1)
@@ -253,7 +253,7 @@ void Main_Scene_Update(void)
         if (TroopButton3.isSel == 1)
         {
             CP_Settings_ImageMode(CP_POSITION_CENTER);
-            CP_Image_Draw(WinInfo, 60 * unit, 95 * unit, 32 * unit, 21 * unit, 255);
+            CP_Image_Draw(BlankInfo, 60 * unit, 95 * unit, 32 * unit, 21 * unit, 255);
         }
 
         //click for currency

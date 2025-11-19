@@ -196,6 +196,7 @@ void Draw_TempText(float dt) {
 		{
 			Reward_Click(&currentMoney);
 		}
+
 		Button_Behavior(&NewWave2Button);
 		{
 			Reward_Click(&currentMoney);
