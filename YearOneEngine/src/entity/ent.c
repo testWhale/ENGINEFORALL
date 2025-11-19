@@ -41,7 +41,7 @@ GameEntity Make_Template(const char* name) {
 		spritePath = "Assets/Cats/p.png";
 		shadowPath = "Assets/Cats/n_s.png";
 		e = (GameEntity){
-		.centerPos = {400, 150}, .rotation = 0, .isPlayer = 0, .forwardVector = {0, 0}, .color = {255,0,255,255},
+		.centerPos = {400, 150}, .rotation = 0, .isPlayer = 1, .forwardVector = {0, 0}, .color = {255,0,255,255},
 		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "poison" , .bullets = {0}, .sprite = "Assets/Cats/p.png"};
 		//B_Arr_Insert(&e.bullets, temp);
 
@@ -51,7 +51,7 @@ GameEntity Make_Template(const char* name) {
 	{
 		Bullet temp = Bullet_Template("stun");
 		e = (GameEntity){
-		.centerPos = {500, 100}, .rotation = 0, .isPlayer = 0, .forwardVector = {0, 0}, .color = {255,0,0,255},
+		.centerPos = {500, 100}, .rotation = 0, .isPlayer = 1, .forwardVector = {0, 0}, .color = {255,0,0,255},
 		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "fire" , .bullets = {0} };
 
 	}
@@ -185,6 +185,12 @@ void Print_BulletInfo(GameEntity* entity) {
 
 void Draw_Bullets() {
 	for (size_t i = 0; i < playerArr.used; ++i) {
+		ActiveEntity* ent = &playerArr.ActiveEntityArr[i];
+		if (!ent->alive)
+		{
+			ent->unit.bullets.used = 0;  
+			continue;
+		}
 		GameEntity* p = &playerArr.ActiveEntityArr[i].unit;
 		for (int j = 0; j < p->bullets.used; j++)
 		{

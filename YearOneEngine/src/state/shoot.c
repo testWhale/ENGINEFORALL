@@ -153,11 +153,13 @@ void Shoot_Update(GameEntity* turret, StateMachine* SM, float dt) {
 								enemy->poisonDamage = bullet->poisonDmg;
 								enemy->poisonTimerDecay = bullet->poisonDecayTimer;
 								enemyArr.ActiveEntityArr[j].health -= enemy->poisonDamage;
+								Health_PlayHitSfx();
 							}
 						}
 
 						if (strcmp(bullet->type, "normal") == 0) {
 							enemyArr.ActiveEntityArr[j].health -= bullet->bulletDmg;
+							Health_PlayHitSfx();
 						}
 
 						/*if (bullet->type == "stun") {

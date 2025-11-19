@@ -6,6 +6,7 @@
 #include "economy/economyCode.h"
 #include <math.h>
 #include <stdio.h>
+#include "clicker/clickCode.h"
    
 static float GO_finalTime = 0.0f;  
 static float GO_money = 0.0f; 
@@ -15,6 +16,8 @@ static float GO_fade = 0.0f;
 
 static CP_Sound KO = 0;
 static CP_Font  GO_font = 0;
+
+int purchaseCount = 0;
 
 void GameOver_SetData(float finalTime, float money) 
 {
@@ -54,7 +57,7 @@ void GameOver_Update(void) {
     (void)snprintf(line, sizeof(line), "Wave survived: %d", wave); 
     CP_Font_DrawText(line, W * 0.5f, H * 0.45f);
 
-    (void)snprintf(line, sizeof(line), "Time: %.0f s", GO_finalTime);
+    (void)snprintf(line, sizeof(line), "Time: %.0fs", GO_finalTime);
     CP_Font_DrawText(line, W * 0.5f, H * 0.52f);
 
     (void)snprintf(line, sizeof(line), "Money: $%.0f", GO_money);
@@ -82,6 +85,9 @@ void GameOver_Update(void) {
 void GameOver_Exit(void) {
     wave = 0;
     currentMoney = 0;
+    clickPower = 1;
+    passiveIncome = 0;
+    purchaseCount = 0;
     if (GO_font) CP_Font_Free(GO_font);
     CP_Sound_Free(KO);
 }

@@ -349,6 +349,5 @@ void Main_Scene_Exit(void)
     Button_Free(&TroopButton2);
     Button_Free(&TroopButton3);
     Button_Sound_Free(&defaultSound);
-    HealthAudio_Free();
     Del_TempText();
 }
