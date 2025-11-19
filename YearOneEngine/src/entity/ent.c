@@ -16,6 +16,9 @@
 ButtonInfo NewWaveButton;
 ButtonInfo NewWave2Button;
 ButtonSound defaultSound;
+static float s_tipTimer = 0.0f;
+static int   s_lastWaveSeen = -1;
+static char  s_tipMsg[96] = "";
 
 CP_Image baseTex;
 CP_Image normalTex;
@@ -184,6 +187,10 @@ void Load_TempText() {
 		"Assets/Buttons/Suprise/JackNormal.png",
 		"Assets/Buttons/Suprise/JackHighlight.png",
 		"Assets/Buttons/Suprise/JackClicked.png", 0);
+
+	s_tipTimer = 0.0f;
+	s_lastWaveSeen = -1;
+	s_tipMsg[0] = '\0';
 }
 
 void Draw_TempText(float dt) {
@@ -208,6 +215,36 @@ void Draw_TempText(float dt) {
 			NewWaveButton.alive = 0;
 			NewWave2Button.alive = 0;
 		}
+	}
+	if (wave != s_lastWaveSeen) {
+		const char* m = NULL;
+		if (wave == 5)      m = "Maybe consider buying a nuke.";
+		else if (wave == 10) m = "You should really consider buying one.";
+		else if (wave == 15) m = "Now you really should buy one!";
+		if (m) {
+			snprintf(s_tipMsg, sizeof s_tipMsg, "%s", m);
+			s_tipTimer = 3.0f;
+		}
+		s_lastWaveSeen = wave;
+	}
+	if (s_tipTimer > 0.0f) {
+		s_tipTimer -= dt;
+		float t = (s_tipTimer > 0.4f) ? 1.0f : (s_tipTimer / 0.4f);
+		if (t < 0.0f) t = 0.0f;
+
+		float cx = 50.0f * unit;
+		float cy = 18.0f * unit;
+		float bw = 80.0f * unit;
+		float bh = 10.0f * unit;
+
+		CP_Settings_RectMode(CP_POSITION_CENTER);
+		CP_Settings_Fill(CP_Color_Create(0, 0, 0, (int)(140 * t)));
+		CP_Graphics_DrawRect(cx, cy, bw, bh);
+
+		CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
+		CP_Settings_TextSize(5.0f * unit);
+		CP_Settings_Fill(CP_Color_Create(255, 255, 255, (int)(255 * t)));
+		CP_Font_DrawText(s_tipMsg, cx, cy);
 	}
 }
 void Del_TempText() {
@@ -339,20 +376,7 @@ void Draw_Entities(void)
 		CP_Settings_Fill(CP_Color_Create(p->color.red, p->color.green, p->color.blue, p->color.opacity));
 		CP_Graphics_DrawCircle(p->centerPos.x, p->centerPos.y, p->diameter);
 		CP_Image_Draw(p->sprite, p->centerPos.x, p->centerPos.y, p->diameter, p->diameter, 255);
-		
 
-		{
-			HealthSystem hs = { 0 };
-			hs.maxhealth = (float)ent->maxHealth;
-			hs.health = (float)ent->health;
-
-			const float barW = 80.0f;
-			const float barH = 10.0f;
-			const float barX = p->centerPos.x - barW * 0.5f;
-			const float barY = p->centerPos.y - p->diameter * 0.65f;
-
-			HealthSystem_DrawBar(&hs, barX, barY, barW, barH);
-		}
 	}
 
 	for (size_t i = 0; i < enemyArr.used; ++i)
@@ -366,22 +390,47 @@ void Draw_Entities(void)
 		CP_Settings_Fill(CP_Color_Create(e->color.red, e->color.green, e->color.blue, e->color.opacity));
 		CP_Graphics_DrawCircle(e->centerPos.x, e->centerPos.y, e->diameter);
 
-		{
-			HealthSystem hs = { 0 };
-			hs.maxhealth = (float)ent->maxHealth;
-			hs.health = (float)ent->health;
-
-			const float barW = 80.0f;
-			const float barH = 10.0f;
-			const float barX = e->centerPos.x - barW * 0.5f;
-			const float barY = e->centerPos.y - e->diameter * 0.65f;
-
-			HealthSystem_DrawBar(&hs, barX, barY, barW, barH);
-		}
 	}
 
 	Draw_Bullets();
 	
+	for (size_t i = 0; i < enemyArr.used; ++i)
+	{
+		ActiveEntity* ent = &enemyArr.ActiveEntityArr[i];
+		if (!ent->alive) continue;
+
+		GameEntity* e = &ent->unit;
+
+		HealthSystem hs = { 0 };
+		hs.maxhealth = (float)ent->maxHealth;
+		hs.health = (float)ent->health;
+
+		float barW = e->diameter * 0.90f;
+		float barH = e->diameter * 0.11f;
+		float barX = e->centerPos.x - barW * 0.5f;
+		float barY = e->centerPos.y - e->diameter * 0.65f;
+
+		HealthSystem_DrawBar(&hs, barX, barY, barW, barH);
+	}
+
+	for (size_t i = 0; i < playerArr.used; ++i)
+	{
+		ActiveEntity* ent = &playerArr.ActiveEntityArr[i];
+		if (!ent->alive) continue;
+
+		GameEntity* p = &ent->unit;
+
+		HealthSystem hs = { 0 };
+		hs.maxhealth = (float)ent->maxHealth;
+		hs.health = (float)ent->health;
+
+		float barW = p->diameter * 0.90f;
+		float barH = p->diameter * 0.11f;
+		float barX = p->centerPos.x - barW * 0.5f;
+		float barY = p->centerPos.y - p->diameter * 0.65f;
+
+		HealthSystem_DrawBar(&hs, barX, barY, barW, barH);
+	}
 }
 
 void setup(char* imgPath, char* normPath) {
