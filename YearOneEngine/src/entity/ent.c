@@ -53,9 +53,10 @@ GameEntity Make_Template(const char* name) {
 		Bullet temp = Bullet_Template("stun");
 		e = (GameEntity){
 		.centerPos = {500, 100}, .rotation = 0, .isPlayer = 1, .forwardVector = {0, 0}, .color = {0,0,255,255},
-		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "fire" , .bullets = {0} };
+		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "stun" , .bullets = {0} };
 
 	}
+
 
 	if (name == "enemy")
 	{
@@ -134,7 +135,7 @@ void Init_NewWave(int currWave) {
 		ActiveEntity ae;
 		ae.id = i;
 		ae.unit = enemy;
-		ae.fsm = (StateMachine){ .currState = IdleState };
+		ae.fsm = (StateMachine){ .currState = EnemyIdleState };
 		/* Difficulty Curving */
 		ae.maxHealth = 100 + pow(currWave, 3/2);
 		ae.health = 100 + pow(currWave, 3/2);

@@ -214,9 +214,9 @@ void Main_Scene_Update(void)
     CP_Font_DrawText(clicker1Cost, 10 * unit, 75 * unit);
     CP_Font_DrawText(clicker2Cost, 25 * unit, 75 * unit);
     CP_Font_DrawText("1000$", 40 * unit, 75 * unit);
-    CP_Font_DrawText(troop1Cost, 10 * unit, 95 * unit);
-    CP_Font_DrawText(troop2Cost, 25 * unit, 95 * unit);
-    CP_Font_DrawText(troop3Cost, 40 * unit, 95 * unit);
+    CP_Font_DrawText("50", 10 * unit, 95 * unit);
+    CP_Font_DrawText("50", 25 * unit, 95 * unit);
+    CP_Font_DrawText("50", 40 * unit, 95 * unit);
 
     if (!Pause_IsPaused())
     {
@@ -286,7 +286,7 @@ void Main_Scene_Update(void)
 
         //poison turret
         if (TroopButton1.isClicked == 1) {
-            if (Purchase_System(&currentMoney, Scaling_Cost(troop1Count, 50))) {
+            if (Purchase_System(&currentMoney,  50)) {
                 GameEntity player = Make_Template("poison");
                 // compute layout
                 int spacing = 60;
@@ -311,7 +311,7 @@ void Main_Scene_Update(void)
 
         //normal turret
         if (TroopButton2.isClicked == 1) {
-            if (Purchase_System(&currentMoney, Scaling_Cost(troop2Count, 50))) {
+            if (Purchase_System(&currentMoney, 50)) {
                 GameEntity player = Make_Template("player");
 
                 // compute layout
@@ -337,7 +337,7 @@ void Main_Scene_Update(void)
 
         //stun turret
         if (TroopButton3.isClicked == 1) {
-            if (Purchase_System(&currentMoney, Scaling_Cost(troop3Count, 50))) {
+            if (Purchase_System(&currentMoney,50)) {
                 printf("WORDS\n");
                 GameEntity player = Make_Template("stun");
                 // compute layout

@@ -88,6 +88,8 @@ void GameOver_Exit(void) {
     troop3Count = 0;
     troop2Count = 0;
     troop1Count = 0;
+    clickerUpgrade1Count = 0;
+    clickerUpgrade2Count = 0;
     if (GO_font) CP_Font_Free(GO_font);
     CP_Sound_Free(KO);
 }
