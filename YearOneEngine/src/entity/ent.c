@@ -243,6 +243,7 @@ void Draw_Bullets() {
 	}
 }
 
+float newDT=0;
 void Draw_Entities(void)
 {
 	float dt = CP_System_GetDt();
@@ -263,9 +264,10 @@ void Draw_Entities(void)
 
 			FSM_Update(&ent->fsm, &ent->unit, dt);
 		}
-
-		if (enemyArr.used <= 0)
-		{
+		newDT += dt;
+		if (enemyArr.used <= 0 && newDT > 6)
+		{	
+			newDT = 0;
 			Init_NewWave(wave++);
 		}
 

@@ -213,7 +213,7 @@ void Main_Scene_Update(void)
     sprintf_s(troop3Cost, 100, "%.0f$ ", Scaling_Cost(troop3Count, 50));
     CP_Font_DrawText(clicker1Cost, 10 * unit, 75 * unit);
     CP_Font_DrawText(clicker2Cost, 25 * unit, 75 * unit);
-    CP_Font_DrawText("Cost 3", 40 * unit, 75 * unit);
+    CP_Font_DrawText("1000$", 40 * unit, 75 * unit);
     CP_Font_DrawText(troop1Cost, 10 * unit, 95 * unit);
     CP_Font_DrawText(troop2Cost, 25 * unit, 95 * unit);
     CP_Font_DrawText(troop3Cost, 40 * unit, 95 * unit);
