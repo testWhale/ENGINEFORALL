@@ -288,15 +288,16 @@ void Main_Scene_Update(void)
 
         //poison turret
         if (TroopButton1.isClicked == 1) {
-            if (Purchase_System(&currentMoney,  50)) {
+            if (Purchase_System(&currentMoney,  50) && Mouse_CanPickup()) {
                 GameEntity player = Make_Template("poison");
                 // compute layout
                 player.centerPos.x = CP_Input_GetMouseX();
                 player.centerPos.y = CP_Input_GetMouseY();
-
+                player.pickUpIndex = Mouse_GetPickupCount(); // gives first pickup id: 1 
+                Mouse_AddPickup();
                 Arr_Insert(&playerArr, (ActiveEntity) {
                     playerArr.used,
-                        player, (StateMachine) { .currState = IdleState },
+                        player, (StateMachine) { .currState = PickUpState },
                         .maxHealth = 100, .health = 100,
                         .alive = 1, .hasScored = 0, .lastLeftmostX = 0
                 });
@@ -306,10 +307,8 @@ void Main_Scene_Update(void)
 
         //normal turret
         if (TroopButton2.isClicked == 1) {
-            if (Purchase_System(&currentMoney, 50)) {
+            if (Purchase_System(&currentMoney, 50) && Mouse_CanPickup()) {
                 GameEntity player = Make_Template("player");
-
-
                 player.centerPos.x = CP_Input_GetMouseX();
                 player.centerPos.y = CP_Input_GetMouseY();
                 player.pickUpIndex = Mouse_GetPickupCount(); // gives first pickup id: 1 
@@ -328,13 +327,14 @@ void Main_Scene_Update(void)
 
         //stun turret
         if (TroopButton3.isClicked == 1) {
-            if (Purchase_System(&currentMoney,50)) {
+            if (Purchase_System(&currentMoney,50) && Mouse_CanPickup() ) {
                 printf("WORDS\n");
                 GameEntity player = Make_Template("stun");
                 // compute layout
                 player.centerPos.x = CP_Input_GetMouseX();
                 player.centerPos.y = CP_Input_GetMouseY();
-
+                player.pickUpIndex = Mouse_GetPickupCount(); // gives first pickup id: 1 
+                Mouse_AddPickup();
                 Arr_Insert(&playerArr, (ActiveEntity) {
                     playerArr.used,
                         player, (StateMachine) { .currState = PickUpState
