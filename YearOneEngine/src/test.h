@@ -4,7 +4,7 @@
  // forward declarations
 
 
-//extern int IsCircleClicked(float cx, float cy, float diameter, float mx, float my);
+//extern int Is_Mouse_Released(float cx, float cy, float diameter, float mx, float my);
 //
 //static int CirclesOverlap(float x1, float y1, float r1, float x2, float y2, float r2);
 //

@@ -51,12 +51,12 @@ void Button_Load(ButtonInfo* newBtn,
 
 void Button_Free(ButtonInfo* newBtn)
 {
-	CP_Image_Free(newBtn->buttonNormal);
-	CP_Image_Free(newBtn->buttonFeedback);
-	CP_Image_Free(newBtn->buttonHighlight);
+	//CP_Image_Free(newBtn->buttonNormal);
+	//CP_Image_Free(newBtn->buttonFeedback);
+	/*CP_Image_Free(newBtn->buttonHighlight);
 	CP_Sound_Free(newBtn->soundEffect->onClick);
 	CP_Sound_Free(newBtn->soundEffect->onHover);
-	CP_Sound_Free(newBtn->soundEffect->onRelease);
+	CP_Sound_Free(newBtn->soundEffect->onRelease);*/
 }
 
 void Button_Sound_Load
@@ -213,47 +213,49 @@ desired behavior;
 
 */
 void Button_Behavior(ButtonInfo* btnname) {
-	Draw_Button_Highlight(btnname);
-	if (Is_Button_Pressed(btnname, Is_Any_Button_Hovered(btnname, CP_Input_GetMouseX(), CP_Input_GetMouseY()))) { //draw the clicked frame if you press down
-		Draw_Button_Feedback(btnname);
-		if (CP_Input_MouseTriggered(MOUSE_BUTTON_LEFT)) {
-			CP_Sound_Play(btnname->soundEffect->onClick);
-			printf("1");
-		}
-		
-	}
-
-	else {
-		if (Is_Button_Released(btnname, Is_Any_Button_Hovered(btnname, CP_Input_GetMouseX(), CP_Input_GetMouseY()))) 
-		{ //only return isClicked =1 on release
-			CP_Sound_Play(btnname->soundEffect->onRelease);
-			btnname->isClicked = 1;
-			printf("2");
-		}
-
-		else { //if its not being clicked or released draw the highlight frame and return isSel =1;
-			if (Is_Any_Button_Hovered(btnname, CP_Input_GetMouseX(), CP_Input_GetMouseY()) == 1)
-			{
-				Draw_Button_Highlight(btnname);
-				if (!btnname->wasHovered) {
-
-					CP_Sound_Play(btnname->soundEffect->onHover);
-				}
-				btnname->isSel = 1;
-				btnname->isClicked = 0;
+	if (btnname->alive)
+	{
+		Draw_Button_Highlight(btnname);
+		if (Is_Button_Pressed(btnname, Is_Any_Button_Hovered(btnname, CP_Input_GetMouseX(), CP_Input_GetMouseY()))) { //draw the clicked frame if you press down
+			Draw_Button_Feedback(btnname);
+			if (CP_Input_MouseTriggered(MOUSE_BUTTON_LEFT)) {
+				CP_Sound_Play(btnname->soundEffect->onClick);
+				printf("1");
 			}
-			else 
+
+		}
+
+		else {
+			if (Is_Button_Released(btnname, Is_Any_Button_Hovered(btnname, CP_Input_GetMouseX(), CP_Input_GetMouseY())))
+			{ //only return isClicked =1 on release
+				CP_Sound_Play(btnname->soundEffect->onRelease);
+				btnname->isClicked = 1;
+				printf("2");
+			}
+
+			else { //if its not being clicked or released draw the highlight frame and return isSel =1;
+				if (Is_Any_Button_Hovered(btnname, CP_Input_GetMouseX(), CP_Input_GetMouseY()) == 1)
+				{
+					Draw_Button_Highlight(btnname);
+					if (!btnname->wasHovered) {
+
+						CP_Sound_Play(btnname->soundEffect->onHover);
+					}
+					btnname->isSel = 1;
+					btnname->isClicked = 0;
+				}
+				else
 				{ //if nothing else is happening just draw the Normal Frame and set both isSel and isClicked to negative
-				Draw_Button_Normal(btnname);
-				if (btnname->wasHovered) {
-					CP_Sound_StopAll();
-				}
-				btnname->isSel = 0;
-				btnname->isClicked = 0;
-				btnname->isDisplayingText = 1;
+					Draw_Button_Normal(btnname);
+					if (btnname->wasHovered) {
+						CP_Sound_StopAll();
+					}
+					btnname->isSel = 0;
+					btnname->isClicked = 0;
+					btnname->isDisplayingText = 1;
 				}
 			}
 		}
-	btnname->wasHovered = (Is_Any_Button_Hovered(btnname, CP_Input_GetMouseX(), CP_Input_GetMouseY()));
-	
+		btnname->wasHovered = (Is_Any_Button_Hovered(btnname, CP_Input_GetMouseX(), CP_Input_GetMouseY()));
 	}
+}

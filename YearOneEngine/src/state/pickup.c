@@ -5,7 +5,8 @@
 #include "tile/tile.h"
 #include "shoot.h"
 #include "./scenes/mouse.h"
-int coun = 0;
+#include "utils/mouse/mouse.h"
+
 
 int Check_ForSel() {
 	int count2 = 0;
@@ -45,9 +46,10 @@ void Idle_Update(GameEntity* entity, StateMachine* sm, float dt) {
 		FSM_SetState(sm, ShootState, entity, dt);
 		return;
 	}
-	if (IsCircleClicked(entity->centerPos.x, entity->centerPos.y, entity->diameter, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
-		//printf("STARTED ATTACK STATE FROM IDLE\n");
-		/*deselectEnt();*/
+	/* Mouse Check If can Hold */
+	if (Mouse_CanPickup() && Is_Mouse_Released(entity->centerPos.x, entity->centerPos.y, entity->diameter, CP_Input_GetMouseX(), CP_Input_GetMouseY()))
+	{
+
 		FSM_SetState(sm, PickUpState, entity, dt);
 		return;
 	}
@@ -59,10 +61,15 @@ void Idle_Exit(GameEntity* entity, StateMachine* sm, float dt) {
 /*---------------------------------PickUp Functions-----------------------------*/
 void PickedUp_Init(GameEntity* entity, StateMachine* sm, float dt) {
 	cursor = 0; //mouse is not free to perform more actions on buttons
-
+	printf("Before %d\n", entity->pickUpIndex);
+	///* Assigns order BEFORE switching state */
+	//
+	
+	entity->pickUpIndex = Mouse_GetPickupCount(); // gives first pickup id: 1 
+	Mouse_AddPickup(); // increments pickup for next item, now count points to 2 
+	printf("after %d\n", entity->pickUpIndex);
 	if (1 == entity->isItOnMap) { //When it is onMap -> SelectedState
-		FSM_SetState(sm, SelectedState, entity, dt);
-
+		//FSM_SetState(sm, SelectedState, entity, dt);
 	} else {
 		entity->color.red = 0;
 		entity->color.green = 0;
@@ -72,23 +79,29 @@ void PickedUp_Init(GameEntity* entity, StateMachine* sm, float dt) {
 	}
 }
 void PickedUp_Update(GameEntity* entity, StateMachine* sm, float dt) {
-	/*//printf("UPDATING\n");*/
 	cursor = 0; //mouse is not free to perform more actions on buttons
+	int col = entity->pickUpIndex % 3;
+	int row = entity->pickUpIndex / 3;
 
+	entity->centerPos.x = CP_Input_GetMouseX() + col * 40;
+	entity->centerPos.y = CP_Input_GetMouseY() + row * 40;
 	entity->stateTimer += dt;
-	entity->centerPos = (CP_Vector){ CP_Input_GetMouseX(), CP_Input_GetMouseY() };
 
 	Hover_TileAt(entity, (CP_Vector) { CP_Input_GetMouseX(), CP_Input_GetMouseY() });
 
-	if (IsCircleClicked(entity->centerPos.x, entity->centerPos.y, entity->diameter, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
+	if (CP_Input_MouseReleased(MOUSE_BUTTON_RIGHT) && (entity->pickUpIndex == 1) ) { // only puts down the first pickUp item
+		
 		
 		if (Set_OnTile(entity, (CP_Vector) { CP_Input_GetMouseX(), CP_Input_GetMouseY() })) // Set_OnTile returns a tile that closley matches the curr Mouse Pos
 		{
+			entity->pickUpRemoval = 1;
+			//printf("removing %d %d\n", entity->pickUpRemoval, entity->pickUpIndex);
 			FSM_SetState(sm, IdleState, entity, dt);
 		}
 		return;
 	}
 }
+
 void PickedUp_Exit(GameEntity* entity, StateMachine* sm, float dt) {
 	//printf("Player left IDLE state\n");
 	B_Arr_Refresh(&(entity->bullets.bulletArr), entity);
@@ -97,6 +110,7 @@ void PickedUp_Exit(GameEntity* entity, StateMachine* sm, float dt) {
 	if (entity->sound.soundPlace == NULL) {
 		printf("HELP");
 	} 
+
 	Hover_Tile_Exit(); // Stop Highlighting the currTile
 	cursor = 1; //mouse is now free
 }
@@ -122,7 +136,7 @@ void Sel_Init(GameEntity* entity, StateMachine* sm, float dt) {
 void Sel_Update(GameEntity* entity, StateMachine* sm, float dt) {
 	Hover_TileAt(entity, (CP_Vector) { entity->centerPos.x, entity->centerPos.y });
 	//Container_Draw( getContainer(entity->label, &containersArr) );
-	if (0==entity->isSel || IsCircleClicked(entity->centerPos.x, entity->centerPos.y, entity->diameter, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
+	if (0==entity->isSel || Is_Circle_Clicked(entity->centerPos.x, entity->centerPos.y, entity->diameter, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
 		FSM_SetState(sm, IdleState, entity, dt);
 		return;
 	}

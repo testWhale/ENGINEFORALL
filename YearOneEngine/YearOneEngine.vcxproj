@@ -38,6 +38,7 @@
     <ClCompile Include="src\utils\backend\containerStates.c" />
     <ClCompile Include="src\utils\container.c" />
     <ClCompile Include="src\utils\health\health.c" />
+    <ClCompile Include="src\utils\mouse\mouse.c" />
     <ClCompile Include="src\utils\readTxt.c" />
     <ClCompile Include="src\utils\arr\sample.c" />
     <ClCompile Include="src\utils\SM.c" />
@@ -56,6 +57,7 @@
     <ClInclude Include="src\scenes\mainscene.h" />
     <ClInclude Include="src\scenes\mouse.h" />
     <ClInclude Include="src\state\enemy.h" />
+    <ClInclude Include="src\state\pickup.h" />
     <ClInclude Include="src\state\shoot.h" />
     <ClInclude Include="src\test.h" />
     <ClCompile Include="src\main.c" />
@@ -65,12 +67,12 @@
     <ClCompile Include="src\utils\arr\State.h" />
     <ClCompile Include="src\utils\utils.c" />
     <ClInclude Include="src\utils\health\health.h" />
+    <ClInclude Include="src\utils\mouse\mouse.h" />
     <ClInclude Include="src\utils\UI\Pause.h" />
     <ClInclude Include="src\utils\wave\wave.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DataTypes.h" />
-    <ClInclude Include="src\state\pickup.h" />
     <ClInclude Include="src\utils\arr.h" />
     <ClInclude Include="src\utils\backend\containerStates.h" />
     <ClInclude Include="src\utils\container.h" />

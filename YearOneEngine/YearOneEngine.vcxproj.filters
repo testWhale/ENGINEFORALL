@@ -31,6 +31,7 @@
     <ClCompile Include="src\utils\arr\State.h" />
     <ClCompile Include="src\utils\utils.c" />
     <ClCompile Include="src\Nuke\nuke.c" />
+    <ClCompile Include="src\utils\mouse\mouse.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\bullet\bullet.h" />
@@ -50,7 +51,6 @@
     <ClInclude Include="src\utils\UI\Pause.h" />
     <ClInclude Include="src\utils\wave\wave.h" />
     <ClInclude Include="DataTypes.h" />
-    <ClInclude Include="src\state\pickup.h" />
     <ClInclude Include="src\utils\arr.h" />
     <ClInclude Include="src\utils\backend\containerStates.h" />
     <ClInclude Include="src\utils\container.h" />
@@ -59,6 +59,9 @@
     <ClInclude Include="src\tile\tile.h" />
     <ClInclude Include="src\utils\utils.h" />
     <ClInclude Include="src\Nuke\nuke.h" />
+    <ClInclude Include="src\scenes\mouse.h" />
+    <ClInclude Include="src\state\pickup.h" />
+    <ClInclude Include="src\utils\mouse\mouse.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="src\utils\backend\containers.txt" />

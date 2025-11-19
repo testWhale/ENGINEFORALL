@@ -3,7 +3,7 @@
 #include "tile/tile.h"
 #include "test.h"
 #include "utils.h"
-
+CP_MOUSE mouse;
 int IsAreaClicked(float area_center_x, float area_center_y, float area_width, float area_height, float click_x, float click_y)
 {
 	if (click_x >= area_center_x - (area_width / 2) && click_x <= area_center_x + (area_width / 2) &&
@@ -30,7 +30,7 @@ int IsImgHovered(CP_Vector leftTopBound, float area_width, float area_height, CP
 		return 0; }
 }
 
-int IsCircleClicked(float circle_center_x, float circle_center_y, float diameter, float click_x, float click_y){
+int Is_Circle_Clicked(float circle_center_x, float circle_center_y, float diameter, float click_x, float click_y) {
 	//find the dist btwn the point clicked and the center of the circle.
 	float radius = diameter / 2.0f;
 	float dist_x = click_x - circle_center_x;
@@ -38,11 +38,41 @@ int IsCircleClicked(float circle_center_x, float circle_center_y, float diameter
 	dist_x = dist_x * dist_x;
 	dist_y = dist_y * dist_y;
 	double dist = sqrt(dist_x + dist_y);
-	if (dist <= radius && CP_Input_MouseDoubleClicked() ) {
+	if (dist <= radius && CP_Input_MouseDoubleClicked()) {
 		printf("Circle Clicked\n");
 		return 1;
 	}
 	return 0;
+}
+
+int Is_Mouse_Released(float circle_center_x, float circle_center_y, float diameter, float click_x, float click_y) {
+	//find the dist btwn the point clicked and the center of the circle.
+	float radius = diameter / 2.0f;
+	float dist_x = click_x - circle_center_x;
+	float dist_y = click_y - circle_center_y;
+	dist_x = dist_x * dist_x;
+	dist_y = dist_y * dist_y;
+	double dist = sqrt(dist_x + dist_y);
+	if (dist <= radius && CP_Input_MouseDown(MOUSE_BUTTON_LEFT))
+	{
+		//printf("Circle Clicked\n");
+		return 1;
+	}
+	if (CP_Input_MouseReleased(MOUSE_BUTTON_LEFT))
+	{
+		return 0;
+	}
+	
+
+
+}
+
+int Is_Right_Clicked() {
+
+	if (CP_Input_MouseReleased(MOUSE_BUTTON_RIGHT))
+	{
+		return 1;
+	}
 }
 
 int EnemyCrossedLine(GameEntity* enemy) {

@@ -5,7 +5,7 @@
 
 clickPower = 1;
 clickPurchaseAmount = 0;
-FiveCountdown = 5.0f;
+OneCountdown = 1.0f;
 passiveIncome = 0;
 
 void One_Click(float* currentMoney) 
@@ -22,16 +22,16 @@ void Click_Upgrade() {
 }
 
 void Passive_Upgrade() {
-	passiveIncome += 1;
+	passiveIncome += 5;
 }
 
 void Passive_System(float* currentMoney)
 {
-	FiveCountdown -= CP_System_GetDt();
-	if (FiveCountdown <= 0.0f) 
+	OneCountdown -= CP_System_GetDt();
+	if (OneCountdown <= 0.0f) 
 	{
 		*currentMoney += passiveIncome;
-		FiveCountdown = 5.0;
+		OneCountdown = 1.0f;
 	}
 }
 

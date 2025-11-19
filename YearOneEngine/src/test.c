@@ -65,7 +65,7 @@
 //static float     g_enemyHitCD[1024];
 //
 //
-//extern int IsCircleClicked(float cx, float cy, float diameter, float mx, float my);
+//extern int Is_Mouse_Released(float cx, float cy, float diameter, float mx, float my);
 //
 //
 //static int CirclesOverlap(float x1, float y1, float r1, float x2, float y2, float r2)
@@ -300,7 +300,7 @@
 //    Hearts_Update(dt);
 //
 //
-//    if (IsCircleClicked(circles[0].centerPos.x, circles[0].centerPos.y, circles[0].diameter,
+//    if (Is_Mouse_Released(circles[0].centerPos.x, circles[0].centerPos.y, circles[0].diameter,
 //        CP_Input_GetMouseX(), CP_Input_GetMouseY()))
 //    {
 //        GameEntity t = (GameEntity){

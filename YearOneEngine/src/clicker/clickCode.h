@@ -1,5 +1,5 @@
 extern int clickPower;
-extern float FiveCountdown,passiveIncome;
+extern float OneCountdown,passiveIncome;
 
 
 

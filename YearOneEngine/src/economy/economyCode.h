@@ -7,6 +7,8 @@ extern float currentMoney, passiveIncome;
 int clickerUpgrade1Count, clickerUpgrade2Count;
 int troop1Count, troop2Count, troop3Count;
 
+extern int purchaseCount;
+
 
 int Purchase_System(float* currentMoney, float itemCost);
 void Poor_Feedback(float fontsize, float PosX, float PosY);

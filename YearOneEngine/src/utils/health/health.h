@@ -17,6 +17,7 @@ typedef struct {
 void HealthSystem_Init(HealthSystem* hs, int maxHearts, int maxhealth);
 void HealthSystem_Update(HealthSystem* hs, float deltaTime);
 void HealthSystem_TakeDamage(HealthSystem* hs);
+void Health_PlayHitSfx(void);
 int HealthSystem_GetHearts(const HealthSystem* hs);
 void HealthSystem_ResetTimer(HealthSystem* hs);
 float HealthSystem_GetTimer(const HealthSystem* hs);
@@ -24,5 +25,4 @@ void HealthSystem_DrawHearts(const HealthSystem* hs);
 void HealthSystem_DrawBar(const HealthSystem* hs, float x, float y, float width, float height);
 void Health_DamagePlayersOnEnemyCollisions(int dmgPerTick,float maxContactTime,float dt);
 void HealthAudio_Load(const char* hitSfxPath, const char* loseSfxPath);
-void HealthAudio_Free(void);
 #endif 

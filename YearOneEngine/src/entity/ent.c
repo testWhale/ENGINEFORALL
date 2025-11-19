@@ -11,10 +11,15 @@
 #include "../scenes/mainmenu.h"
 #include "../economy/economyCode.h"
 #include "state/shoot.h"
+#include "utils/mouse/mouse.h"
 #include <math.h>
 
 ButtonInfo NewWaveButton;
+ButtonInfo NewWave2Button;
 ButtonSound defaultSound;
+static float s_tipTimer = 0.0f;
+static int   s_lastWaveSeen = -1;
+static char  s_tipMsg[96] = "";
 
 CP_Image baseTex;
 CP_Image normalTex;
@@ -24,51 +29,48 @@ CP_Color* outPixels;
 CP_Image imgOut;
 /*-------------Template Value--------------*/
 GameEntity Make_Template(const char* name) {
-	GameEntity e;
+	GameEntity e; char* spritePath = "Assets/Cats/n.png"; char* shadowPath = "Assets/Cats/n_s.png";
 	if (name == "player")
 	{
+		spritePath = "Assets/Cats/n.png";
+		shadowPath = "Assets/Cats/n_s.png";
 		e = (GameEntity){
 		.centerPos = {400, 100}, .rotation = 0, .isPlayer = 1, .forwardVector = {0, 0}, .color = {255,0,0,255},
-		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "fire", .bullets = {0 } };
+		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "fire", .bullets = {0 }, .pickUpRemoval = 0};
 	}
 
 
 	if (name == "poison")
 	{
 		Bullet temp = Bullet_Template("poison");
+		spritePath = "Assets/Cats/p.png";
+		shadowPath = "Assets/Cats/n_s.png";
 		e = (GameEntity){
-		.centerPos = {400, 150}, .rotation = 0, .isPlayer = 0, .forwardVector = {0, 0}, .color = {255,0,255,255},
-		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "poison" , .bullets = {0} };
-		B_Arr_Insert(&e.bullets, temp);
-		/*B_Arr_Init(2, &e.bullets);
-		B_Arr_Insert(&e.bullets, temp);*/
+		.centerPos = {400, 150}, .rotation = 0, .isPlayer = 1, .forwardVector = {0, 0}, .color = {255,0,255,255},
+		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "poison" , .bullets = {0}, .sprite = "Assets/Cats/p.png"};
+		//B_Arr_Insert(&e.bullets, temp);
+
 	}
 
 	if (name == "stun")
 	{
 		Bullet temp = Bullet_Template("stun");
 		e = (GameEntity){
-		.centerPos = {500, 100}, .rotation = 0, .isPlayer = 0, .forwardVector = {0, 0}, .color = {255,0,0,255},
-		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "fire" , .bullets = {0} };
-		/*B_Arr_Init(2, &e.bullets);
-		B_Arr_Insert(&e.bullets, temp);*/
+		.centerPos = {500, 100}, .rotation = 0, .isPlayer = 1, .forwardVector = {0, 0}, .color = {0,0,255,255},
+		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "stun" , .bullets = {0} };
+
 	}
+
 
 	if (name == "enemy")
 	{
-
 		e = (GameEntity){
 		.centerPos = {100, 400}, .rotation = 0, .isPlayer = 0, .forwardVector = {0, 0}, .color = {255,255,0,255},
 		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "enemy" , .bullets = {0} };
 
 	}
-	//do not assign any pointers here as it will point to the same address
-	/* aka:
-	B_Arr_Init(10, &e.bullets);
-	...
-	GameEntity player = e
-	GameEntity enemy = e
-	both point to the same bullet array STOP */
+	e.sprite = CP_Image_Load(spritePath);
+	e.shadow = CP_Image_Load(shadowPath);
 	return e;
 }
 
@@ -93,10 +95,11 @@ void Init_PlayerDemo() {
 		ae.alive = 1;
 		ae.hasScored = 0;
 		ae.lastLeftmostX = 0.0f;
-		printf("turrent ID: %d", ae.id);
+		//printf("turrent ID: %d", ae.id);
+
 		Arr_Insert(&playerArr, ae);
 		playerArr.ActiveEntityArr[i].unit.centerPos.x = player.centerPos.x + i * 100.0f;
-		//B_Arr_Init(10, &ae.unit.bullets);
+
 	}
 
 
@@ -115,8 +118,11 @@ void Init_PlayerDemo() {
 		ae.contactTime = 0.0f;
 		Arr_Insert(&enemyArr, ae);
 		Start_Wave(&enemyArr.ActiveEntityArr[i].unit, 0);
+		if (enemyArr.ActiveEntityArr[i].unit.accel.x > -0.5) {
+			enemyArr.ActiveEntityArr[i].maxHealth += 35 * -enemyArr.ActiveEntityArr[i].unit.accel.x;
+			printf("THis enemy has more health %f\n", enemyArr.ActiveEntityArr[i].health);
+		}
 
-		/*enemyArr.ActiveEntityArr[i].unit.centerPos.x += 200.0f;*/
 	}
 	//ContArr_Init(playerArr.used, &containersArr);
 	//Read_File("Assets/containers");
@@ -126,14 +132,18 @@ void Init_NewWave(int currWave) {
 	GameEntity enemy = Make_Template("enemy");
 	/* FOR ENEMY UNITS */
 	waveFlag = 1;
+	// every new wave add 5 units, we start with 5 units
 	int spawn = currWave + 5;
+	if (spawn > MAX_ENTITIES) { spawn = MAX_ENTITIES; }
 	for (int i = 0; i < spawn; i++) {
 		ActiveEntity ae;
 		ae.id = i;
 		ae.unit = enemy;
-		ae.fsm = (StateMachine){ .currState = IdleState };
-		ae.maxHealth = 100;
-		ae.health = 100;
+		ae.fsm = (StateMachine){ .currState = EnemyIdleState };
+		/* Difficulty Curving */
+		ae.maxHealth = 100 + pow(currWave, 3/2);
+		ae.health = 100 + pow(currWave, 3/2);
+		printf("health %f\n", enemyArr.ActiveEntityArr[i].health);
 		ae.alive = 1;
 		ae.hasScored = 0;
 		ae.lastLeftmostX = 0.0f;
@@ -142,11 +152,35 @@ void Init_NewWave(int currWave) {
 		Arr_Insert(&enemyArr, ae);
 		Start_Wave(&enemyArr.ActiveEntityArr[i].unit, (int)2);
 
-		/*enemyArr.ActiveEntityArr[i].unit.centerPos.x += 200.0f;*/
+		/* TANK CODE */
+		/* this sets ur enemy health, if enemy is slower than -0.4 than it will be tankier */
+		if (enemyArr.ActiveEntityArr[i].unit.accel.x > -0.4) {
+			enemyArr.ActiveEntityArr[i].maxHealth += 1005 * -enemyArr.ActiveEntityArr[i].unit.accel.x;
+			enemyArr.ActiveEntityArr[i].health += 1005 * -enemyArr.ActiveEntityArr[i].unit.accel.x;
+			printf("Tank HP %f\n", enemyArr.ActiveEntityArr[i].health);
+		}
+	}
+}
+
+/* Completely Kills all active Enemies */
+void Kill_NewWave() {
+	{
+		printf("test;");
+		while(enemyArr.used > 0) {
+			Arr_Del(&(enemyArr), enemyArr.ActiveEntityArr->id);
+		}
 	}
 }
 
 void Load_TempText() {
+	Button_Load(&NewWave2Button, &defaultSound,
+		96 * unit, 60 * unit,
+		143 * unit, 60 * unit,
+		0 * unit,
+		"Assets/Buttons/Ribbon/Ribbon.png",
+		"Assets/Buttons/Ribbon/Ribbon.png",
+		"Assets/Buttons/Ribbon/Ribbon.png", 0);
+
 	Button_Load(&NewWaveButton, &defaultSound,
 		96 * unit, 92 * unit,
 		20 * unit, 20 * unit,
@@ -154,16 +188,25 @@ void Load_TempText() {
 		"Assets/Buttons/Suprise/JackNormal.png",
 		"Assets/Buttons/Suprise/JackHighlight.png",
 		"Assets/Buttons/Suprise/JackClicked.png", 0);
+
+	s_tipTimer = 0.0f;
+	s_lastWaveSeen = -1;
+	s_tipMsg[0] = '\0';
 }
 
 void Draw_TempText(float dt) {
 	if (waveFlag) {
 		waveState += (dt * 2);
-		printf("DT: %f\n", waveState);
+		//printf("DT: %f\n", waveState);
 		CP_Graphics_DrawRect(CP_Input_GetMouseX(), CP_Input_GetMouseY(), 50, 50);
-		NewWaveButton.alive = 1;
+		NewWaveButton.alive = 1; NewWave2Button.alive = 1;
 		Button_Behavior(&NewWaveButton);
 		if (NewWaveButton.isClicked)
+		{
+			Reward_Click(&currentMoney);
+		}
+
+		Button_Behavior(&NewWave2Button);
 		{
 			Reward_Click(&currentMoney);
 		}
@@ -171,26 +214,103 @@ void Draw_TempText(float dt) {
 		if (waveState > 4 && (NewWaveButton.alive==1)) {
 			waveFlag = 0; waveState = 0;
 			NewWaveButton.alive = 0;
-			
+			NewWave2Button.alive = 0;
 		}
+	}
+	if (wave != s_lastWaveSeen) {
+		const char* m = NULL;
+		if (wave == 5)      m = "Maybe consider buying a nuke.";
+		else if (wave == 10) m = "You should really consider buying one.";
+		else if (wave == 15) m = "Now you really should buy one!";
+		if (m) {
+			snprintf(s_tipMsg, sizeof s_tipMsg, "%s", m);
+			s_tipTimer = 3.0f;
+		}
+		s_lastWaveSeen = wave;
+	}
+	if (s_tipTimer > 0.0f) {
+		s_tipTimer -= dt;
+		float t = (s_tipTimer > 0.4f) ? 1.0f : (s_tipTimer / 0.4f);
+		if (t < 0.0f) t = 0.0f;
+
+		float cx = 50.0f * unit;
+		float cy = 18.0f * unit;
+		float bw = 80.0f * unit;
+		float bh = 10.0f * unit;
+
+		CP_Settings_RectMode(CP_POSITION_CENTER);
+		CP_Settings_Fill(CP_Color_Create(0, 0, 0, (int)(140 * t)));
+		CP_Graphics_DrawRect(cx, cy, bw, bh);
+
+		CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
+		CP_Settings_TextSize(5.0f * unit);
+		CP_Settings_Fill(CP_Color_Create(255, 255, 255, (int)(255 * t)));
+		CP_Font_DrawText(s_tipMsg, cx, cy);
 	}
 }
 void Del_TempText() {
 	Button_Free(&NewWaveButton);
+	Button_Free(&NewWave2Button);
 }
 
-void Print_BulletInfo(GameEntity* entity) {
-	for (size_t i = 0; i < playerArr.used; ++i) {
+/* Mouse Refresh after Loop */
+// Compare function for qsort descending
+int compare_desc(const void* a, const void* b) {
+	return (*(int*)b - *(int*)a);
+}
 
-		for (size_t i = 0; i < entity->bullets.used; i++) {
-			Bullet* b = &entity->bullets.bulletArr[i];
-			printf("  Bullet %d at (%.1f, %.1f)\n", b->id, b->centerPos.x, b->centerPos.y);
+void LateUpdate_Pickups()
+{
+	int removedIndices[64]; // adjust max pickups if needed
+	int removedCount = 0;
+
+	// PASS 1 � find all removed items
+	for (int i = 0; i < playerArr.used; i++)
+	{
+		GameEntity* e = &playerArr.ActiveEntityArr[i].unit;
+
+		if (e->pickUpRemoval == 1)
+		{
+			printf("\nREMOVING %d\n", e->pickUpIndex);
+			removedIndices[removedCount++] = e->pickUpIndex;
+
+			e->pickUpIndex = 0;
+			e->pickUpRemoval = 0;
+			
 		}
 	}
-}
 
+	if (removedCount == 0)
+		return;
+
+	// Sort removed indices descending
+	qsort(removedIndices, removedCount, sizeof(int), compare_desc);
+
+	// PASS 2 � shift remaining items down
+	for (int r = 0; r < removedCount; r++)
+	{
+		int removedIndex = removedIndices[r];
+
+		for (int i = 0; i < playerArr.used; i++)
+		{
+			GameEntity* e = &playerArr.ActiveEntityArr[i].unit;
+
+			if (e->pickUpIndex > removedIndex)
+			{
+				e->pickUpIndex--;
+			}
+		}
+	}
+	Mouse_DelPickup();
+}
 void Draw_Bullets() {
 	for (size_t i = 0; i < playerArr.used; ++i) {
+		ActiveEntity* ent = &playerArr.ActiveEntityArr[i];
+		if (!ent->alive)
+		{
+			ent->unit.bullets.used = 0;  
+			continue;
+		}
 		GameEntity* p = &playerArr.ActiveEntityArr[i].unit;
 		for (int j = 0; j < p->bullets.used; j++)
 		{
@@ -200,7 +320,7 @@ void Draw_Bullets() {
 			{
 				if (pew->type == "poison") { 
 					pew->color.red = 255; pew->color.green = 0; pew->color.blue = 255; pew->color.opacity = 255; }
-				//printf("%s\n", pew->type);
+				
 				CP_Settings_Fill(CP_Color_Create(pew->color.red, pew->color.green, pew->color.blue, pew->opacity));
 				CP_Graphics_DrawCircle(pew->centerPos.x, pew->centerPos.y, pew->diameter);
 			}
@@ -208,41 +328,57 @@ void Draw_Bullets() {
 	}
 }
 
+float newDT=0;
 void Draw_Entities(void)
 {
 	float dt = CP_System_GetDt();
 
-	//if (!Pause_IsPaused())
-	//{
-	//	for (size_t i = 0; i < playerArr.used; ++i)
-	//	{
-	//		ActiveEntity* ent = &playerArr.ActiveEntityArr[i];
-	//		if (!ent->alive)
-	//			continue;
+	
+	CP_Settings_NoStroke();
 
-	//		FSM_Update(&ent->fsm, &ent->unit, dt);
-	//	}
+	if (!Pause_IsPaused())
+	{
+		for (size_t i = 0; i < playerArr.used; ++i)
+		{
+			ActiveEntity* ent = &playerArr.ActiveEntityArr[i];
+			if (!ent->alive)
+			{
+				continue; }
+				
 
-	//	if (enemyArr.used <= 0)
-	//	{
-	//		Init_NewWave(wave++);
-	//	}
+			FSM_Update(&ent->fsm, &ent->unit, dt);
+			Mouse_Update();
+		}
+		newDT += dt;
+		if (enemyArr.used <= 0 && newDT > 6)
+		{	
+			newDT = 0;
+			Init_NewWave(wave++);
+		}
 
-	//	/* ----------------- ENEMIES ----------------- */
-	//	for (size_t i = 0; i < enemyArr.used; )
-	//	{
-	//		ActiveEntity* ent = &enemyArr.ActiveEntityArr[i];
-	//		if (!ent->alive)
-	//		{
-	//			++i;
-	//			continue;
-	//		}
-	//		if (!ent->isHitting)
-	//		{
-	//			Move_Wave(&ent->unit, dt);
-	//		}
+		/* ----------------- ENEMIES ----------------- */
+		for (size_t i = 0; i < enemyArr.used; )
+		{
+			ActiveEntity* ent = &enemyArr.ActiveEntityArr[i];
+			if (!ent->alive)
+			{
+				++i;
+				continue;
+			}
+			if (!ent->isHitting)
+			{
+				if (ent->unit.isStunned) {
+					ent->unit.stunTimer -= dt;
 
-	//		FSM_Update(&ent->fsm, &ent->unit, dt);
+					if (ent->unit.stunTimer <= 0) {
+						ent->unit.isStunned = 0;
+						ent->unit.stunTimer = 0;
+					}
+				}
+				else {
+					Move_Wave(&ent->unit, dt);
+				}
+			}
 
 	//		if (ent->health <= 0.0f)
 	//		{
@@ -253,8 +389,6 @@ void Draw_Entities(void)
 	//		++i;
 	//	}
 	//}
-
-
 
 	CP_Vector lightDir = CP_Vector_Set(1.0f, -1.0f);   
 	float     shadowScaleY = 0.5f;
@@ -273,30 +407,31 @@ void Draw_Entities(void)
 		CP_Vector shadowPos = CP_Vector_Add(p->centerPos, shadowOffset);
 
 		CP_Settings_Fill(CP_Color_Create(0, 0, 0, 100));
-		CP_Graphics_DrawEllipse(
-			shadowPos.x, shadowPos.y,
+		CP_Image_Draw(p->shadow, shadowPos.x, shadowPos.y,
 			p->diameter,
-			p->diameter * shadowScaleY);
+			p->diameter * shadowScaleY, 100);
 
-		if (p->label == "poison") { p->color.red = 255; p->color.green = 0;   p->color.blue = 255; p->color.opacity = 255; }
-		if (p->label == "fire") { p->color.red = 255; p->color.green = 0;   p->color.blue = 0;   p->color.opacity = 255; }
-		if (p->isSel) { p->color.red = 0;   p->color.green = 0;   p->color.blue = 255; p->color.opacity = 255; }
+		if (p->label == "poison") { p->color.red = 255; p->color.green = 0;   p->color.blue = 255; p->color.opacity = 100; }
+		if (p->label == "fire") { p->color.red = 255; p->color.green = 0;   p->color.blue = 0;   p->color.opacity = 100; }
+		if (p->isSel) { p->color.red = 0;   p->color.green = 0;   p->color.blue = 255; p->color.opacity = 100; }
 
 		CP_Settings_Fill(CP_Color_Create(p->color.red, p->color.green, p->color.blue, p->color.opacity));
 		CP_Graphics_DrawCircle(p->centerPos.x, p->centerPos.y, p->diameter);
-
+		CP_Image_Draw(p->sprite, p->centerPos.x, p->centerPos.y, p->diameter, p->diameter, 255);
+		
+		if (p->pickUpIndex > 0) 
 		{
-			HealthSystem hs = { 0 };
-			hs.maxhealth = (float)ent->maxHealth;
-			hs.health = (float)ent->health;
+			char str[2];
+			CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
+			CP_Settings_TextSize(5 * unit);
+			
+			sprintf_s(str, sizeof(str), "%d", p->pickUpIndex);
 
-			const float barW = 80.0f;
-			const float barH = 10.0f;
-			const float barX = p->centerPos.x - barW * 0.5f;
-			const float barY = p->centerPos.y - p->diameter * 0.75f;
-
-			HealthSystem_DrawBar(&hs, barX, barY, barW, barH);
+			CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
+			CP_Font_DrawText(str, p->centerPos.x, p->centerPos.y);
+			
 		}
+
 	}
 
 	for (size_t i = 0; i < enemyArr.used; ++i)
@@ -311,22 +446,47 @@ void Draw_Entities(void)
 		CP_Settings_Fill(CP_Color_Create(e->color.red, e->color.green, e->color.blue, e->color.opacity));
 		CP_Graphics_DrawCircle(e->centerPos.x, e->centerPos.y, e->diameter);
 
-		{
-			HealthSystem hs = { 0 };
-			hs.maxhealth = (float)ent->maxHealth;
-			hs.health = (float)ent->health;
-
-			const float barW = 80.0f;
-			const float barH = 10.0f;
-			const float barX = e->centerPos.x - barW * 0.5f;
-			const float barY = e->centerPos.y - e->diameter * 0.75f;
-
-			HealthSystem_DrawBar(&hs, barX, barY, barW, barH);
-		}
 	}
 
 	Draw_Bullets();
 	
+	for (size_t i = 0; i < enemyArr.used; ++i)
+	{
+		ActiveEntity* ent = &enemyArr.ActiveEntityArr[i];
+		if (!ent->alive) continue;
+
+		GameEntity* e = &ent->unit;
+
+		HealthSystem hs = { 0 };
+		hs.maxhealth = (float)ent->maxHealth;
+		hs.health = (float)ent->health;
+
+		float barW = e->diameter * 0.90f;
+		float barH = e->diameter * 0.11f;
+		float barX = e->centerPos.x - barW * 0.5f;
+		float barY = e->centerPos.y - e->diameter * 0.65f;
+
+		HealthSystem_DrawBar(&hs, barX, barY, barW, barH);
+	}
+
+	for (size_t i = 0; i < playerArr.used; ++i)
+	{
+		ActiveEntity* ent = &playerArr.ActiveEntityArr[i];
+		if (!ent->alive) continue;
+
+		GameEntity* p = &ent->unit;
+
+		HealthSystem hs = { 0 };
+		hs.maxhealth = (float)ent->maxHealth;
+		hs.health = (float)ent->health;
+
+		float barW = p->diameter * 0.90f;
+		float barH = p->diameter * 0.11f;
+		float barX = p->centerPos.x - barW * 0.5f;
+		float barY = p->centerPos.y - p->diameter * 0.65f;
+
+		HealthSystem_DrawBar(&hs, barX, barY, barW, barH);
+	}
 }
 
 void setup(char* imgPath, char* normPath) {
@@ -359,39 +519,50 @@ void draw(float x, float y, float wdth, float height, int alpha) {
 	int h = CP_Image_GetHeight(baseTex);
 	float lx = CP_Input_GetMouseX();
 	float ly = CP_Input_GetMouseY();
+
+	float screenX = x * unit - (wdth * unit) * 0.5f;
+	float screenY = y * unit - (height * unit) * 0.5f;
+	float scaleX = (wdth * unit) / w;
+	float scaleY = (height * unit) / h;
+	
 	// Lighting per pixel 
-	for (int y = 0; y < h; y++) {
-		for (int x = 0; x < w; x++) {
-			int i = y * w + x;
+	for (int py = 0; py < h; py++) {
+		for (int px = 0; px < w; px++) {
+
+			int i = py * w + px;
 
 			CP_Color col = basePixels[i];
 			CP_Color n = normalPixels[i];
 
-			// Convert normal RGB -> [-1,1] for X/Y, 0..1 for Z
 			float nx = (n.r / 255.0f) * 2.0f - 1.0f;
 			float ny = (n.g / 255.0f) * 2.0f - 1.0f;
 			float nz = (n.b / 255.0f);
 
-			// Light direction (2D)
-			float dx = lx - (400 - w / 2 + x);
-			float dy = ly - (300 - h / 2 + y);
+			// Convert pixel to screen-space
+			float pixelX = screenX + px * scaleX + scaleX * 0.5f;
+			float pixelY = screenY + py * scaleY + scaleY * 0.5f;
+			
+
+			// Light direction
+			float dx = lx - pixelX;
+			float dy = ly - pixelY;
+
 			float len = sqrtf(dx * dx + dy * dy);
-			if (len < 0.0001f) len = 0.0001f;
+			if (len < 0.001f) len = 0.001f;
 			dx /= len;
 			dy /= len;
 
-			// Diffuse lighting
 			float diffuse = nx * dx + ny * dy + nz * 0.5f;
 			if (diffuse < 0) diffuse = 0;
 
-			// Apply diffuse to color
-			int r = (int)(col.r * diffuse + 0.5f);
-			int g = (int)(col.g * diffuse + 0.5f);
-			int b = (int)(col.b * diffuse + 0.5f);
+			int r = (int)(col.r * diffuse);
+			int g = (int)(col.g * diffuse);
+			int b = (int)(col.b * diffuse);
 
 			outPixels[i] = CP_Color_Create(r, g, b, col.a);
 		}
 	}
+
 
 	// Update the output image pixels
 	CP_Image_UpdatePixelData(imgOut, outPixels);

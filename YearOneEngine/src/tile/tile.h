@@ -40,8 +40,7 @@ Tile* Hover_TileAt(GameEntity* Entity, CP_Vector mouse);
 Tile* Hover_Tile_Exit();
 
 /* Set the tile that entity is on. c_tile->tsel = 1; */
-void Sel_AfterPlaced(GameEntity* Entity, CP_Vector 
-);
+void Sel_AfterPlaced(GameEntity* Entity, CP_Vector );
 
 void Map_Init(CP_Vector startPos, float width, float height);
 

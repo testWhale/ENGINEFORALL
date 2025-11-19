@@ -57,12 +57,11 @@ void Arr_Insert(TestArr* A, ActiveEntity e) {
     // Initlise bullet array, with 0 values.
     B_Arr_Init(2, &unit->bullets);
     for (int j = 0; j < 4; j++) {
-        printf("j = %d\n", j);
-        //memset(&unit->bullets, 0, sizeof(unit->bullets));
+
         Bullet b = { .id = j, .centerPos = unit->centerPos, .velocity = {1,0}, .color = {0,255,0,255}, .diameter = 50 };
         B_Arr_Insert(&unit->bullets, b);
         unit->bullets.bulletArr[j].opacity = 0;
-        printf("Turret %d,  Bullet ID: %d \n", A->ActiveEntityArr[A->used].id, unit->bullets.bulletArr[j].id);
+       
     }
 
     if (e.maxHealth <= 0) e.maxHealth = 100;
@@ -78,8 +77,10 @@ void Arr_Del(TestArr* A, int id) {
     for (size_t i = 0; i < A->used; ++i)
         if (A->ActiveEntityArr[i].id == id) { idx = i; break; }
     if (idx == A->used) return;
+   
     A->ActiveEntityArr[idx] = A->ActiveEntityArr[A->used - 1];
     --A->used;
+   
 }
 
 void Arr_Free(TestArr* A) {
