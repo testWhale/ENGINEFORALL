@@ -412,8 +412,8 @@ void draw(float x, float y, float wdth, float height, int alpha) {
 	
 	int w = CP_Image_GetWidth(baseTex);
 	int h = CP_Image_GetHeight(baseTex);
-	float lx = 100;
-	float ly = 100;
+	float lx = CP_Input_GetMouseX();
+	float ly = CP_Input_GetMouseY();
 
 	float screenX = x * unit - (wdth * unit) * 0.5f;
 	float screenY = y * unit - (height * unit) * 0.5f;

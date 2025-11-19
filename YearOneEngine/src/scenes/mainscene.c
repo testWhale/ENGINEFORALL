@@ -411,4 +411,10 @@ void Main_Scene_Exit(void)
     Button_Free(&TroopButton3);
     Button_Sound_Free(&defaultSound);
     Del_TempText();
+    wave = 0;
+    currentMoney = 0;
+    clickPower = 1;
+    passiveIncome = 0;
+    clickerUpgrade1Count = 0;
+    clickerUpgrade2Count = 0;
 }

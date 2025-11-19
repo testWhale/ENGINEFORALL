@@ -69,6 +69,7 @@ void GameOver_Update(void) {
 
     if (GO_timer > 0.6f) {
         if (CP_Input_KeyTriggered(KEY_R) || CP_Input_KeyTriggered('R')) {
+            waveFlag = 0;
             CP_Engine_SetNextGameState(Main_Scene_Init, Main_Scene_Update, Main_Scene_Exit);
             return;
         }
@@ -81,15 +82,6 @@ void GameOver_Update(void) {
 
 
 void GameOver_Exit(void) {
-    wave = 0;
-    currentMoney = 0;
-    clickPower = 1;
-    passiveIncome = 0;
-    troop3Count = 0;
-    troop2Count = 0;
-    troop1Count = 0;
-    clickerUpgrade1Count = 0;
-    clickerUpgrade2Count = 0;
     if (GO_font) CP_Font_Free(GO_font);
     CP_Sound_Free(KO);
 }
