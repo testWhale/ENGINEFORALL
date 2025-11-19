@@ -17,8 +17,6 @@ static float GO_fade = 0.0f;
 static CP_Sound KO = 0;
 static CP_Font  GO_font = 0;
 
-int purchaseCount = 0;
-
 void GameOver_SetData(float finalTime, float money) 
 {
     GO_finalTime = finalTime;
@@ -87,7 +85,9 @@ void GameOver_Exit(void) {
     currentMoney = 0;
     clickPower = 1;
     passiveIncome = 0;
-    purchaseCount = 0;
+    troop3Count = 0;
+    troop2Count = 0;
+    troop1Count = 0;
     if (GO_font) CP_Font_Free(GO_font);
     CP_Sound_Free(KO);
 }
