@@ -233,7 +233,7 @@ void Draw_TempText(float dt) {
 		float t = (s_tipTimer > 0.4f) ? 1.0f : (s_tipTimer / 0.4f);
 		if (t < 0.0f) t = 0.0f;
 
-		float cx = 50.0f * unit;
+		const float cx = 0.5f * (float)CP_System_GetWindowWidth();
 		float cy = 18.0f * unit;
 		float bw = 80.0f * unit;
 		float bh = 10.0f * unit;
