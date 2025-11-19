@@ -66,26 +66,26 @@ void Enemy_PickedUpExit(GameEntity* entity, StateMachine* sm, float dt) {
 
 /*---------------------------------SELECT FUNCTION-----------------------------*/
 void Enemy_SelInit(GameEntity* entity, StateMachine* sm, float dt) {
-	Hover_Tile_Exit();
-	//Sel_AfterPlaced(entity, entity->centerPos); //Select Function
+	//Hover_Tile_Exit();
+	////Sel_AfterPlaced(entity, entity->centerPos); //Select Function
 
-	entity->stateTimer = 0.0f;
-	CP_Sound_Play(entity->sound.soundPlace);
+	//entity->stateTimer = 0.0f;
+	//CP_Sound_Play(entity->sound.soundPlace);
 
-	if (Check_ForSel()) { //check if other unit has been selected. Before Setting New isSel
-		deselectEnt();
-	};
-	entity->isSel = 1;
+	//if (Check_ForSel()) { //check if other unit has been selected. Before Setting New isSel
+	//	deselectEnt();
+	//};
+	//entity->isSel = 1;
 
 }
 void Enemy_SelUpdate(GameEntity* entity, StateMachine* sm, float dt) {
-	entity->stateTimer += dt;
-	Hover_TileAt(entity, (CP_Vector) { entity->centerPos.x, entity->centerPos.y });
-	//Container_Draw( getContainer(entity->label, &containersArr) );
-	if (0 == entity->isSel || Is_Mouse_Released(entity->centerPos.x, entity->centerPos.y, entity->diameter, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
-		FSM_SetState(sm, EnemyIdleState, entity, dt);
-		return;
-	}
+	//entity->stateTimer += dt;
+	//Hover_TileAt(entity, (CP_Vector) { entity->centerPos.x, entity->centerPos.y });
+	////Container_Draw( getContainer(entity->label, &containersArr) );
+	//if (0 == entity->isSel || Is_Mouse_Released(entity->centerPos.x, entity->centerPos.y, entity->diameter, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
+	//	FSM_SetState(sm, EnemyIdleState, entity, dt);
+	//	return;
+	//}
 }
 
 void Enemy_SelExit(GameEntity* entity, StateMachine* sm, float dt) {
