@@ -11,6 +11,7 @@
 #include "Utils/UI/Pause.h"
 #include "nuke/nuke.h"
 #include "health.h"
+#include "utils/wave/wave.h"
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
@@ -42,7 +43,7 @@ void Main_Scene_Init(void)
     ClickerInfo = CP_Image_Load("Assets/Misc/InfoBoxes/ClickPowerInfo.png");
     PassiveInfo = CP_Image_Load("Assets/Misc/InfoBoxes/PassivePowerInfo.png");
     BlankInfo = CP_Image_Load("Assets/Misc/InfoBoxes/EMPTYINFO.png");
-    PoisonInfo = CP_Image_Load("Assets/Misc/InfoBoxes/PoisonCatInfo.png");
+    PoisonInfo = CP_Image_Load("Assets/Misc/InfoBoxes/RadioCat.png");
     NormalInfo = CP_Image_Load("Assets/Misc/InfoBoxes/NormalCatInfo.png");
     WinInfo = CP_Image_Load("Assets/Misc/InfoBoxes/WinInfo.png");
 
@@ -71,9 +72,9 @@ void Main_Scene_Init(void)
         10 * unit, 80 * unit,
         10 * unit, 10 * unit,
         0 * unit,
-        "Assets/Buttons/ClickerUpgrade1/ClickerUpgrade1Normal.png",
-        "Assets/Buttons/ClickerUpgrade1/ClickerUpgrade1Highlight.png",
-        "Assets/Buttons/ClickerUpgrade1/ClickerUpgrade1Clicked.png", 1);
+        "Assets/Buttons/ClickerUpgrade1/ClickerUpgradeNormal.png",
+        "Assets/Buttons/ClickerUpgrade1/ClickerUpgradeHighlight.png",
+        "Assets/Buttons/ClickerUpgrade1/ClickerUpgradeClicked.png", 1);
 
     Button_Load(&ClickerUpgrade2, &defaultSound,
         25 * unit, 80 * unit,
@@ -87,25 +88,25 @@ void Main_Scene_Init(void)
         40 * unit, 80 * unit,
         10 * unit, 10 * unit,
         0 * unit,
-        "Assets/Buttons/ClickerUpgrade3/ClickerUpgrade3Normal.png",
-        "Assets/Buttons/ClickerUpgrade3/ClickerUpgrade3Highlight.png",
-        "Assets/Buttons/ClickerUpgrade3/ClickerUpgrade3Clicked.png", 1);
+        "Assets/Buttons/ClickerUpgrade3/NukeNormal.png",
+        "Assets/Buttons/ClickerUpgrade3/NukeHighlight.png",
+        "Assets/Buttons/ClickerUpgrade3/NukeClicked.png", 1);
 
     Button_Load(&TroopButton1, &defaultSound,
         10 * unit, 100 * unit,
         10 * unit, 10 * unit,
         0 * unit,
-        "Assets/Buttons/Troops1/Troops1Normal.png",
-        "Assets/Buttons/Troops1/Troops1Highlight.png",
-        "Assets/Buttons/Troops1/Troops1Clicked.png", 1);
+        "Assets/Buttons/Troops1/PoisonCatNormal.png",
+        "Assets/Buttons/Troops1/PoisonCatHighlight.png",
+        "Assets/Buttons/Troops1/PoisonCatClicked.png", 1);
 
     Button_Load(&TroopButton2, &defaultSound,
         25 * unit, 100 * unit,
         10 * unit, 10 * unit,
         0 * unit,
-        "Assets/Buttons/Troops2/Troops2Normal.png",
-        "Assets/Buttons/Troops2/Troops2Highlight.png",
-        "Assets/Buttons/Troops2/Troops2Clicked.png", 1);
+        "Assets/Buttons/Troops2/NormalCatNormal.png",
+        "Assets/Buttons/Troops2/NormalCatHighlight.png",
+        "Assets/Buttons/Troops2/NormalCatClicked.png", 1);
 
     Button_Load(&TroopButton3, &defaultSound,
         40 * unit, 100 * unit,
@@ -163,8 +164,12 @@ void Main_Scene_Update(void)
     //draw(120, 60, 108, 72, 255);
 
     Draw_Entities();    
-    Draw_TempText(dt);
 
+
+    if (CP_Input_KeyDown(KEY_T))
+    {
+        Kill_NewWave();
+    }
     if (!Pause_IsPaused())
     {
         Button_Behavior(&ClickerButton);
@@ -208,10 +213,10 @@ void Main_Scene_Update(void)
     sprintf_s(troop3Cost, 100, "%.0f$ ", Scaling_Cost(troop3Count, 50));
     CP_Font_DrawText(clicker1Cost, 10 * unit, 75 * unit);
     CP_Font_DrawText(clicker2Cost, 25 * unit, 75 * unit);
-    CP_Font_DrawText("Cost 3", 40 * unit, 75 * unit);
+    CP_Font_DrawText("1000$", 40 * unit, 75 * unit);
     CP_Font_DrawText(troop1Cost, 10 * unit, 95 * unit);
     CP_Font_DrawText(troop2Cost, 25 * unit, 95 * unit);
-    CP_Font_DrawText("1000", 40 * unit, 95 * unit);
+    CP_Font_DrawText(troop3Cost, 40 * unit, 95 * unit);
 
     if (!Pause_IsPaused())
     {
@@ -230,7 +235,7 @@ void Main_Scene_Update(void)
         if (ClickerUpgrade3.isSel == 1)
         {
             CP_Settings_ImageMode(CP_POSITION_CENTER);
-            CP_Image_Draw(BlankInfo, 60 * unit, 75 * unit, 32 * unit, 21 * unit, 255);
+            CP_Image_Draw(WinInfo, 60 * unit, 75 * unit, 32 * unit, 21 * unit, 255);
         }
 
         if (TroopButton1.isSel == 1)
@@ -248,13 +253,15 @@ void Main_Scene_Update(void)
         if (TroopButton3.isSel == 1)
         {
             CP_Settings_ImageMode(CP_POSITION_CENTER);
-            CP_Image_Draw(WinInfo, 60 * unit, 95 * unit, 32 * unit, 21 * unit, 255);
+            CP_Image_Draw(BlankInfo, 60 * unit, 95 * unit, 32 * unit, 21 * unit, 255);
         }
 
+        //click for currency
         if (ClickerButton.isClicked == 1) {
             One_Click(&currentMoney);
         }
 
+        //normal click upgrade
         if (ClickerUpgrade1.isClicked == 1) {
             if (Purchase_System(&currentMoney, Scaling_Cost(clickerUpgrade1Count, 50))) {
                 clickerUpgrade1Count += 1;
@@ -262,6 +269,7 @@ void Main_Scene_Update(void)
             }
         }
 
+        //passive income upgrade
         if (ClickerUpgrade2.isClicked == 1) {
             if (Purchase_System(&currentMoney, Scaling_Cost(clickerUpgrade2Count, 10))) {
                 clickerUpgrade2Count += 1;
@@ -269,10 +277,27 @@ void Main_Scene_Update(void)
             }
         }
 
+        //nuke
+        if (ClickerUpgrade3.isClicked == 1) {
+            if (Purchase_System(&currentMoney, 1000)) {
+                CP_Engine_SetNextGameState(Nuke_Init, Nuke_Update, Nuke_Exit);
+            }
+        }
+
+        //poison turret
         if (TroopButton1.isClicked == 1) {
             if (Purchase_System(&currentMoney, Scaling_Cost(troop1Count, 50))) {
                 GameEntity player = Make_Template("poison");
-                player.centerPos.x += playerArr.used * 50;
+                // compute layout
+                int spacing = 60;
+                int iconsPerRow = 12;
+
+                int offset = playerArr.used;
+                int row = offset % 3;
+                int col = offset / 3;
+
+                player.centerPos.x = 550 + col * spacing;
+                player.centerPos.y = 50 + row * 50;
 
                 Arr_Insert(&playerArr, (ActiveEntity) {
                     playerArr.used,
@@ -284,10 +309,21 @@ void Main_Scene_Update(void)
             }
         }
 
+        //normal turret
         if (TroopButton2.isClicked == 1) {
             if (Purchase_System(&currentMoney, Scaling_Cost(troop2Count, 50))) {
                 GameEntity player = Make_Template("player");
-                player.centerPos.x += playerArr.used * 60;
+
+                // compute layout
+                int spacing = 60;
+                int iconsPerRow = 12;
+
+                int offset = playerArr.used;
+                int row = offset % 3;
+                int col = offset / 3;
+
+                player.centerPos.x = 550 + col * spacing;
+                player.centerPos.y = 50 + row * 50;
 
                 Arr_Insert(&playerArr, (ActiveEntity) {
                     playerArr.used,
@@ -299,17 +335,36 @@ void Main_Scene_Update(void)
             }
         }
 
-        if (TroopButton3.isClicked == 1)
-    {
-        if (Purchase_System(&currentMoney, 1000))
-        {
-            CP_Engine_SetNextGameState(Nuke_Init, Nuke_Update, Nuke_Exit);
-        }
+        //stun turret
+        if (TroopButton3.isClicked == 1) {
+            if (Purchase_System(&currentMoney, Scaling_Cost(troop3Count, 50))) {
+                printf("WORDS\n");
+                GameEntity player = Make_Template("stun");
+                // compute layout
+                int spacing = 60;
+                int iconsPerRow = 12;
+
+                int offset = playerArr.used;
+                int row = offset % 3;
+                int col = offset / 3;
+
+                player.centerPos.x = 550 + col * spacing;
+                player.centerPos.y = 50 + row * 50;
+
+                Arr_Insert(&playerArr, (ActiveEntity) {
+                    playerArr.used,
+                        player, (StateMachine) { .currState = IdleState },
+                        .maxHealth = 100, .health = 100,
+                        .alive = 1, .hasScored = 0, .lastLeftmostX = 0
+                });
+                troop3Count += 1;
+            }
     }
     Passive_System(&currentMoney);
-    if (CP_Input_KeyDown(KEY_Q)) CP_Engine_Terminate();
+
+    if (CP_Input_KeyDown(KEY_Q)) CP_Engine_Terminate();  
     if (CP_Input_KeyDown(KEY_W)) currentMoney += 1000;
-}
+}   
 
     if (HealthSystem_GetHearts(&gHealth) <= 0) {
         float finalTime = HealthSystem_GetTimer(&gHealth);
@@ -335,6 +390,12 @@ void Main_Scene_Update(void)
         CP_Engine_SetNextGameState(Main_Menu_Init, Main_Menu_Update, Main_Menu_Exit);
         return;
     }
+
+    /* UI ELEMENTS */
+    Draw_WaveCounter();
+
+    /* POPUPS DOWN Here */
+    Draw_TempText(dt);
 }
 
 void Main_Scene_Exit(void)

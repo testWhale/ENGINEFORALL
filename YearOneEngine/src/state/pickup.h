@@ -1,3 +1,14 @@
+//---------------------------------------------------------
+// file:	pickup.h
+// author:	[Zachary Ng]
+// email:	[zacharyhuaen.n@digipen.edu]
+//
+// brief:	Player States are stored  
+//			of the CProcessing library
+//
+// Copyright 2020 DigiPen, All rights reserved.
+//---------------------------------------------------------
+
 #include "utils/SM.h"
 
 extern States IdleState;

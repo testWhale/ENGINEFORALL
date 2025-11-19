@@ -14,6 +14,7 @@
 #include <math.h>
 
 ButtonInfo NewWaveButton;
+ButtonInfo NewWave2Button;
 ButtonSound defaultSound;
 
 CP_Image baseTex;
@@ -31,7 +32,7 @@ GameEntity Make_Template(const char* name) {
 		shadowPath = "Assets/Cats/n_s.png";
 		e = (GameEntity){
 		.centerPos = {400, 100}, .rotation = 0, .isPlayer = 1, .forwardVector = {0, 0}, .color = {255,0,0,255},
-		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "fire", .bullets = {0 }, .sprite = "Assets/Cats/n.png" };
+		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "fire", .bullets = {0 }};
 	}
 
 
@@ -89,7 +90,8 @@ void Init_PlayerDemo() {
 		ae.alive = 1;
 		ae.hasScored = 0;
 		ae.lastLeftmostX = 0.0f;
-		printf("turrent ID: %d", ae.id);
+		//printf("turrent ID: %d", ae.id);
+
 		Arr_Insert(&playerArr, ae);
 		playerArr.ActiveEntityArr[i].unit.centerPos.x = player.centerPos.x + i * 100.0f;
 
@@ -111,6 +113,10 @@ void Init_PlayerDemo() {
 		ae.contactTime = 0.0f;
 		Arr_Insert(&enemyArr, ae);
 		Start_Wave(&enemyArr.ActiveEntityArr[i].unit, 0);
+		if (enemyArr.ActiveEntityArr[i].unit.accel.x > -0.5) {
+			enemyArr.ActiveEntityArr[i].maxHealth += 35 * -enemyArr.ActiveEntityArr[i].unit.accel.x;
+			printf("THis enemy has more health %f\n", enemyArr.ActiveEntityArr[i].health);
+		}
 
 	}
 	//ContArr_Init(playerArr.used, &containersArr);
@@ -121,14 +127,18 @@ void Init_NewWave(int currWave) {
 	GameEntity enemy = Make_Template("enemy");
 	/* FOR ENEMY UNITS */
 	waveFlag = 1;
+	// every new wave add 5 units, we start with 5 units
 	int spawn = currWave + 5;
+	if (spawn > MAX_ENTITIES) { spawn = MAX_ENTITIES; }
 	for (int i = 0; i < spawn; i++) {
 		ActiveEntity ae;
 		ae.id = i;
 		ae.unit = enemy;
 		ae.fsm = (StateMachine){ .currState = IdleState };
-		ae.maxHealth = 100;
-		ae.health = 100;
+		/* Difficulty Curving */
+		ae.maxHealth = 100 + pow(currWave, 3/2);
+		ae.health = 100 + pow(currWave, 3/2);
+		printf("health %f\n", enemyArr.ActiveEntityArr[i].health);
 		ae.alive = 1;
 		ae.hasScored = 0;
 		ae.lastLeftmostX = 0.0f;
@@ -137,10 +147,35 @@ void Init_NewWave(int currWave) {
 		Arr_Insert(&enemyArr, ae);
 		Start_Wave(&enemyArr.ActiveEntityArr[i].unit, (int)2);
 
+		/* TANK CODE */
+		/* this sets ur enemy health, if enemy is slower than -0.4 than it will be tankier */
+		if (enemyArr.ActiveEntityArr[i].unit.accel.x > -0.4) {
+			enemyArr.ActiveEntityArr[i].maxHealth += 1005 * -enemyArr.ActiveEntityArr[i].unit.accel.x;
+			enemyArr.ActiveEntityArr[i].health += 1005 * -enemyArr.ActiveEntityArr[i].unit.accel.x;
+			printf("Tank HP %f\n", enemyArr.ActiveEntityArr[i].health);
+		}
+	}
+}
+
+/* Completely Kills all active Enemies */
+void Kill_NewWave() {
+	{
+		printf("test;");
+		while(enemyArr.used > 0) {
+			Arr_Del(&(enemyArr), enemyArr.ActiveEntityArr->id);
+		}
 	}
 }
 
 void Load_TempText() {
+	Button_Load(&NewWave2Button, &defaultSound,
+		96 * unit, 60 * unit,
+		143 * unit, 60 * unit,
+		0 * unit,
+		"Assets/Buttons/Ribbon/Ribbon.png",
+		"Assets/Buttons/Ribbon/Ribbon.png",
+		"Assets/Buttons/Ribbon/Ribbon.png", 0);
+
 	Button_Load(&NewWaveButton, &defaultSound,
 		96 * unit, 92 * unit,
 		20 * unit, 20 * unit,
@@ -153,11 +188,16 @@ void Load_TempText() {
 void Draw_TempText(float dt) {
 	if (waveFlag) {
 		waveState += (dt * 2);
-		printf("DT: %f\n", waveState);
+		//printf("DT: %f\n", waveState);
 		CP_Graphics_DrawRect(CP_Input_GetMouseX(), CP_Input_GetMouseY(), 50, 50);
-		NewWaveButton.alive = 1;
+		NewWaveButton.alive = 1; NewWave2Button.alive = 1;
 		Button_Behavior(&NewWaveButton);
 		if (NewWaveButton.isClicked)
+		{
+			Reward_Click(&currentMoney);
+		}
+
+		Button_Behavior(&NewWave2Button);
 		{
 			Reward_Click(&currentMoney);
 		}
@@ -165,12 +205,13 @@ void Draw_TempText(float dt) {
 		if (waveState > 4 && (NewWaveButton.alive==1)) {
 			waveFlag = 0; waveState = 0;
 			NewWaveButton.alive = 0;
-			
+			NewWave2Button.alive = 0;
 		}
 	}
 }
 void Del_TempText() {
 	Button_Free(&NewWaveButton);
+	Button_Free(&NewWave2Button);
 }
 
 void Print_BulletInfo(GameEntity* entity) {
@@ -178,7 +219,7 @@ void Print_BulletInfo(GameEntity* entity) {
 
 		for (size_t i = 0; i < entity->bullets.used; i++) {
 			Bullet* b = &entity->bullets.bulletArr[i];
-			printf("  Bullet %d at (%.1f, %.1f)\n", b->id, b->centerPos.x, b->centerPos.y);
+			//printf("  Bullet %d at (%.1f, %.1f)\n", b->id, b->centerPos.x, b->centerPos.y);
 		}
 	}
 }
@@ -208,23 +249,31 @@ void Draw_Bullets() {
 	}
 }
 
+float newDT=0;
 void Draw_Entities(void)
 {
 	float dt = CP_System_GetDt();
 
+	
+	CP_Settings_NoStroke();
 	if (!Pause_IsPaused())
 	{
 		for (size_t i = 0; i < playerArr.used; ++i)
 		{
 			ActiveEntity* ent = &playerArr.ActiveEntityArr[i];
 			if (!ent->alive)
-				continue;
+			{
+				//printf("PLAYER UNIT %d\n", ent->id);
+
+				continue; }
+				
 
 			FSM_Update(&ent->fsm, &ent->unit, dt);
 		}
-
-		if (enemyArr.used <= 0)
-		{
+		newDT += dt;
+		if (enemyArr.used <= 0 && newDT > 6)
+		{	
+			newDT = 0;
 			Init_NewWave(wave++);
 		}
 
@@ -239,7 +288,17 @@ void Draw_Entities(void)
 			}
 			if (!ent->isHitting)
 			{
-				Move_Wave(&ent->unit, dt);
+				if (ent->unit.isStunned) {
+					ent->unit.stunTimer -= dt;
+
+					if (ent->unit.stunTimer <= 0) {
+						ent->unit.isStunned = 0;
+						ent->unit.stunTimer = 0;
+					}
+				}
+				else {
+					Move_Wave(&ent->unit, dt);
+				}
 			}
 
 			FSM_Update(&ent->fsm, &ent->unit, dt);
@@ -253,8 +312,6 @@ void Draw_Entities(void)
 			++i;
 		}
 	}
-
-
 
 	CP_Vector lightDir = CP_Vector_Set(1.0f, -1.0f);   
 	float     shadowScaleY = 0.5f;
@@ -273,11 +330,6 @@ void Draw_Entities(void)
 		CP_Image_Draw(p->shadow, shadowPos.x, shadowPos.y,
 			p->diameter,
 			p->diameter * shadowScaleY, 100);
-
-		//CP_Graphics_DrawEllipse(
-		//	shadowPos.x, shadowPos.y,
-		//	p->diameter,
-		//	p->diameter * shadowScaleY);
 
 		if (p->label == "poison") { p->color.red = 255; p->color.green = 0;   p->color.blue = 255; p->color.opacity = 100; }
 		if (p->label == "fire") { p->color.red = 255; p->color.green = 0;   p->color.blue = 0;   p->color.opacity = 100; }
@@ -359,8 +411,8 @@ void draw(float x, float y, float wdth, float height, int alpha) {
 	
 	int w = CP_Image_GetWidth(baseTex);
 	int h = CP_Image_GetHeight(baseTex);
-	float lx = CP_Input_GetMouseX();
-	float ly = CP_Input_GetMouseY();
+	float lx = 100;
+	float ly = 100;
 
 	float screenX = x * unit - (wdth * unit) * 0.5f;
 	float screenY = y * unit - (height * unit) * 0.5f;
