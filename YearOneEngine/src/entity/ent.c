@@ -11,6 +11,7 @@
 #include "../scenes/mainmenu.h"
 #include "../economy/economyCode.h"
 #include "state/shoot.h"
+#include "utils/mouse/mouse.h"
 #include <math.h>
 
 ButtonInfo NewWaveButton;
@@ -35,7 +36,7 @@ GameEntity Make_Template(const char* name) {
 		shadowPath = "Assets/Cats/n_s.png";
 		e = (GameEntity){
 		.centerPos = {400, 100}, .rotation = 0, .isPlayer = 1, .forwardVector = {0, 0}, .color = {255,0,0,255},
-		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "fire", .bullets = {0 }};
+		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "fire", .bullets = {0 }, .pickUpRemoval = 0};
 	}
 
 
@@ -252,16 +253,56 @@ void Del_TempText() {
 	Button_Free(&NewWave2Button);
 }
 
-void Print_BulletInfo(GameEntity* entity) {
-	for (size_t i = 0; i < playerArr.used; ++i) {
-
-		for (size_t i = 0; i < entity->bullets.used; i++) {
-			Bullet* b = &entity->bullets.bulletArr[i];
-			//printf("  Bullet %d at (%.1f, %.1f)\n", b->id, b->centerPos.x, b->centerPos.y);
-		}
-	}
+/* Mouse Refresh after Loop */
+// Compare function for qsort descending
+int compare_desc(const void* a, const void* b) {
+	return (*(int*)b - *(int*)a);
 }
 
+void LateUpdate_Pickups()
+{
+	int removedIndices[64]; // adjust max pickups if needed
+	int removedCount = 0;
+
+	// PASS 1 � find all removed items
+	for (int i = 0; i < playerArr.used; i++)
+	{
+		GameEntity* e = &playerArr.ActiveEntityArr[i].unit;
+
+		if (e->pickUpRemoval == 1)
+		{
+			printf("\nREMOVING %d\n", e->pickUpIndex);
+			removedIndices[removedCount++] = e->pickUpIndex;
+
+			e->pickUpIndex = 0;
+			e->pickUpRemoval = 0;
+			
+		}
+	}
+
+	if (removedCount == 0)
+		return;
+
+	// Sort removed indices descending
+	qsort(removedIndices, removedCount, sizeof(int), compare_desc);
+
+	// PASS 2 � shift remaining items down
+	for (int r = 0; r < removedCount; r++)
+	{
+		int removedIndex = removedIndices[r];
+
+		for (int i = 0; i < playerArr.used; i++)
+		{
+			GameEntity* e = &playerArr.ActiveEntityArr[i].unit;
+
+			if (e->pickUpIndex > removedIndex)
+			{
+				e->pickUpIndex--;
+			}
+		}
+	}
+	Mouse_DelPickup();
+}
 void Draw_Bullets() {
 	for (size_t i = 0; i < playerArr.used; ++i) {
 		ActiveEntity* ent = &playerArr.ActiveEntityArr[i];
@@ -294,6 +335,7 @@ void Draw_Entities(void)
 
 	
 	CP_Settings_NoStroke();
+
 	if (!Pause_IsPaused())
 	{
 		for (size_t i = 0; i < playerArr.used; ++i)
@@ -301,12 +343,11 @@ void Draw_Entities(void)
 			ActiveEntity* ent = &playerArr.ActiveEntityArr[i];
 			if (!ent->alive)
 			{
-				//printf("PLAYER UNIT %d\n", ent->id);
-
 				continue; }
 				
 
 			FSM_Update(&ent->fsm, &ent->unit, dt);
+			Mouse_Update();
 		}
 		newDT += dt;
 		if (enemyArr.used <= 0 && newDT > 6)
@@ -376,6 +417,19 @@ void Draw_Entities(void)
 		CP_Settings_Fill(CP_Color_Create(p->color.red, p->color.green, p->color.blue, p->color.opacity));
 		CP_Graphics_DrawCircle(p->centerPos.x, p->centerPos.y, p->diameter);
 		CP_Image_Draw(p->sprite, p->centerPos.x, p->centerPos.y, p->diameter, p->diameter, 255);
+		
+		if (p->pickUpIndex > 0) 
+		{
+			char str[2];
+			CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
+			CP_Settings_TextSize(5 * unit);
+			
+			sprintf_s(str, sizeof(str), "%d", p->pickUpIndex);
+
+			CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
+			CP_Font_DrawText(str, p->centerPos.x, p->centerPos.y);
+			
+		}
 
 	}
 

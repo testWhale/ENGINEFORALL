@@ -26,4 +26,6 @@ void draw(float x, float y, float w, float h, int alpha);
 void clean();
 
 void Kill_NewWave();
+
+void LateUpdate_Pickups();
 #endif

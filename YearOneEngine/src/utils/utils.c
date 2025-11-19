@@ -62,7 +62,17 @@ int Is_Mouse_Released(float circle_center_x, float circle_center_y, float diamet
 	{
 		return 0;
 	}
+	
 
+
+}
+
+int Is_Right_Clicked() {
+
+	if (CP_Input_MouseReleased(MOUSE_BUTTON_RIGHT))
+	{
+		return 1;
+	}
 }
 
 int EnemyCrossedLine(GameEntity* enemy) {
