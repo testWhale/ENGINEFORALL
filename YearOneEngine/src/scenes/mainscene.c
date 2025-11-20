@@ -369,12 +369,6 @@ void Main_Scene_Update(void)
     char tbuf[48];
     snprintf(tbuf, sizeof(tbuf), "Time: %.1fs", HealthSystem_GetTimer(&gHealth));
     CP_Font_DrawText(tbuf, (float)CP_System_GetWindowWidth() * 0.6f, 8.0f);
-
-    Pause_UpdateAndDraw();
-    if (Pause_TakeMenuRequest()) {
-        CP_Engine_SetNextGameState(Main_Menu_Init, Main_Menu_Update, Main_Menu_Exit);
-        return;
-    }
     
     Draw_Entities();
     LateUpdate_Pickups();
@@ -383,6 +377,12 @@ void Main_Scene_Update(void)
 
     /* POPUPS DOWN Here */
     Draw_TempText(dt);
+
+    Pause_UpdateAndDraw();
+    if (Pause_TakeMenuRequest()) {
+        CP_Engine_SetNextGameState(Main_Menu_Init, Main_Menu_Update, Main_Menu_Exit);
+        return;
+    }
 }
 
 void Main_Scene_Exit(void)

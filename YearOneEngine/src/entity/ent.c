@@ -211,7 +211,7 @@ void Draw_TempText(float dt) {
 			Reward_Click(&currentMoney);
 		}
 
-		if (waveState > 4 && (NewWaveButton.alive==1)) {
+		if (waveState > 4 && (NewWaveButton.alive == 1)) {
 			waveFlag = 0; waveState = 0;
 			NewWaveButton.alive = 0;
 			NewWave2Button.alive = 0;
@@ -234,9 +234,9 @@ void Draw_TempText(float dt) {
 		if (t < 0.0f) t = 0.0f;
 
 		const float cx = 0.5f * (float)CP_System_GetWindowWidth();
-		float cy = 18.0f * unit;
-		float bw = 80.0f * unit;
-		float bh = 10.0f * unit;
+		const float cy = 18.0f * unit;
+		const float bw = 80.0f * unit;
+		const float bh = 12.5f * unit;
 
 		CP_Settings_RectMode(CP_POSITION_CENTER);
 		CP_Settings_Fill(CP_Color_Create(0, 0, 0, (int)(140 * t)));
