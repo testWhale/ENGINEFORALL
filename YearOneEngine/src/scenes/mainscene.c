@@ -299,15 +299,16 @@ void Main_Scene_Update(void)
 
         //poison turret
         if (TroopButton1.isClicked == 1) {
-            if (Purchase_System(&currentMoney,  50)) {
+            if (Purchase_System(&currentMoney,  50) && Mouse_CanPickup()) {
                 GameEntity player = Make_Template("poison");
                 // compute layout
                 player.centerPos.x = CP_Input_GetMouseX();
                 player.centerPos.y = CP_Input_GetMouseY();
-
+                player.pickUpIndex = Mouse_GetPickupCount(); // gives first pickup id: 1 
+                Mouse_AddPickup();
                 Arr_Insert(&playerArr, (ActiveEntity) {
                     playerArr.used,
-                        player, (StateMachine) { .currState = IdleState },
+                        player, (StateMachine) { .currState = PickUpState },
                         .maxHealth = 100, .health = 100,
                         .alive = 1, .hasScored = 0, .lastLeftmostX = 0
                 });
@@ -317,10 +318,8 @@ void Main_Scene_Update(void)
 
         //normal turret
         if (TroopButton2.isClicked == 1) {
-            if (Purchase_System(&currentMoney, 50)) {
+            if (Purchase_System(&currentMoney, 50) && Mouse_CanPickup()) {
                 GameEntity player = Make_Template("player");
-
-
                 player.centerPos.x = CP_Input_GetMouseX();
                 player.centerPos.y = CP_Input_GetMouseY();
                 player.pickUpIndex = Mouse_GetPickupCount(); // gives first pickup id: 1 
@@ -339,13 +338,14 @@ void Main_Scene_Update(void)
 
         //stun turret
         if (TroopButton3.isClicked == 1) {
-            if (Purchase_System(&currentMoney,50)) {
+            if (Purchase_System(&currentMoney,50) && Mouse_CanPickup() ) {
                 printf("WORDS\n");
                 GameEntity player = Make_Template("stun");
                 // compute layout
                 player.centerPos.x = CP_Input_GetMouseX();
                 player.centerPos.y = CP_Input_GetMouseY();
-
+                player.pickUpIndex = Mouse_GetPickupCount(); // gives first pickup id: 1 
+                Mouse_AddPickup();
                 Arr_Insert(&playerArr, (ActiveEntity) {
                     playerArr.used,
                         player, (StateMachine) { .currState = PickUpState
@@ -380,12 +380,6 @@ void Main_Scene_Update(void)
     char tbuf[48];
     snprintf(tbuf, sizeof(tbuf), "Time: %.1fs", HealthSystem_GetTimer(&gHealth));
     CP_Font_DrawText(tbuf, (float)CP_System_GetWindowWidth() * 0.6f, 8.0f);
-
-    Pause_UpdateAndDraw();
-    if (Pause_TakeMenuRequest()) {
-        CP_Engine_SetNextGameState(Main_Menu_Init, Main_Menu_Update, Main_Menu_Exit);
-        return;
-    }
     
     Draw_Entities();
     LateUpdate_Pickups();
@@ -404,6 +398,12 @@ void Main_Scene_Update(void)
     if (CP_Input_KeyDown(KEY_W)) currentMoney += 1000;
     /* POPUPS DOWN Here */
     Draw_TempText(dt);
+
+    Pause_UpdateAndDraw();
+    if (Pause_TakeMenuRequest()) {
+        CP_Engine_SetNextGameState(Main_Menu_Init, Main_Menu_Update, Main_Menu_Exit);
+        return;
+    }
 }
 
 void Main_Scene_Exit(void)
@@ -419,6 +419,7 @@ void Main_Scene_Exit(void)
     Button_Free(&TroopButton3);
     Button_Sound_Free(&defaultSound);
     Del_TempText();
+    Free_Pickup();
     wave = 0;
     currentMoney = 0;
     clickPower = 1;
