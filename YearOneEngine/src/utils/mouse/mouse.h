@@ -24,4 +24,5 @@ void Mouse_DelPickup(void);
 // Get current pickup count
 int Mouse_GetPickupCount(void);
 
+void Free_Pickup();
 #endif

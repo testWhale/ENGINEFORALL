@@ -303,6 +303,9 @@ void LateUpdate_Pickups()
 	}
 	Mouse_DelPickup();
 }
+
+
+
 void Draw_Bullets() {
 	for (size_t i = 0; i < playerArr.used; ++i) {
 		ActiveEntity* ent = &playerArr.ActiveEntityArr[i];
