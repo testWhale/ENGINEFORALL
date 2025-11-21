@@ -279,7 +279,7 @@ void Main_Scene_Update(void)
 
         //nuke
         if (ClickerUpgrade3.isClicked == 1) {
-            if (Purchase_System(&currentMoney, 1000)) {
+            if (Purchase_System(&currentMoney, 100000)) {
                 CP_Engine_SetNextGameState(Nuke_Init, Nuke_Update, Nuke_Exit);
             }
         }
