@@ -4,3 +4,4 @@
 .bin\Debug-x64
 .bin\*
 ./Assets/soundEffects/*
+.bin\Debug-x64\*.pdb
