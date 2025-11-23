@@ -288,7 +288,7 @@ void Main_Scene_Update(void)
 
         //poison turret
         if (TroopButton1.isClicked == 1) {
-            if (Purchase_System(&currentMoney,  50) && Mouse_CanPickup()) {
+            if (Mouse_CanPickup() && Purchase_System(&currentMoney,  50)) {
                 GameEntity player = Make_Template("poison");
                 // compute layout
                 player.centerPos.x = CP_Input_GetMouseX();
@@ -307,7 +307,7 @@ void Main_Scene_Update(void)
 
         //normal turret
         if (TroopButton2.isClicked == 1) {
-            if (Purchase_System(&currentMoney, 50) && Mouse_CanPickup()) {
+            if (Mouse_CanPickup() && Purchase_System(&currentMoney, 50) ) {
                 GameEntity player = Make_Template("player");
                 player.centerPos.x = CP_Input_GetMouseX();
                 player.centerPos.y = CP_Input_GetMouseY();
@@ -327,7 +327,7 @@ void Main_Scene_Update(void)
 
         //stun turret
         if (TroopButton3.isClicked == 1) {
-            if (Purchase_System(&currentMoney,50) && Mouse_CanPickup() ) {
+            if (Mouse_CanPickup() && Purchase_System(&currentMoney,50) ) {
                 printf("WORDS\n");
                 GameEntity player = Make_Template("stun");
                 // compute layout
