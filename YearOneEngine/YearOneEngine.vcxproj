@@ -28,6 +28,7 @@
     <ClCompile Include="src\Nuke\nuke.c" />
     <ClCompile Include="src\scenes\credits.c" />
     <ClCompile Include="src\scenes\gameover.c" />
+    <ClCompile Include="src\scenes\logo.c" />
     <ClCompile Include="src\scenes\mainmenu.c" />
     <ClCompile Include="src\scenes\mainscene.c" />
     <ClCompile Include="src\state\enemy.c" />
@@ -53,6 +54,7 @@
     <ClInclude Include="src\Nuke\nuke.h" />
     <ClInclude Include="src\scenes\credits.h" />
     <ClInclude Include="src\scenes\gameover.h" />
+    <ClInclude Include="src\scenes\logo.h" />
     <ClInclude Include="src\scenes\mainmenu.h" />
     <ClInclude Include="src\scenes\mainscene.h" />
     <ClInclude Include="src\scenes\mouse.h" />

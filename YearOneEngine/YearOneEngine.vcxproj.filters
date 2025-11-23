@@ -32,6 +32,7 @@
     <ClCompile Include="src\utils\utils.c" />
     <ClCompile Include="src\Nuke\nuke.c" />
     <ClCompile Include="src\utils\mouse\mouse.c" />
+    <ClCompile Include="src\scenes\logo.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\bullet\bullet.h" />
@@ -62,6 +63,7 @@
     <ClInclude Include="src\scenes\mouse.h" />
     <ClInclude Include="src\state\pickup.h" />
     <ClInclude Include="src\utils\mouse\mouse.h" />
+    <ClInclude Include="src\scenes\logo.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="src\utils\backend\containers.txt" />
