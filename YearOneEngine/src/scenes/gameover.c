@@ -25,7 +25,7 @@ void GameOver_SetData(float finalTime, float money)
 
 void GameOver_Init(void) {
     GO_timer = GO_fade = 0.0f;
-    GO_font = CP_Font_Load("Assets/Exo2-Regular.ttf");
+    GO_font = CP_Font_Load("Assets/Fonts/Quinndoodle.ttf");
     if (GO_font) CP_Font_Set(GO_font);
     KO = CP_Sound_Load("Assets/Game Over Arcade by myfox14 Id-382310.wav");
     CP_Sound_Play(KO);

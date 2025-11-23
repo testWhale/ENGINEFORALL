@@ -7,7 +7,6 @@
 
 static CP_Sound s_hitSfx = 0;
 static CP_Sound s_loseSfx = 0;
-static int      s_playedLose = 0;
 
 void HealthSystem_Init(HealthSystem* hs, int maxHearts, int maxhealth)
 {
@@ -28,8 +27,6 @@ void HealthSystem_Init(HealthSystem* hs, int maxHearts, int maxhealth)
         hs->alpha[i] = 0.0f;
         hs->flashTimer[i] = 0.0f;
     }
-
-    s_playedLose = 0;
 }
 
 void HealthSystem_Update(HealthSystem* hs, float deltaTime)
@@ -83,15 +80,12 @@ void HealthSystem_TakeDamage(HealthSystem* hs)
 
     hs->currentHearts -= 1;
 
+    if (s_loseSfx)
+        CP_Sound_Play(s_loseSfx);
+
     if (lostIndex >= 0 && lostIndex < hs->maxHearts) {
         hs->flashTimer[lostIndex] = HEART_FLASH_TIME;
         hs->alpha[lostIndex] = 1.0f;
-    }
-
-    if (hs->currentHearts <= 0 && !s_playedLose) {
-        if (s_loseSfx)
-            CP_Sound_Play(s_loseSfx);
-        s_playedLose = 1;
     }
 }
 
@@ -162,35 +156,13 @@ void HealthAudio_Load(const char* hitSfxPath, const char* loseSfxPath)
 {
     s_hitSfx = 0;
     s_loseSfx = 0;
-    s_playedLose = 0;
 
     if (hitSfxPath && *hitSfxPath)
-    {
         s_hitSfx = CP_Sound_Load(hitSfxPath);
-        if (!s_hitSfx)
-        {
-            printf("HealthAudio_Load: FAILED to load HIT sfx: %s\n", hitSfxPath);
-        }
-        else
-        {
-            printf("HealthAudio_Load: Loaded HIT sfx: %s\n", hitSfxPath);
-        }
-    }
 
     if (loseSfxPath && *loseSfxPath)
-    {
         s_loseSfx = CP_Sound_Load(loseSfxPath);
-        if (!s_loseSfx)
-        {
-            printf("HealthAudio_Load: FAILED to load LOSE sfx: %s\n", loseSfxPath);
-        }
-        else
-        {
-            printf("HealthAudio_Load: Loaded LOSE sfx: %s\n", loseSfxPath);
-        }
-    }
 }
-
 
 static int circles_overlap(float x1, float y1, float r1,
     float x2, float y2, float r2)
@@ -209,11 +181,10 @@ void Health_DamagePlayersOnEnemyCollisions(int dmgPerTick,
         maxContactTime = 3.0f;
 
     const float tickInterval = 0.5f;
-
-    const float tileStartX = g_TileMap[0][0].startPos.x;   
-    const float tileStartY = g_TileMap[0][0].startPos.y;   
-    const float tileW = g_TileMap[0][0].dim.x;        
-    const float tileH = g_TileMap[0][0].dim.y;       
+    const float tileStartX = g_TileMap[0][0].startPos.x;
+    const float tileStartY = g_TileMap[0][0].startPos.y;
+    const float tileW = g_TileMap[0][0].dim.x;
+    const float tileH = g_TileMap[0][0].dim.y;
 
     for (size_t ei = 0; ei < enemyArr.used; ++ei)
     {
@@ -221,7 +192,7 @@ void Health_DamagePlayersOnEnemyCollisions(int dmgPerTick,
         if (!enemy->alive || enemy->unit.isPlayer)
             continue;
 
-        int   touching = 0;
+        int touching = 0;
 
         float ex = enemy->unit.centerPos.x;
         float ey = enemy->unit.centerPos.y;
@@ -244,7 +215,7 @@ void Health_DamagePlayersOnEnemyCollisions(int dmgPerTick,
 
             if (eRow != pRow || eCol != pCol)
                 continue;
-           
+
             if (!circles_overlap(ex, ey, er, px, py, pr))
                 continue;
 
@@ -289,7 +260,7 @@ void Health_DamagePlayersOnEnemyCollisions(int dmgPerTick,
                                 t->tsel = 0;
                                 t->currHovered = 0;
                                 t->nextTileCheck = 0;
-                                r = TILE_ROWS;  
+                                r = TILE_ROWS;
                                 break;
                             }
                         }
@@ -306,4 +277,3 @@ void Health_DamagePlayersOnEnemyCollisions(int dmgPerTick,
         }
     }
 }
-
