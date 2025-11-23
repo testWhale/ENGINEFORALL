@@ -4,12 +4,13 @@
 #include "scenes/mainscene.h"
 #include "scenes/credits.h"
 #include "buttons/buttonCode.h"
+#include "scenes/settings.h"
 
 
 
 CP_Font myFont;
 CP_Image MainMenuBackground;
-ButtonInfo PlayButton, CreditsButton,QuitButton;
+ButtonInfo PlayButton, CreditsButton,QuitButton, SettingsButton;
 ButtonSound defaultSound;
 
 
@@ -49,6 +50,14 @@ void Main_Menu_Init(void)
         "Assets/Buttons/MainMenu/QuitNormal.png",
         "Assets/Buttons/MainMenu/QuitHighlight.png",
         "Assets/Buttons/MainMenu/QuitClicked.png", 1);
+
+    /*Button_Load(&SettingsButton, &defaultSound,
+        156 * unit, 10 * unit,
+        55 * unit, 19.5 * unit,
+        0 * unit,
+        "Assets/Buttons/MainMenu/QuitNormal.png",
+        "Assets/Buttons/MainMenu/QuitHighlight.png",
+        "Assets/Buttons/MainMenu/QuitClicked.png", 1);*/
 }
 
 void Main_Menu_Update(void)
@@ -62,6 +71,8 @@ void Main_Menu_Update(void)
     Button_Behavior(&PlayButton);
     Button_Behavior(&CreditsButton);
     Button_Behavior(&QuitButton);
+    /*Button_Behavior(&SettingsButton);*/
+
 
     if (PlayButton.isClicked)
     {
@@ -78,6 +89,12 @@ void Main_Menu_Update(void)
     {
         CP_Engine_Terminate();
     }
+
+   /* if (SettingsButton.isClicked)
+    {
+        CP_Engine_SetNextGameState(Sd_Settings_Init, Sd_Settings_Update, Sd_Settings_Exit);
+
+    }*/
    
     
 
@@ -89,5 +106,7 @@ void Main_Menu_Exit(void)
     Button_Free(&PlayButton);
     Button_Free(&CreditsButton);
     Button_Free(&QuitButton);
+    //Button_Free(&SettingsButton);
+
     Button_Sound_Free(&defaultSound);
 }

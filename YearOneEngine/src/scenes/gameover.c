@@ -51,7 +51,7 @@ void GameOver_Update(void) {
 
     char line[64];
     CP_Settings_TextSize(36.0f);
-
+    printf("Wave %d\n", wave);
     (void)snprintf(line, sizeof(line), "Wave survived: %d", wave); 
     CP_Font_DrawText(line, W * 0.5f, H * 0.45f);
 
@@ -82,6 +82,7 @@ void GameOver_Update(void) {
 
 
 void GameOver_Exit(void) {
+    wave = 0;
     if (GO_font) CP_Font_Free(GO_font);
     CP_Sound_Free(KO);
 }

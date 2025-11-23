@@ -29,7 +29,7 @@ static char  s_tipMsg[96] = "";
 //CP_Color* normalPixels;
 //CP_Color* outPixels;
 //CP_Image imgOut;
-/*-------------Template Value--------------*/
+/* Template Value */
 GameEntity Make_Template(const char* name) {
 	GameEntity e; char* spritePath = "Assets/Cats/n.png"; char* shadowPath = "Assets/Cats/n_s.png";
 	if (name == "player")
@@ -57,6 +57,8 @@ GameEntity Make_Template(const char* name) {
 	if (name == "stun")
 	{
 		Bullet temp = Bullet_Template("stun");
+		spritePath = "Assets/Cats/e.png";
+		shadowPath = "Assets/Cats/n_s.png";
 		e = (GameEntity){
 		.centerPos = {500, 100}, .rotation = 0, .isPlayer = 1, .forwardVector = {0, 0}, .color = {0,0,255,255},
 		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "stun" , .bullets = {0} };
@@ -82,7 +84,7 @@ void Init_PlayerDemo() {
 	GameEntity player = Make_Template("player");
 	GameEntity enemy = Make_Template("enemy");
 
-	/*-------------Template Value--------------*/
+	/* Template Value * /
 	Arr_Init(2, &playerArr);
 	Arr_Init(11, &enemyArr);
 
@@ -179,9 +181,9 @@ void Load_TempText() {
 		96 * unit, 60 * unit,
 		143 * unit, 60 * unit,
 		0 * unit,
-		"Assets/Buttons/Ribbon/Ribbon.png",
-		"Assets/Buttons/Ribbon/Ribbon.png",
-		"Assets/Buttons/Ribbon/Ribbon.png", 0);
+		"Assets/Buttons/Ribbon/RibbonW.png",
+		"Assets/Buttons/Ribbon/RWHighlighted.png",
+		"Assets/Buttons/Ribbon/RibbonW.png", 0);
 
 	Button_Load(&NewWaveButton, &defaultSound,
 		96 * unit, 92 * unit,
@@ -373,7 +375,7 @@ void Draw_Entities(void)
 			Init_NewWave(wave++);
 		}
 
-		/* ----------------- ENEMIES ----------------- */
+		/* -------ENEMIES -------*/
 		for (size_t i = 0; i < enemyArr.used; )
 		{
 			ActiveEntity* ent = &enemyArr.ActiveEntityArr[i];
@@ -505,203 +507,181 @@ void Draw_Entities(void)
 }
 
 
+/* Config / tuning */
+const float CELL_THRESH_1 = 0.20f;   /* deep shadow threshold */
+const float CELL_THRESH_2 = 0.45f;   /* shadow threshold */
+const float CELL_THRESH_3 = 0.75f;   /* light threshold */
 
+const float SHADE_1 = 0.20f; /* deep shadow */
+const float SHADE_2 = 0.45f; /* shadow */
+const float SHADE_3 = 0.75f; /* light */
+const float SHADE_4 = 1.00f; /* highlight */
 
+const float AMBIENT_TINT = 0.08f;    /* tiny ambient added after quantize */
+const float FIXED_LZ = 0.50f;        /* fixed Z component of light */
 
-// --- Precomputed buffers ---
-// ---------- Config / tuning ----------
-const float CELL_THRESH_1 = 0.20f;   // deep shadow threshold
-const float CELL_THRESH_2 = 0.45f;   // shadow threshold
-const float CELL_THRESH_3 = 0.75f;   // light threshold
-// corresponding shade levels (0..1)
-const float SHADE_1 = 0.20f; // deep shadow
-const float SHADE_2 = 0.45f; // shadow
-const float SHADE_3 = 0.75f; // light
-const float SHADE_4 = 1.00f; // highlight
+#define NUM_DIRS 16  /* precompute 16 directional textures */
 
-const float AMBIENT_TINT = 0.08f;    // tiny ambient added after quantize (keeps very dark areas visible)
-const float FIXED_LZ = 0.50f;       // fixed Z component of light direction (gives "pop" from normal.z)
+/* Globals */
+static CP_Image baseTex = NULL;      /* base sprite texture */
+static CP_Image normalTex = NULL;    /* normal map texture */
 
-// ---------- Globals ----------
-static CP_Image baseTex = NULL;
-static CP_Image normalTex = NULL;
-static CP_Image imgOut = NULL;
+static int texW = 0;                 /* texture width */
+static int texH = 0;                 /* texture height */
 
-static int texW = 0;
-static int texH = 0;
+static float* baseR = NULL;          /* base red channel (0..1) */
+static float* baseG = NULL;          /* base green channel (0..1) */
+static float* baseB = NULL;          /* base blue channel (0..1) */
+static unsigned char* baseA = NULL;  /* base alpha channel (0..255) */
 
-// Precomputed arrays (allocated once)
-static float* baseR = NULL;
-static float* baseG = NULL;
-static float* baseB = NULL;
-static unsigned char* baseA = NULL;
-/* normal arr */
-static float* nxArr = NULL;
-static float* nyArr = NULL;
-static float* nzArr = NULL;
-/*  */
-static float* pxFrac = NULL;
-static float* pyFrac = NULL;
+static float* nxArr = NULL;          /* normal X */
+static float* nyArr = NULL;          /* normal Y */
+static float* nzArr = NULL;          /* normal Z */
 
-static CP_Color* outPixels = NULL;
+static CP_Image* texDirs = NULL;     /* array of precomputed directional textures */
 
-// Helpers why does it 0-1f
+/* Helpers */
 static inline float clampf01(float v) {
+	/* clamp value to 0..1 */
 	if (v < 0.0f) return 0.0f;
 	if (v > 1.0f) return 1.0f;
 	return v;
 }
 
-/* set up r, g, b array of an image on the heap to allow for dynamic writing.
-base RGB arrays!, normal xyz array, normalized world position xy */
+/* Setup */
 void setup(const char* basePath, const char* normalPath) {
-	//CP_Image_Init();
-
+	/* load textures */
 	baseTex = CP_Image_Load(basePath);
-	if (!baseTex) { printf("CS_Setup: failed to load base image '%s'\n", basePath); return; }
 	normalTex = CP_Image_Load(normalPath);
-	if (!normalTex) { printf("CS_Setup: failed to load normal map '%s'\n", normalPath); return; }
 
 	texW = CP_Image_GetWidth(baseTex);
 	texH = CP_Image_GetHeight(baseTex);
-	if (texW <= 0 || texH <= 0) { printf("CS_Setup: invalid texture size\n"); return; }
+	int totalPixels = texW * texH;
 
-	// allocate arrays
-	baseR = (float*)malloc(sizeof(float) * texW * texH);
-	baseG = (float*)malloc(sizeof(float) * texW * texH);
-	baseB = (float*)malloc(sizeof(float) * texW * texH);
-	baseA = (unsigned char*)malloc(sizeof(unsigned char) * texW * texH);
-
-	nxArr = (float*)malloc(sizeof(float) * texW * texH);
-	nyArr = (float*)malloc(sizeof(float) * texW * texH);
-	nzArr = (float*)malloc(sizeof(float) * texW * texH);
-
-	/* making an array of img pixels */
-	pxFrac = (float*)malloc(sizeof(float) * texW);
-	pyFrac = (float*)malloc(sizeof(float) * texH);
-
-	/* Final RGB Value of Image */
-	outPixels = (CP_Color*)malloc(sizeof(CP_Color) * texW * texH);
-
-	/* a 2D temporary buffers to pull pixel data once */
-	CP_Color* tmpBase = (CP_Color*)malloc(sizeof(CP_Color) * texW * texH);
-	CP_Color* tmpNormal = (CP_Color*)malloc(sizeof(CP_Color) * texW * texH);
+	/* temporary buffers for reading pixel data */
+	CP_Color* tmpBase = malloc(sizeof(CP_Color) * totalPixels);
+	CP_Color* tmpNormal = malloc(sizeof(CP_Color) * totalPixels);
 	CP_Image_GetPixelData(baseTex, tmpBase);
 	CP_Image_GetPixelData(normalTex, tmpNormal);
 
-	// precompute pixel centers (0..1) 
-	/* distance btwn pixel is 1/texW, adding 0.5 shifts from left edge to the center of pixel */
-	for (int px = 0; px < texW; ++px) pxFrac[px] = (px + 0.5f) / (float)texW;
-	for (int py = 0; py < texH; ++py) pyFrac[py] = (py + 0.5f) / (float)texH;
+	/* allocate arrays */
+	baseR = malloc(sizeof(float) * totalPixels);
+	baseG = malloc(sizeof(float) * totalPixels);
+	baseB = malloc(sizeof(float) * totalPixels);
+	baseA = malloc(sizeof(unsigned char) * totalPixels);
+	nxArr = malloc(sizeof(float) * totalPixels);
+	nyArr = malloc(sizeof(float) * totalPixels);
+	nzArr = malloc(sizeof(float) * totalPixels);
 
-	// precompute base colors (0..1) and normals
-	for (int i = 0; i < texW * texH; ++i) {
+	/* fill arrays */
+	for (int i = 0; i < totalPixels; ++i) {
 		CP_Color bc = tmpBase[i];
 		baseR[i] = bc.r / 255.0f;
 		baseG[i] = bc.g / 255.0f;
 		baseB[i] = bc.b / 255.0f;
 		baseA[i] = bc.a;
 
-		// convert the r g b value of the normal map into a normalized range of -1 to 1.
 		CP_Color nc = tmpNormal[i];
-		// Normal map expected: R->X (-1..1), G->Y (-1..1), B->Z (0..1)
 		nxArr[i] = (nc.r / 255.0f) * 2.0f - 1.0f;
 		nyArr[i] = (nc.g / 255.0f) * 2.0f - 1.0f;
-		nzArr[i] = (nc.b / 255.0f); // 0..1
+		nzArr[i] = (nc.b / 255.0f); /* 0..1 */
 	}
 
 	free(tmpBase);
 	free(tmpNormal);
 
-	// create output image (contents will be updated each frame)
-	imgOut = CP_Image_CreateFromData(texW, texH, (unsigned char*)outPixels);
+	/* allocate directional texture array */
+	texDirs = malloc(sizeof(CP_Image) * NUM_DIRS);
 
-	printf("CS_Setup: Loaded %s + %s (%dx%d)\n", basePath, normalPath, texW, texH);
-}
+	/* precompute directional textures */
+	for (int d = 0; d < NUM_DIRS; ++d) {
+		float angle = (float)d / NUM_DIRS * 2.0f * 3.14159265f;
+		float Lx = cosf(angle);
+		float Ly = sinf(angle);
+		float Lz = FIXED_LZ;
+		float invLen = 1.0f / sqrtf(Lx * Lx + Ly * Ly + Lz * Lz);
+		Lx *= invLen; Ly *= invLen; Lz *= invLen;
 
-// Call each frame to draw the cell-shaded sprite.
-// (worldX, worldY) uses your world units; function converts to screen using 'unit' and centers sprite there.
-void draw(float worldX, float worldY, float drawW, float drawH, int alpha) {
-	if (!imgOut || !baseR) return; /* safety: textures not loaded */
+		CP_Color* buf = malloc(sizeof(CP_Color) * totalPixels);
 
-	/* mouse position in screen pixels */
-	float mx = CP_Input_GetMouseX();
-	float my = CP_Input_GetMouseY();
-
-	/* convert world to screen (CProcessing draws images centered at provided x,y) */
-	float screenX = worldX * unit - (drawW * unit) * 0.5f; /* top-left x of sprite in screen coords */
-	float screenY = worldY * unit - (drawH * unit) * 0.5f; /* top-left y of sprite in screen coords */
-	float screenW = drawW * unit; /* width in screen pixels */
-	float screenH = drawH * unit; /* height in screen pixels */
-
-	/* Pre-normalize light direction around sprite center once per frame */
-	float centerX = screenX + screenW * 0.5f; /* center of sprite on screen X */
-	float centerY = screenY + screenH * 0.5f; /* center of sprite on screen Y */
-	float Ldx = mx - centerX; /* vector from sprite center to mouse X */
-	float Ldy = my - centerY; /* vector from sprite center to mouse Y */
-	float invLen = 1.0f / sqrtf(Ldx * Ldx + Ldy * Ldy + FIXED_LZ * FIXED_LZ + 1e-6f);
-	/* 1 / |L| ; 1e-6f avoids division by zero */
-	float Lx = Ldx * invLen; /* normalized X component of light */
-	float Ly = Ldy * invLen; /* normalized Y component */
-	float Lz = FIXED_LZ * invLen; /* normalized fixed Z component (light height) */
-
-	/* Loop pixels: minimal per-pixel math, only dot + quantize */
-	for (int py = 0; py < texH; ++py) {
-		float pyScreen = screenY + pyFrac[py] * screenH; /* pixel center Y in screen coordinates */
-		int row = py * texW;
-
-		for (int px = 0; px < texW; ++px) {
-			int i = row + px;
-
-			/* pixel center screen X */
-			float pxScreen = screenX + pxFrac[px] * screenW;
-			/* precomputed fraction * screen width gives pixel center in screen space */
-
-			/* Build local approximate light dir for pixel by re-using pre-normalized L */
-			/* For cell shading, using the center-normalized L is visually good and very fast */
-			float nx = nxArr[i]; /* precomputed normal X (-1..1) */
-			float ny = nyArr[i]; /* precomputed normal Y (-1..1) */
-			float nz = nzArr[i]; /* precomputed normal Z (0..1) */
-
-			float dot = nx * Lx + ny * Ly + nz * Lz;
-			/* dot product between normal and normalized light vector
-			   gives cosine of angle between surface normal & light; controls brightness */
-
-			   /* Quantize to 4-level cell shading */
+		for (int i = 0; i < totalPixels; ++i) {
+			float dot = nxArr[i] * Lx + nyArr[i] * Ly + nzArr[i] * Lz;
 			float shade;
+
 			if (dot < CELL_THRESH_1) shade = SHADE_1;
 			else if (dot < CELL_THRESH_2) shade = SHADE_2;
 			else if (dot < CELL_THRESH_3) shade = SHADE_3;
 			else shade = SHADE_4;
-			/* map continuous dot product to discrete shading levels */
 
-			/* add tiny ambient so darkest areas aren't fully black */
-			shade = clampf01(shade + AMBIENT_TINT); /* clamp to 0..1 and add ambient */
+			shade = clampf01(shade + AMBIENT_TINT);
 
-			/* apply to base color (preconverted to 0..1) */
-			int r = (int)(baseR[i] * shade * 255.0f + 0.5f);
-			int g = (int)(baseG[i] * shade * 255.0f + 0.5f);
-			int b = (int)(baseB[i] * shade * 255.0f + 0.5f);
-			unsigned char a = baseA[i];
-
-			outPixels[i] = CP_Color_Create(r, g, b, a);
-			/* store in output image buffer for bulk GPU update */
+			buf[i] = CP_Color_Create(
+				(int)(baseR[i] * shade * 255.0f),
+				(int)(baseG[i] * shade * 255.0f),
+				(int)(baseB[i] * shade * 255.0f),
+				baseA[i]
+			);
 		}
+
+		texDirs[d] = CP_Image_CreateFromData(texW, texH, (unsigned char*)buf);
+		free(buf);
 	}
 
-	/* Update GPU texture and draw (main thread) */
-	CP_Image_UpdatePixelData(imgOut, outPixels); /* push CPU-side pixel buffer to GPU texture */
-	CP_Image_Draw(imgOut, worldX * unit, worldY * unit, drawW * unit, drawH * unit, alpha);
-	/* draw final cell-shaded sprite at requested position/size */
+	printf("CS_Setup: Precomputed %d directional textures (%dx%d)\n", NUM_DIRS, texW, texH);
 }
 
+/* Draw */
+void draw(float worldX, float worldY, float drawW, float drawH, int alpha) {
+	if (!texDirs) return;
 
-// Cleanup: free memory and textures
+	float mx = CP_Input_GetMouseX();
+	float my = CP_Input_GetMouseY();
+
+	float screenX = worldX * unit - drawW * unit * 0.5f;
+	float screenY = worldY * unit - drawH * unit * 0.5f;
+	float screenW = drawW * unit;
+	float screenH = drawH * unit;
+
+	float cx = screenX + screenW * 0.5f;
+	float cy = screenY + screenH * 0.5f;
+
+	/* compute angle from sprite center to mouse */
+	float dx = mx - cx;
+	float dy = my - cy;
+	float angle = atan2f(dy, dx);
+	if (angle < 0) angle += 2.0f * 3.14159265f;
+
+	/* map angle to 0..NUM_DIRS */
+	float fdir = angle / (2.0f * 3.14159265f) * NUM_DIRS;
+	int index0 = (int)fdir % NUM_DIRS;
+	int index1 = (index0 + 1) % NUM_DIRS;
+	float blend = fdir - index0;
+
+	/* draw first texture fully opaque */
+	CP_Settings_Tint(CP_Color_Create(1.0f, 1.0f, 1.0f, 1.0f));
+	CP_Image_Draw(texDirs[index0], worldX * unit, worldY * unit, screenW, screenH, alpha);
+
+	/* draw second texture fully opaque, weighted by blend using color only */
+	CP_Settings_Tint(CP_Color_Create(blend, blend, blend, 1.0f));
+	CP_Image_Draw(texDirs[index1], worldX * unit, worldY * unit, screenW, screenH, alpha);
+
+	/* reset tint */
+	CP_Settings_Tint(CP_Color_Create(1.0f, 1.0f, 1.0f, 1.0f));
+}
+
+/* Cleanup */
 void cleanup(void) {
-	if (imgOut) { CP_Image_Free(imgOut); imgOut = NULL; }
+	/* free directional textures */
+	for (int d = 0; d < NUM_DIRS; ++d) {
+		if (texDirs[d]) { CP_Image_Free(texDirs[d]); texDirs[d] = NULL; }
+	}
+	free(texDirs); texDirs = NULL;
+
+	/* free base textures */
 	if (baseTex) { CP_Image_Free(baseTex); baseTex = NULL; }
 	if (normalTex) { CP_Image_Free(normalTex); normalTex = NULL; }
 
+	/* free arrays */
 	if (baseR) { free(baseR); baseR = NULL; }
 	if (baseG) { free(baseG); baseG = NULL; }
 	if (baseB) { free(baseB); baseB = NULL; }
@@ -710,10 +690,4 @@ void cleanup(void) {
 	if (nxArr) { free(nxArr); nxArr = NULL; }
 	if (nyArr) { free(nyArr); nyArr = NULL; }
 	if (nzArr) { free(nzArr); nzArr = NULL; }
-
-	if (pxFrac) { free(pxFrac); pxFrac = NULL; }
-	if (pyFrac) { free(pyFrac); pyFrac = NULL; }
-
-	if (outPixels) { free(outPixels); outPixels = NULL; }
 }
-

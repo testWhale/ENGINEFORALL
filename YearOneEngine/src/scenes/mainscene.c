@@ -171,7 +171,7 @@ void Main_Scene_Update(void)
     CP_Image_Draw(TileMap, 120 * unit, 60 * unit, 108 * unit, 72 * unit, 255);
 
     Map_Update();
-   // draw(120, 60, 108, 72, 255);
+    draw(120, 60, 108, 72, 255);
     /* REFRESH MOUSE HOLDER */
  
     
@@ -399,7 +399,7 @@ void Main_Scene_Exit(void)
     Button_Sound_Free(&defaultSound);
     Del_TempText();
     Free_Pickup();
-    wave = 0;
+    
     currentMoney = 0;
     clickPower = 1;
     passiveIncome = 0;
