@@ -1,4 +1,4 @@
-#include "cprocessing.h"
+﻿#include "cprocessing.h"
 #include "ent.h"
 #include "../SM.h"
 #include "../arr.h"
@@ -13,6 +13,8 @@
 #include "state/shoot.h"
 #include "utils/mouse/mouse.h"
 #include <math.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 ButtonInfo NewWaveButton;
 ButtonInfo NewWave2Button;
@@ -21,12 +23,12 @@ static float s_tipTimer = 0.0f;
 static int   s_lastWaveSeen = -1;
 static char  s_tipMsg[96] = "";
 
-CP_Image baseTex;
-CP_Image normalTex;
-CP_Color* basePixels;
-CP_Color* normalPixels;
-CP_Color* outPixels;
-CP_Image imgOut;
+//CP_Image baseTex;
+//CP_Image normalTex;
+//CP_Color* basePixels;
+//CP_Color* normalPixels;
+//CP_Color* outPixels;
+//CP_Image imgOut;
 /*-------------Template Value--------------*/
 GameEntity Make_Template(const char* name) {
 	GameEntity e; char* spritePath = "Assets/Cats/n.png"; char* shadowPath = "Assets/Cats/n_s.png";
@@ -264,7 +266,7 @@ void LateUpdate_Pickups()
 	int removedIndices[64]; // adjust max pickups if needed
 	int removedCount = 0;
 
-	// PASS 1 � find all removed items
+	// PASS 1 — find all removed items
 	for (int i = 0; i < playerArr.used; i++)
 	{
 		GameEntity* e = &playerArr.ActiveEntityArr[i].unit;
@@ -286,7 +288,7 @@ void LateUpdate_Pickups()
 	// Sort removed indices descending
 	qsort(removedIndices, removedCount, sizeof(int), compare_desc);
 
-	// PASS 2 � shift remaining items down
+	// PASS 2 — shift remaining items down
 	for (int r = 0; r < removedCount; r++)
 	{
 		int removedIndex = removedIndices[r];
@@ -490,99 +492,216 @@ void Draw_Entities(void)
 	}
 }
 
-void setup(char* imgPath, char* normPath) {
-	baseTex = CP_Image_Load(imgPath);
-	if (baseTex == NULL) { printf("BRoke at test.\n"); }
-	normalTex = CP_Image_Load(normPath);
-	if (normalTex == NULL) { printf("BRoke at normal.\n"); }
-	int w = CP_Image_GetWidth(baseTex);
-	int h = CP_Image_GetHeight(baseTex);
-	float lx = 500;
-	float ly = 10;
-	// Allocate pixel buffers (arrays with length: image width * height)
-	basePixels = (CP_Color*)malloc(sizeof(CP_Color) * w * h); //basePixels = pointer to first byte of memory block of baseImg
-	normalPixels = (CP_Color*)malloc(sizeof(CP_Color) * w * h);
-	outPixels = (CP_Color*)malloc(sizeof(CP_Color) * w * h);
 
-	/* Get an array of CP_Color variables from images */
-	CP_Image_GetPixelData(baseTex, basePixels); // Stores every pixel inside of this block 
-	CP_Image_GetPixelData(normalTex, normalPixels);
-	
 
-	//  Create output image from pixel buffer
-	imgOut = CP_Image_CreateFromData(w, h, (unsigned char*)outPixels);
 
+
+// --- Precomputed buffers ---
+// ---------- Config / tuning ----------
+const float CELL_THRESH_1 = 0.20f;   // deep shadow threshold
+const float CELL_THRESH_2 = 0.45f;   // shadow threshold
+const float CELL_THRESH_3 = 0.75f;   // light threshold
+// corresponding shade levels (0..1)
+const float SHADE_1 = 0.20f; // deep shadow
+const float SHADE_2 = 0.45f; // shadow
+const float SHADE_3 = 0.75f; // light
+const float SHADE_4 = 1.00f; // highlight
+
+const float AMBIENT_TINT = 0.08f;    // tiny ambient added after quantize (keeps very dark areas visible)
+const float FIXED_LZ = 0.50f;       // fixed Z component of light direction (gives "pop" from normal.z)
+
+// ---------- Globals ----------
+static CP_Image baseTex = NULL;
+static CP_Image normalTex = NULL;
+static CP_Image imgOut = NULL;
+
+static int texW = 0;
+static int texH = 0;
+
+// Precomputed arrays (allocated once)
+static float* baseR = NULL;
+static float* baseG = NULL;
+static float* baseB = NULL;
+static unsigned char* baseA = NULL;
+/* normal arr */
+static float* nxArr = NULL;
+static float* nyArr = NULL;
+static float* nzArr = NULL;
+/*  */
+static float* pxFrac = NULL;
+static float* pyFrac = NULL;
+
+static CP_Color* outPixels = NULL;
+
+// Helpers why does it 0-1f
+static inline float clampf01(float v) {
+	if (v < 0.0f) return 0.0f;
+	if (v > 1.0f) return 1.0f;
+	return v;
 }
 
-void draw(float x, float y, float wdth, float height, int alpha) {
-	
-	int w = CP_Image_GetWidth(baseTex);
-	int h = CP_Image_GetHeight(baseTex);
-	float lx = CP_Input_GetMouseX();
-	float ly = CP_Input_GetMouseY();
+/* set up r, g, b array of an image on the heap to allow for dynamic writing.
+base RGB arrays!, normal xyz array, normalized world position xy */
+void setup(const char* basePath, const char* normalPath) {
+	//CP_Image_Init();
 
-	float screenX = x * unit - (wdth * unit) * 0.5f;
-	float screenY = y * unit - (height * unit) * 0.5f;
-	float scaleX = (wdth * unit) / w;
-	float scaleY = (height * unit) / h;
-	
-	// Lighting per pixel 
-	for (int py = 0; py < h; py++) {
-		for (int px = 0; px < w; px++) {
+	baseTex = CP_Image_Load(basePath);
+	if (!baseTex) { printf("CS_Setup: failed to load base image '%s'\n", basePath); return; }
+	normalTex = CP_Image_Load(normalPath);
+	if (!normalTex) { printf("CS_Setup: failed to load normal map '%s'\n", normalPath); return; }
 
-			int i = py * w + px;
+	texW = CP_Image_GetWidth(baseTex);
+	texH = CP_Image_GetHeight(baseTex);
+	if (texW <= 0 || texH <= 0) { printf("CS_Setup: invalid texture size\n"); return; }
 
-			CP_Color col = basePixels[i];
-			CP_Color n = normalPixels[i];
+	// allocate arrays
+	baseR = (float*)malloc(sizeof(float) * texW * texH);
+	baseG = (float*)malloc(sizeof(float) * texW * texH);
+	baseB = (float*)malloc(sizeof(float) * texW * texH);
+	baseA = (unsigned char*)malloc(sizeof(unsigned char) * texW * texH);
 
-			float nx = (n.r / 255.0f) * 2.0f - 1.0f;
-			float ny = (n.g / 255.0f) * 2.0f - 1.0f;
-			float nz = (n.b / 255.0f);
+	nxArr = (float*)malloc(sizeof(float) * texW * texH);
+	nyArr = (float*)malloc(sizeof(float) * texW * texH);
+	nzArr = (float*)malloc(sizeof(float) * texW * texH);
 
-			// Convert pixel to screen-space
-			float pixelX = screenX + px * scaleX + scaleX * 0.5f;
-			float pixelY = screenY + py * scaleY + scaleY * 0.5f;
-			
+	/* making an array of img pixels */
+	pxFrac = (float*)malloc(sizeof(float) * texW);
+	pyFrac = (float*)malloc(sizeof(float) * texH);
 
-			// Light direction
-			float dx = lx - pixelX;
-			float dy = ly - pixelY;
+	/* Final RGB Value of Image */
+	outPixels = (CP_Color*)malloc(sizeof(CP_Color) * texW * texH);
 
-			float len = sqrtf(dx * dx + dy * dy);
-			if (len < 0.001f) len = 0.001f;
-			dx /= len;
-			dy /= len;
+	/* a 2D temporary buffers to pull pixel data once */
+	CP_Color* tmpBase = (CP_Color*)malloc(sizeof(CP_Color) * texW * texH);
+	CP_Color* tmpNormal = (CP_Color*)malloc(sizeof(CP_Color) * texW * texH);
+	CP_Image_GetPixelData(baseTex, tmpBase);
+	CP_Image_GetPixelData(normalTex, tmpNormal);
 
-			float diffuse = nx * dx + ny * dy + nz * 0.5f;
-			if (diffuse < 0) diffuse = 0;
+	// precompute pixel centers (0..1) 
+	/* distance btwn pixel is 1/texW, adding 0.5 shifts from left edge to the center of pixel */
+	for (int px = 0; px < texW; ++px) pxFrac[px] = (px + 0.5f) / (float)texW;
+	for (int py = 0; py < texH; ++py) pyFrac[py] = (py + 0.5f) / (float)texH;
 
-			int r = (int)(col.r * diffuse);
-			int g = (int)(col.g * diffuse);
-			int b = (int)(col.b * diffuse);
+	// precompute base colors (0..1) and normals
+	for (int i = 0; i < texW * texH; ++i) {
+		CP_Color bc = tmpBase[i];
+		baseR[i] = bc.r / 255.0f;
+		baseG[i] = bc.g / 255.0f;
+		baseB[i] = bc.b / 255.0f;
+		baseA[i] = bc.a;
 
-			outPixels[i] = CP_Color_Create(r, g, b, col.a);
+		// convert the r g b value of the normal map into a normalized range of -1 to 1.
+		CP_Color nc = tmpNormal[i];
+		// Normal map expected: R->X (-1..1), G->Y (-1..1), B->Z (0..1)
+		nxArr[i] = (nc.r / 255.0f) * 2.0f - 1.0f;
+		nyArr[i] = (nc.g / 255.0f) * 2.0f - 1.0f;
+		nzArr[i] = (nc.b / 255.0f); // 0..1
+	}
+
+	free(tmpBase);
+	free(tmpNormal);
+
+	// create output image (contents will be updated each frame)
+	imgOut = CP_Image_CreateFromData(texW, texH, (unsigned char*)outPixels);
+
+	printf("CS_Setup: Loaded %s + %s (%dx%d)\n", basePath, normalPath, texW, texH);
+}
+
+// Call each frame to draw the cell-shaded sprite.
+// (worldX, worldY) uses your world units; function converts to screen using 'unit' and centers sprite there.
+void draw(float worldX, float worldY, float drawW, float drawH, int alpha) {
+	if (!imgOut || !baseR) return; /* safety: textures not loaded */
+
+	/* mouse position in screen pixels */
+	float mx = CP_Input_GetMouseX();
+	float my = CP_Input_GetMouseY();
+
+	/* convert world to screen (CProcessing draws images centered at provided x,y) */
+	float screenX = worldX * unit - (drawW * unit) * 0.5f; /* top-left x of sprite in screen coords */
+	float screenY = worldY * unit - (drawH * unit) * 0.5f; /* top-left y of sprite in screen coords */
+	float screenW = drawW * unit; /* width in screen pixels */
+	float screenH = drawH * unit; /* height in screen pixels */
+
+	/* Pre-normalize light direction around sprite center once per frame */
+	float centerX = screenX + screenW * 0.5f; /* center of sprite on screen X */
+	float centerY = screenY + screenH * 0.5f; /* center of sprite on screen Y */
+	float Ldx = mx - centerX; /* vector from sprite center to mouse X */
+	float Ldy = my - centerY; /* vector from sprite center to mouse Y */
+	float invLen = 1.0f / sqrtf(Ldx * Ldx + Ldy * Ldy + FIXED_LZ * FIXED_LZ + 1e-6f);
+	/* 1 / |L| ; 1e-6f avoids division by zero */
+	float Lx = Ldx * invLen; /* normalized X component of light */
+	float Ly = Ldy * invLen; /* normalized Y component */
+	float Lz = FIXED_LZ * invLen; /* normalized fixed Z component (light height) */
+
+	/* Loop pixels: minimal per-pixel math, only dot + quantize */
+	for (int py = 0; py < texH; ++py) {
+		float pyScreen = screenY + pyFrac[py] * screenH; /* pixel center Y in screen coordinates */
+		int row = py * texW;
+
+		for (int px = 0; px < texW; ++px) {
+			int i = row + px;
+
+			/* pixel center screen X */
+			float pxScreen = screenX + pxFrac[px] * screenW;
+			/* precomputed fraction * screen width gives pixel center in screen space */
+
+			/* Build local approximate light dir for pixel by re-using pre-normalized L */
+			/* For cell shading, using the center-normalized L is visually good and very fast */
+			float nx = nxArr[i]; /* precomputed normal X (-1..1) */
+			float ny = nyArr[i]; /* precomputed normal Y (-1..1) */
+			float nz = nzArr[i]; /* precomputed normal Z (0..1) */
+
+			float dot = nx * Lx + ny * Ly + nz * Lz;
+			/* dot product between normal and normalized light vector
+			   gives cosine of angle between surface normal & light; controls brightness */
+
+			   /* Quantize to 4-level cell shading */
+			float shade;
+			if (dot < CELL_THRESH_1) shade = SHADE_1;
+			else if (dot < CELL_THRESH_2) shade = SHADE_2;
+			else if (dot < CELL_THRESH_3) shade = SHADE_3;
+			else shade = SHADE_4;
+			/* map continuous dot product to discrete shading levels */
+
+			/* add tiny ambient so darkest areas aren't fully black */
+			shade = clampf01(shade + AMBIENT_TINT); /* clamp to 0..1 and add ambient */
+
+			/* apply to base color (preconverted to 0..1) */
+			int r = (int)(baseR[i] * shade * 255.0f + 0.5f);
+			int g = (int)(baseG[i] * shade * 255.0f + 0.5f);
+			int b = (int)(baseB[i] * shade * 255.0f + 0.5f);
+			unsigned char a = baseA[i];
+
+			outPixels[i] = CP_Color_Create(r, g, b, a);
+			/* store in output image buffer for bulk GPU update */
 		}
 	}
 
-
-	// Update the output image pixels
-	CP_Image_UpdatePixelData(imgOut, outPixels);
-
-	CP_Image_Draw(imgOut, x * unit, y * unit, wdth * unit, height * unit, alpha);
-
-
+	/* Update GPU texture and draw (main thread) */
+	CP_Image_UpdatePixelData(imgOut, outPixels); /* push CPU-side pixel buffer to GPU texture */
+	CP_Image_Draw(imgOut, worldX * unit, worldY * unit, drawW * unit, drawH * unit, alpha);
+	/* draw final cell-shaded sprite at requested position/size */
 }
 
 
-void clean() {
-	//  Free memory
-	free(basePixels);
-	free(normalPixels);
-	free(outPixels);
+// Cleanup: free memory and textures
+void cleanup(void) {
+	if (imgOut) { CP_Image_Free(imgOut); imgOut = NULL; }
+	if (baseTex) { CP_Image_Free(baseTex); baseTex = NULL; }
+	if (normalTex) { CP_Image_Free(normalTex); normalTex = NULL; }
 
-	// Optional: free output image if not reused
-	CP_Image_Free(baseTex);
-	CP_Image_Free(normalTex);
-	CP_Image_Free(imgOut);
+	if (baseR) { free(baseR); baseR = NULL; }
+	if (baseG) { free(baseG); baseG = NULL; }
+	if (baseB) { free(baseB); baseB = NULL; }
+	if (baseA) { free(baseA); baseA = NULL; }
+
+	if (nxArr) { free(nxArr); nxArr = NULL; }
+	if (nyArr) { free(nyArr); nyArr = NULL; }
+	if (nzArr) { free(nzArr); nzArr = NULL; }
+
+	if (pxFrac) { free(pxFrac); pxFrac = NULL; }
+	if (pyFrac) { free(pyFrac); pyFrac = NULL; }
+
+	if (outPixels) { free(outPixels); outPixels = NULL; }
 }
 

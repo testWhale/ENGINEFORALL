@@ -1,6 +1,17 @@
-.tmp
-.vs
-.bin
-.bin\Debug-x64
-.bin\*
-./Assets/soundEffects/*
+# Temporary files
+.tmp/
+.vs/
+
+# Bin folders
+bin/
+bin/*
+
+# Ignore ALL debug build outputs
+bin/Debug-x64/
+bin/Debug-x64/**
+
+# Ignore all PDB files anywhere
+*.pdb
+
+# Ignore sound effects folder
+Assets/soundEffects/

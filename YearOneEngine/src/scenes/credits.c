@@ -10,8 +10,11 @@ ButtonSound defaultSound;
 char CreditsString[100];
 float unit;
 float CreditsY;
-
-
+CP_Image logo = NULL;
+static float elapsed = 0.0f;          // time since screen started
+static const float FADE_DURATION = 3.0f;  // 3 seconds fade
+static float fadeOutStart = 3.0f;      // seconds
+static float fadeOutDuration = 0.5f;   // quick fade-out
 void Credits_Init(void)
 {
     CP_System_Fullscreen();
@@ -34,14 +37,65 @@ void Credits_Init(void)
         "Assets/Buttons/Back/BackNormal.png",
         "Assets/Buttons/Back/BackHighlighted.png",
         "Assets/Buttons/Back/BackClicked.png", 1);
+    
+    elapsed = 0; // reset timer
+    logo = CP_Image_Load("Assets/Misc/DigiPen_BLACK.png");
+    if (logo == NULL)
+    {
+        CP_System_SetWindowTitle("Error: Failed to load DigiPen_BLACK.png");
+    }
 }
 
 void Credits_Update(void)
 {
+    
 
-    CP_Graphics_ClearBackground(CP_Color_Create(255, 128, 128, 255));
+    CP_Graphics_ClearBackground(CP_Color_Create(255, 255, 255, 255));
     CP_Settings_ImageMode(CP_POSITION_CORNER);
     CP_Image_Draw(MainMenuBackground, 0, 0, 192 * unit, 108 * unit, 255);
+    
+    elapsed += CP_System_GetDt();
+
+    float alpha = 0.0f;
+
+    if (elapsed < FADE_DURATION)
+    {
+        // Fade in: 0 to 255
+        alpha = (elapsed / FADE_DURATION) * 255.0f;
+    }
+    else if (elapsed < fadeOutStart)
+    {
+        // Hold full visibility
+        alpha = 255.0f;
+    }
+    else
+    {
+        // Fade out: 255 to 0
+        float t = (elapsed - fadeOutStart) / fadeOutDuration;
+        if (t > 1.0f) t = 1.0f;
+
+        alpha = (1.0f - t) * 255.0f;
+    }
+
+    int width = CP_System_GetWindowWidth();
+    int height = CP_System_GetWindowHeight();
+
+    // scale logo to 60% of screen width
+    float drawW = width * 0.6f;
+    float aspect = 445.0f / 1525.0f;
+    float drawH = drawW * aspect;
+
+    
+    CP_Settings_ImageMode(CP_POSITION_CENTER);
+    /* draw centered */
+    CP_Image_Draw(logo,
+        width * 0.5f,
+        height * 0.5f,
+        drawW,
+        drawH,
+        alpha);
+
+    CP_Settings_ImageMode(CP_POSITION_CORNER);
     CP_Image_Draw(Credits, 0, CreditsY, 168 * unit, 700 * unit, 255);
 
 
