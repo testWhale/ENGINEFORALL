@@ -35,14 +35,12 @@ void Logo_Update(void)
     float drawH = drawW * aspect;
 
     CP_Graphics_ClearBackground(CP_Color_Create(255, 255, 255, 255));
-
-    /* IMPORTANT — must come BEFORE CP_Image_Draw */
     CP_Settings_ImageMode(CP_POSITION_CENTER);
 
-    /* guaranteed to draw centered */
+    /* draw centered */
     CP_Image_Draw(justinFace,
-        width * 2.5f,
-        height * 2.5f,
+        width * 0.5f,
+        height * 0.5f,
         drawW,
         drawH,
         alpha);
@@ -55,5 +53,5 @@ void Logo_Update(void)
 
 void Logo_Exit(void)
 {
-    // nothing needed here
+    CP_Image_Free(justinFace);
 }
