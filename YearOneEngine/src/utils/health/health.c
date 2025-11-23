@@ -206,9 +206,14 @@ void Health_DamagePlayersOnEnemyCollisions(int dmgPerTick,
     float dt)
 {
     if (maxContactTime <= 0.0f)
-        maxContactTime = 3.0f;   
+        maxContactTime = 3.0f;
 
-    const float tickInterval = 0.5f;  
+    const float tickInterval = 0.5f;
+
+    const float tileStartX = g_TileMap[0][0].startPos.x;   
+    const float tileStartY = g_TileMap[0][0].startPos.y;   
+    const float tileW = g_TileMap[0][0].dim.x;        
+    const float tileH = g_TileMap[0][0].dim.y;       
 
     for (size_t ei = 0; ei < enemyArr.used; ++ei)
     {
@@ -216,7 +221,7 @@ void Health_DamagePlayersOnEnemyCollisions(int dmgPerTick,
         if (!enemy->alive || enemy->unit.isPlayer)
             continue;
 
-        int touching = 0;
+        int   touching = 0;
 
         float ex = enemy->unit.centerPos.x;
         float ey = enemy->unit.centerPos.y;
@@ -232,6 +237,14 @@ void Health_DamagePlayersOnEnemyCollisions(int dmgPerTick,
             float py = pl->unit.centerPos.y;
             float pr = 0.5f * pl->unit.diameter;
 
+            int eRow = (int)((ey - tileStartY) / tileH);
+            int pRow = (int)((py - tileStartY) / tileH);
+            int eCol = (int)((ex - tileStartX) / tileW);
+            int pCol = (int)((px - tileStartX) / tileW);
+
+            if (eRow != pRow || eCol != pCol)
+                continue;
+           
             if (!circles_overlap(ex, ey, er, px, py, pr))
                 continue;
 
@@ -241,7 +254,8 @@ void Health_DamagePlayersOnEnemyCollisions(int dmgPerTick,
             enemy->isHitting = 1;
             enemy->contactTime += dt;
 
-            if (enemy->contactTime > maxContactTime) {
+            if (enemy->contactTime > maxContactTime)
+            {
                 enemy->isHitting = 0;
                 enemy->contactTime = 0.0f;
                 break;
@@ -254,6 +268,7 @@ void Health_DamagePlayersOnEnemyCollisions(int dmgPerTick,
             {
                 pl->health -= dmgPerTick;
                 Health_PlayHitSfx();
+
                 if (pl->health <= 0)
                 {
                     pl->health = 0;
@@ -274,7 +289,7 @@ void Health_DamagePlayersOnEnemyCollisions(int dmgPerTick,
                                 t->tsel = 0;
                                 t->currHovered = 0;
                                 t->nextTileCheck = 0;
-                                r = TILE_ROWS; 
+                                r = TILE_ROWS;  
                                 break;
                             }
                         }
@@ -291,3 +306,4 @@ void Health_DamagePlayersOnEnemyCollisions(int dmgPerTick,
         }
     }
 }
+

@@ -147,6 +147,15 @@ void Main_Scene_Update(void)
 
     HealthSystem_Update(&gHealth, dt);
 
+    if (HealthSystem_GetHearts(&gHealth) <= 0) {
+        float finalTime = HealthSystem_GetTimer(&gHealth);
+        int   moneyEarn = (int)currentMoney;
+
+        GameOver_SetData(finalTime, moneyEarn);
+        CP_Engine_SetNextGameState(GameOver_Init, GameOver_Update, GameOver_Exit);
+        return;
+    }
+
     if (!Pause_IsPaused()) {
         ProcessGoalHits(&gHealth);
         Health_DamagePlayersOnEnemyCollisions(
@@ -162,7 +171,7 @@ void Main_Scene_Update(void)
     CP_Image_Draw(TileMap, 120 * unit, 60 * unit, 108 * unit, 72 * unit, 255);
 
     Map_Update();
-    draw(120, 60, 108, 72, 255);
+   // draw(120, 60, 108, 72, 255);
     /* REFRESH MOUSE HOLDER */
  
     
@@ -350,15 +359,6 @@ void Main_Scene_Update(void)
     if (CP_Input_KeyDown(KEY_Q)) CP_Engine_Terminate();  
     if (CP_Input_KeyDown(KEY_W)) currentMoney += 1000;
 }   
-
-    if (HealthSystem_GetHearts(&gHealth) <= 0) {
-        float finalTime = HealthSystem_GetTimer(&gHealth);
-        int   moneyEarn = (int)currentMoney;
-
-        GameOver_SetData(finalTime, moneyEarn);
-        CP_Engine_SetNextGameState(GameOver_Init, GameOver_Update, GameOver_Exit);
-        return;
-    }
 
     HealthSystem_DrawHearts(&gHealth);
 

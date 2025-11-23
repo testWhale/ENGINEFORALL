@@ -152,4 +152,4 @@ void Map_Update() {
 			CP_Graphics_DrawRect(c_tile->startPos.x, c_tile->startPos.y, c_tile->dim.x - 2, c_tile->dim.y - 2);
 		}
 	}
-};
+}

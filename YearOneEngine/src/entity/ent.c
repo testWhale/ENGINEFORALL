@@ -220,16 +220,28 @@ void Draw_TempText(float dt) {
 		}
 	}
 	if (wave != s_lastWaveSeen) {
-		const char* m = NULL;
-		if (wave == 5)      m = "Maybe consider buying a nuke.";
-		else if (wave == 10) m = "You should really consider buying one.";
-		else if (wave == 15) m = "Now you really should buy one!";
-		if (m) {
-			snprintf(s_tipMsg, sizeof s_tipMsg, "%s", m);
+		s_tipMsg[0] = '\0';
+		s_tipTimer = 0.0f;
+
+		switch (wave) {
+		case 5:
+			snprintf(s_tipMsg, sizeof s_tipMsg, "Maybe consider buying a nuke.");
 			s_tipTimer = 3.0f;
+			break;
+		case 10:
+			snprintf(s_tipMsg, sizeof s_tipMsg, "You should really consider buying one.");
+			s_tipTimer = 3.0f;
+			break;
+		case 15:
+			snprintf(s_tipMsg, sizeof s_tipMsg, "Now you really should buy one!");
+			s_tipTimer = 3.0f;
+			break;
+		default:
+			break;
 		}
 		s_lastWaveSeen = wave;
 	}
+
 	if (s_tipTimer > 0.0f) {
 		s_tipTimer -= dt;
 		float t = (s_tipTimer > 0.4f) ? 1.0f : (s_tipTimer / 0.4f);
@@ -237,11 +249,11 @@ void Draw_TempText(float dt) {
 
 		const float cx = 0.5f * (float)CP_System_GetWindowWidth();
 		const float cy = 18.0f * unit;
-		const float bw = 80.0f * unit;
-		const float bh = 12.5f * unit;
+		const float bw = 86.0f * unit;
+		const float bh = 12.0f * unit;
 
 		CP_Settings_RectMode(CP_POSITION_CENTER);
-		CP_Settings_Fill(CP_Color_Create(0, 0, 0, (int)(140 * t)));
+		CP_Settings_Fill(CP_Color_Create(0, 0, 0, (int)(160 * t)));
 		CP_Graphics_DrawRect(cx, cy, bw, bh);
 
 		CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
