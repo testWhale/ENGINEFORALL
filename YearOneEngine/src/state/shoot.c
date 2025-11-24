@@ -1,3 +1,14 @@
+//---------------------------------------------------------
+// file:	shoot.c
+// author:	[Zachary Ng]
+// email:	[zacharyhuaen.n@digipen.edu]
+//
+// brief:	Main entry point for the sample project
+//			of the CProcessing library
+//
+// Copyright 2020 DigiPen, All rights reserved.
+//---------------------------------------------------------
+
 #include "shoot.h"
 #include "utils/utils.h"
 #include "utils/arr.h"
@@ -96,7 +107,7 @@ void Shoot_Update(GameEntity* turret, StateMachine* SM, float dt) {
 	int turretRow = (turret->centerPos.y - g_TileMap[0][0].startPos.y) / g_TileMap[0][0].dim.y;
 
 	if (Is_Circle_Clicked(turret->centerPos.x, turret->centerPos.y, turret->diameter, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
-		FSM_SetState(SM, SelectedState, turret, dt);
+		//FSM_SetState(SM, SelectedState, turret, dt);
 		return;
 	}
 
@@ -147,11 +158,13 @@ void Shoot_Update(GameEntity* turret, StateMachine* SM, float dt) {
 								enemy->poisonDamage = bullet->poisonDmg;
 								enemy->poisonTimerDecay = bullet->poisonDecayTimer;
 								enemyArr.ActiveEntityArr[j].health -= enemy->poisonDamage * dt;
+								Health_PlayHitSfx();
 							}
 						}
 
 						if (strcmp(bullet->type, "normal") == 0) {
 							enemyArr.ActiveEntityArr[j].health -= bullet->bulletDmg;
+							Health_PlayHitSfx();
 						}
 
 						if (strcmp(bullet->type, "stun") == 0) {

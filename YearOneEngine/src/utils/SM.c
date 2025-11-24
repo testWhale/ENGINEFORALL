@@ -12,7 +12,11 @@ StateFunction FSM_SetState(StateMachine* fsm, States newState, GameEntity* data,
 	fsm->currState.Init(data, fsm, dt);
 }
 StateFunction FSM_Update(StateMachine* fsm, GameEntity* data, float dt) {
+    /*fsm->currState.Init(data, fsm, dt);*/
 	fsm->currState.Update(data, fsm,dt);
+}
+StateFunction FSM_Init(StateMachine* fsm, GameEntity* data, float dt) {
+    fsm->currState.Init(data, fsm, dt);
 }
 GameEntity MakePlayerTemplate() {
     GameEntity e = {

@@ -6,6 +6,7 @@
 #include "economy/economyCode.h"
 #include <math.h>
 #include <stdio.h>
+#include "clicker/clickCode.h"
    
 static float GO_finalTime = 0.0f;  
 static float GO_money = 0.0f; 
@@ -24,7 +25,7 @@ void GameOver_SetData(float finalTime, float money)
 
 void GameOver_Init(void) {
     GO_timer = GO_fade = 0.0f;
-    GO_font = CP_Font_Load("Assets/Exo2-Regular.ttf");
+    GO_font = CP_Font_Load("Assets/Fonts/Quinndoodle.ttf");
     if (GO_font) CP_Font_Set(GO_font);
     KO = CP_Sound_Load("Assets/Game Over Arcade by myfox14 Id-382310.wav");
     CP_Sound_Play(KO);
@@ -50,11 +51,11 @@ void GameOver_Update(void) {
 
     char line[64];
     CP_Settings_TextSize(36.0f);
-
+    printf("Wave %d\n", wave);
     (void)snprintf(line, sizeof(line), "Wave survived: %d", wave); 
     CP_Font_DrawText(line, W * 0.5f, H * 0.45f);
 
-    (void)snprintf(line, sizeof(line), "Time: %.0f s", GO_finalTime);
+    (void)snprintf(line, sizeof(line), "Time: %.0fs", GO_finalTime);
     CP_Font_DrawText(line, W * 0.5f, H * 0.52f);
 
     (void)snprintf(line, sizeof(line), "Money: $%.0f", GO_money);
@@ -68,6 +69,7 @@ void GameOver_Update(void) {
 
     if (GO_timer > 0.6f) {
         if (CP_Input_KeyTriggered(KEY_R) || CP_Input_KeyTriggered('R')) {
+            waveFlag = 0;
             CP_Engine_SetNextGameState(Main_Scene_Init, Main_Scene_Update, Main_Scene_Exit);
             return;
         }
@@ -81,7 +83,6 @@ void GameOver_Update(void) {
 
 void GameOver_Exit(void) {
     wave = 0;
-    currentMoney = 0;
     if (GO_font) CP_Font_Free(GO_font);
     CP_Sound_Free(KO);
 }

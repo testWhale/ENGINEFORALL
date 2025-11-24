@@ -17,6 +17,7 @@
 #include <stdlib.h>
 #include "gameover.h"
 #include "mainmenu.h"
+#include "mouse.h"
 
 CP_Image Overlay;
 CP_Image Background, TileMap;
@@ -146,6 +147,15 @@ void Main_Scene_Update(void)
 
     HealthSystem_Update(&gHealth, dt);
 
+    if (HealthSystem_GetHearts(&gHealth) <= 0) {
+        float finalTime = HealthSystem_GetTimer(&gHealth);
+        int   moneyEarn = (int)currentMoney;
+
+        GameOver_SetData(finalTime, moneyEarn);
+        CP_Engine_SetNextGameState(GameOver_Init, GameOver_Update, GameOver_Exit);
+        return;
+    }
+
     if (!Pause_IsPaused()) {
         ProcessGoalHits(&gHealth);
         Health_DamagePlayersOnEnemyCollisions(
@@ -161,9 +171,10 @@ void Main_Scene_Update(void)
     CP_Image_Draw(TileMap, 120 * unit, 60 * unit, 108 * unit, 72 * unit, 255);
 
     Map_Update();
-    //draw(120, 60, 108, 72, 255);
-
-    Draw_Entities();    
+    draw(120, 60, 108, 72, 255);
+    /* REFRESH MOUSE HOLDER */
+ 
+    
 
 
     if (CP_Input_KeyDown(KEY_T))
@@ -213,10 +224,10 @@ void Main_Scene_Update(void)
     sprintf_s(troop3Cost, 100, "%.0f$ ", Scaling_Cost(troop3Count, 50));
     CP_Font_DrawText(clicker1Cost, 10 * unit, 75 * unit);
     CP_Font_DrawText(clicker2Cost, 25 * unit, 75 * unit);
-    CP_Font_DrawText("Cost 3", 40 * unit, 75 * unit);
-    CP_Font_DrawText(troop1Cost, 10 * unit, 95 * unit);
-    CP_Font_DrawText(troop2Cost, 25 * unit, 95 * unit);
-    CP_Font_DrawText("1000", 40 * unit, 95 * unit);
+    CP_Font_DrawText("1000$", 40 * unit, 75 * unit);
+    CP_Font_DrawText("50", 10 * unit, 95 * unit);
+    CP_Font_DrawText("50", 25 * unit, 95 * unit);
+    CP_Font_DrawText("50", 40 * unit, 95 * unit);
 
     if (!Pause_IsPaused())
     {
@@ -235,7 +246,7 @@ void Main_Scene_Update(void)
         if (ClickerUpgrade3.isSel == 1)
         {
             CP_Settings_ImageMode(CP_POSITION_CENTER);
-            CP_Image_Draw(BlankInfo, 60 * unit, 75 * unit, 32 * unit, 21 * unit, 255);
+            CP_Image_Draw(WinInfo, 60 * unit, 75 * unit, 32 * unit, 21 * unit, 255);
         }
 
         if (TroopButton1.isSel == 1)
@@ -253,7 +264,7 @@ void Main_Scene_Update(void)
         if (TroopButton3.isSel == 1)
         {
             CP_Settings_ImageMode(CP_POSITION_CENTER);
-            CP_Image_Draw(WinInfo, 60 * unit, 95 * unit, 32 * unit, 21 * unit, 255);
+            CP_Image_Draw(BlankInfo, 60 * unit, 95 * unit, 32 * unit, 21 * unit, 255);
         }
 
         //click for currency
@@ -286,13 +297,16 @@ void Main_Scene_Update(void)
 
         //poison turret
         if (TroopButton1.isClicked == 1) {
-            if (Purchase_System(&currentMoney, Scaling_Cost(troop1Count, 50))) {
+            if (Mouse_CanPickup() && Purchase_System(&currentMoney,  50)) {
                 GameEntity player = Make_Template("poison");
-                player.centerPos.x += playerArr.used * 50;
-
+                // compute layout
+                player.centerPos.x = CP_Input_GetMouseX();
+                player.centerPos.y = CP_Input_GetMouseY();
+                player.pickUpIndex = Mouse_GetPickupCount(); // gives first pickup id: 1 
+                Mouse_AddPickup();
                 Arr_Insert(&playerArr, (ActiveEntity) {
                     playerArr.used,
-                        player, (StateMachine) { .currState = IdleState },
+                        player, (StateMachine) { .currState = PickUpState },
                         .maxHealth = 100, .health = 100,
                         .alive = 1, .hasScored = 0, .lastLeftmostX = 0
                 });
@@ -302,29 +316,38 @@ void Main_Scene_Update(void)
 
         //normal turret
         if (TroopButton2.isClicked == 1) {
-            if (Purchase_System(&currentMoney, Scaling_Cost(troop2Count, 50))) {
+            if (Mouse_CanPickup() && Purchase_System(&currentMoney, 50) ) {
                 GameEntity player = Make_Template("player");
-                player.centerPos.x += playerArr.used * 60;
-
+                player.centerPos.x = CP_Input_GetMouseX();
+                player.centerPos.y = CP_Input_GetMouseY();
+                player.pickUpIndex = Mouse_GetPickupCount(); // gives first pickup id: 1 
+                Mouse_AddPickup();
                 Arr_Insert(&playerArr, (ActiveEntity) {
                     playerArr.used,
-                        player, (StateMachine) { .currState = IdleState },
+                        player, (StateMachine) { .currState = PickUpState },
                         .maxHealth = 100, .health = 100,
                         .alive = 1, .hasScored = 0, .lastLeftmostX = 0
                 });
                 troop2Count += 1;
+
             }
+
         }
 
         //stun turret
         if (TroopButton3.isClicked == 1) {
-            if (Purchase_System(&currentMoney, Scaling_Cost(troop3Count, 50))) {
+            if (Mouse_CanPickup() && Purchase_System(&currentMoney,50) ) {
+                printf("WORDS\n");
                 GameEntity player = Make_Template("stun");
-                player.centerPos.x += playerArr.used * 50;
-
+                // compute layout
+                player.centerPos.x = CP_Input_GetMouseX();
+                player.centerPos.y = CP_Input_GetMouseY();
+                player.pickUpIndex = Mouse_GetPickupCount(); // gives first pickup id: 1 
+                Mouse_AddPickup();
                 Arr_Insert(&playerArr, (ActiveEntity) {
                     playerArr.used,
-                        player, (StateMachine) { .currState = IdleState },
+                        player, (StateMachine) { .currState = PickUpState
+                    },
                         .maxHealth = 100, .health = 100,
                         .alive = 1, .hasScored = 0, .lastLeftmostX = 0
                 });
@@ -337,15 +360,6 @@ void Main_Scene_Update(void)
     if (CP_Input_KeyDown(KEY_W)) currentMoney += 1000;
 }   
 
-    if (HealthSystem_GetHearts(&gHealth) <= 0) {
-        float finalTime = HealthSystem_GetTimer(&gHealth);
-        int   moneyEarn = (int)currentMoney;
-
-        GameOver_SetData(finalTime, moneyEarn);
-        CP_Engine_SetNextGameState(GameOver_Init, GameOver_Update, GameOver_Exit);
-        return;
-    }
-
     HealthSystem_DrawHearts(&gHealth);
 
     CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
@@ -355,18 +369,20 @@ void Main_Scene_Update(void)
     char tbuf[48];
     snprintf(tbuf, sizeof(tbuf), "Time: %.1fs", HealthSystem_GetTimer(&gHealth));
     CP_Font_DrawText(tbuf, (float)CP_System_GetWindowWidth() * 0.6f, 8.0f);
+    
+    Draw_Entities();
+    LateUpdate_Pickups();
+    /* UI ELEMENTS */
+    Draw_WaveCounter();
+
+    /* POPUPS DOWN Here */
+    Draw_TempText(dt);
 
     Pause_UpdateAndDraw();
     if (Pause_TakeMenuRequest()) {
         CP_Engine_SetNextGameState(Main_Menu_Init, Main_Menu_Update, Main_Menu_Exit);
         return;
     }
-
-    /* UI ELEMENTS */
-    Draw_WaveCounter();
-
-    /* POPUPS DOWN Here */
-    Draw_TempText(dt);
 }
 
 void Main_Scene_Exit(void)
@@ -381,6 +397,12 @@ void Main_Scene_Exit(void)
     Button_Free(&TroopButton2);
     Button_Free(&TroopButton3);
     Button_Sound_Free(&defaultSound);
-    HealthAudio_Free();
     Del_TempText();
+    Free_Pickup();
+    
+    currentMoney = 0;
+    clickPower = 1;
+    passiveIncome = 0;
+    clickerUpgrade1Count = 0;
+    clickerUpgrade2Count = 0;
 }
