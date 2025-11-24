@@ -24,10 +24,10 @@ GameEntity* Start_Wave(GameEntity* entity, float dt) {
 	/* This sets a random speed value for each enemy*/
 	entity->accel = (CP_Vector){ (rand() % 2), 0 };
 	if (entity->accel.x >= 1) {
-		entity->accel.x *= 0.09;
+		entity->accel.x *= 0.01;
 	}
 	if (entity->accel.x == 0) {
-		entity->accel.x = 0.3;
+		entity->accel.x = 0.1;
 	}
 
 	entity->accel = CP_Vector_Negate(entity->accel);

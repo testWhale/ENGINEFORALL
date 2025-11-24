@@ -29,8 +29,8 @@ Bullet Bullet_Template(const char* name) {
             .opacity = 0,
             .type = "poison",
             .bulletDmg = 2.0f,
-            .poisonDmg = 20.0f,
-            .poisonDecayTimer = 10.0f
+            .poisonDmg = 5.0f,
+            .poisonDecayTimer = 5.0f
         };
        
     }
@@ -56,7 +56,7 @@ Bullet Bullet_Template(const char* name) {
             .diameter = 30,
             .opacity = 0,
             .type = "normal",
-            .bulletDmg = 35.0f
+            .bulletDmg = 10.0f
         };
     }
 

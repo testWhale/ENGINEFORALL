@@ -35,5 +35,5 @@ void Poor_Feedback(float fontsize,float PosX, float PosY)
 
 float Scaling_Cost(int purchaseCount, float basePrice)
 {
-	return basePrice * pow(1.75, (double)purchaseCount);
+	return basePrice * pow(1.08, (double)purchaseCount);
 }
