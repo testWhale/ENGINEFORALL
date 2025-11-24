@@ -17,7 +17,6 @@ static float fadeOutStart = 3.0f;      // seconds
 static float fadeOutDuration = 0.5f;   // quick fade-out
 void Credits_Init(void)
 {
-    CP_System_Fullscreen();
     unit = CP_System_GetWindowWidth() / 192.0f;
     myFont = CP_Font_Load("Assets/Fonts/QuinnDoodle.ttf");
     MainMenuBackground = CP_Image_Load("Assets/Misc/MenuScreen2.png");

@@ -269,6 +269,7 @@ void Main_Scene_Update(void)
 
         //click for currency
         if (ClickerButton.isClicked == 1) {
+            ClickerButton.isClicked = 0;
             One_Click(&currentMoney);
         }
 
