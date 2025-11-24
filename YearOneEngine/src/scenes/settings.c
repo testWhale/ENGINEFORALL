@@ -1,38 +1,28 @@
 #include "cprocessing.h"
 #include "buttons/buttonCode.h"
+#include "scenes/settings.h"
 #include "mainmenu.h"
-#include <stdbool.h>
-#include <stdio.h>
 
 bool settingsTabOpen = true;
 float masterVolume = 1.0f;
 extern int unit;
-
+float volume = 0.5f;
 CP_Font myFont;
 CP_Image MainMenuBackground;
 ButtonInfo MuteButton;
 ButtonSound defaultSound;
-float volume = 0.5f;
 
-typedef struct {
-    float x, y;       // top-left of slider
-    float width, height;
-    float* value;     // pointer to controlled variable
-    float minValue;
-    float maxValue;
-    bool dragging;
-} Slider;
-Slider s;
-Slider Slider_Create(float x, float y, float width, float height, float* value, float minVal, float maxVal) {
-    s.x = x;
-    s.y = y;
-    s.width = width;
-    s.height = height;
-    s.value = value;
-    s.minValue = minVal;
-    s.maxValue = maxVal;
-    s.dragging = false;
-    return s;
+
+Slider* Slider_Create(Slider* slider, float x, float y, float width, float height, float* value, float minVal, float maxVal) {
+    slider->x = x;
+    slider->y = y;
+    slider->width = width;
+    slider->height = height;
+    slider->value = value;
+    slider->minValue = minVal;
+    slider->maxValue = maxVal;
+    slider->dragging = false;
+    return slider;
 }
 
 void Slider_Draw(Slider* s) {
@@ -107,12 +97,6 @@ void Sd_Settings_Init() {
         "Assets/Buttons/MainMenu/PlayHighlight.png",
         "Assets/Buttons/MainMenu/PlayClicked.png", 1);
 
-    // Centered slider
-    float sliderWidth = 800;
-    float sliderHeight = 100;
-    float sliderX = (192 * unit / 2) - (sliderWidth / 2);
-    float sliderY = 80 * unit;
-    s = Slider_Create(sliderX, sliderY, sliderWidth, sliderHeight, &volume, 0.0f, 1.0f);
 
 }
 
@@ -139,20 +123,12 @@ void Sd_Settings_Update() {
     CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
     CP_Font_DrawText("Volume Slider", s.x, s.y - 20);
 
-    char volumeText[32];
-    sprintf_s(volumeText, sizeof(volumeText), "Volume: %.2f", volume);
-    CP_Settings_TextSize(28.0f);
-    CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
-    CP_Font_DrawText(volumeText, s.x, s.y + 30);
-    // Update master volume
-    masterVolume = volume;
-    CP_Sound_SetGroupVolume(0, masterVolume); // assuming group 0 is your main sound group
 
 
-    if (CP_Input_KeyDown(KEY_Q))
-    {
-        CP_Engine_SetNextGameState(Main_Menu_Init, Main_Menu_Update, Main_Menu_Exit);
-    }
+    //if (CP_Input_KeyDown(KEY_Q))
+    //{
+    //    CP_Engine_SetNextGameState(Main_Menu_Init, Main_Menu_Update, Main_Menu_Exit);
+    //}
 
 }
 

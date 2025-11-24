@@ -20,7 +20,7 @@
 #include "mouse.h"
 
 CP_Image Overlay;
-CP_Image Background, TileMap;
+CP_Image Background;
 CP_Image ClickerInfo,PassiveInfo,BlankInfo,PoisonInfo,NormalInfo,WinInfo;
 
 ButtonInfo ClickerButton, PauseButton;
@@ -39,7 +39,6 @@ void Main_Scene_Init(void)
     unit = CP_System_GetWindowWidth() / 192.0f;
     myFont = CP_Font_Load("Assets/Fonts/QuinnDoodle.ttf");
     Background = CP_Image_Load("Assets/Misc/BackgroundArt.png");
-    TileMap = CP_Image_Load("Assets/Misc/TileMap.jpg");
 
     ClickerInfo = CP_Image_Load("Assets/Misc/InfoBoxes/ClickPowerInfo.png");
     PassiveInfo = CP_Image_Load("Assets/Misc/InfoBoxes/PassivePowerInfo.png");
@@ -152,6 +151,11 @@ void Main_Scene_Update(void)
         int   moneyEarn = (int)currentMoney;
 
         GameOver_SetData(finalTime, moneyEarn);
+        Free_Pickup();
+        Arr_Free(&enemyArr);
+        /*B_Arr_Free(&(playerArr.ActiveEntityArr->unit.bullets));*/
+        Arr_Free(&playerArr);
+
         CP_Engine_SetNextGameState(GameOver_Init, GameOver_Update, GameOver_Exit);
         return;
     }
@@ -167,10 +171,11 @@ void Main_Scene_Update(void)
     CP_Settings_ImageMode(CP_POSITION_CORNER);
     CP_Image_Draw(Background, 0, 0, 192 * unit, 108 * unit, 255);
 
-    CP_Settings_ImageMode(CP_POSITION_CENTER);
-    CP_Image_Draw(TileMap, 120 * unit, 60 * unit, 108 * unit, 72 * unit, 255);
+    /*CP_Settings_ImageMode(CP_POSITION_CENTER);
+    CP_Image_Draw(TileMap, 120 * unit, 60 * unit, 108 * unit, 72 * unit, 255);*/
 
     Map_Update();
+    CP_Settings_ImageMode(CP_POSITION_CENTER);
     draw(120, 60, 108, 72, 255);
     /* REFRESH MOUSE HOLDER */
  

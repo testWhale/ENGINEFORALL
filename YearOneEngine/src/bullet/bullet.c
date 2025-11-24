@@ -29,8 +29,9 @@ Bullet Bullet_Template(const char* name) {
             .opacity = 0,
             .type = "poison",
             .bulletDmg = 2.0f,
-            .poisonDmg = 5.0f,
-            .poisonDecayTimer = 5.0f
+            .poisonDmg = 10.0f,
+            .poisonDecayTimer = 5.0f,
+            .yarn = CP_Image_Load("Assets/Cats/Yarn/Yarn.png")
         };
        
     }
@@ -44,7 +45,8 @@ Bullet Bullet_Template(const char* name) {
             .opacity = 0,
             .type = "stun",
             .bulletDmg = 1.0f,
-            .stunTimer = 1.0f
+            .stunTimer = 1.0f,
+            .yarn = CP_Image_Load("Assets/Cats/Yarn/Stun.png")
         };
     }
     else { // default "normal"
@@ -56,7 +58,8 @@ Bullet Bullet_Template(const char* name) {
             .diameter = 30,
             .opacity = 0,
             .type = "normal",
-            .bulletDmg = 10.0f
+            .bulletDmg = 10.0f,
+            .yarn = CP_Image_Load("Assets/Cats/Yarn/Yarn.png")
         };
     }
 

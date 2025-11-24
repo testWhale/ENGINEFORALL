@@ -51,13 +51,13 @@ void Main_Menu_Init(void)
         "Assets/Buttons/MainMenu/QuitHighlight.png",
         "Assets/Buttons/MainMenu/QuitClicked.png", 1);
 
-    /*Button_Load(&SettingsButton, &defaultSound,
+    Button_Load(&SettingsButton, &defaultSound,
         156 * unit, 10 * unit,
         55 * unit, 19.5 * unit,
         0 * unit,
         "Assets/Buttons/MainMenu/QuitNormal.png",
         "Assets/Buttons/MainMenu/QuitHighlight.png",
-        "Assets/Buttons/MainMenu/QuitClicked.png", 1);*/
+        "Assets/Buttons/MainMenu/QuitClicked.png", 1);
 }
 
 void Main_Menu_Update(void)
@@ -71,7 +71,7 @@ void Main_Menu_Update(void)
     Button_Behavior(&PlayButton);
     Button_Behavior(&CreditsButton);
     Button_Behavior(&QuitButton);
-    /*Button_Behavior(&SettingsButton);*/
+    Button_Behavior(&SettingsButton);
 
 
     if (PlayButton.isClicked)
@@ -90,11 +90,11 @@ void Main_Menu_Update(void)
         CP_Engine_Terminate();
     }
 
-   /* if (SettingsButton.isClicked)
+   if (SettingsButton.isClicked)
     {
         CP_Engine_SetNextGameState(Sd_Settings_Init, Sd_Settings_Update, Sd_Settings_Exit);
 
-    }*/
+    }
    
     
 

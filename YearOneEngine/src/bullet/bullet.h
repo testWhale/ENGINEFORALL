@@ -19,6 +19,7 @@ typedef struct Bullet {
 	float stunTimer;
 
 	CP_BOOL isActive; char* type;
+	CP_Image yarn;
 }Bullet;
 
 typedef struct BulletArr {
