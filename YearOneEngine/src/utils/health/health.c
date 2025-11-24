@@ -7,6 +7,9 @@
 
 static CP_Sound s_hitSfx = 0;
 static CP_Sound s_loseSfx = 0;
+static CP_Image Heart = 0; 
+static CP_Image Heart_Gone = 0;
+extern float unit;
 
 void HealthSystem_Init(HealthSystem* hs, int maxHearts, int maxhealth)
 {
@@ -27,6 +30,12 @@ void HealthSystem_Init(HealthSystem* hs, int maxHearts, int maxhealth)
         hs->alpha[i] = 0.0f;
         hs->flashTimer[i] = 0.0f;
     }
+
+    if (!Heart)
+        Heart = CP_Image_Load("Assets/buttons/Health/MilkBowl.png");
+
+    if (!Heart_Gone)
+        Heart_Gone = CP_Image_Load("Assets/buttons/Health/MilkBowlEmpty.png");
 }
 
 void HealthSystem_Update(HealthSystem* hs, float deltaTime)
@@ -104,33 +113,33 @@ int HealthSystem_GetHearts(const HealthSystem* hs)
 void HealthSystem_DrawHearts(const HealthSystem* hs)
 {
     if (!hs) return;
+    if (!Heart || !Heart_Gone) return;
 
-    const float startX = 650.0f;
-    const float y = 30.0f;
-    const float gap = 60.0f;
-    const float r = 20.0f;
+    CP_Settings_ImageMode(CP_POSITION_CENTER);
+
+    const float startX = 150.0f * unit;
+    const float y = 10.0f * unit;
+    const float gap = 25.0f * unit;
+    const float size = 10.0f * unit;
 
     for (int i = 0; i < hs->maxHearts; ++i) {
         float x = startX + i * gap;
 
-        CP_Settings_Fill(CP_Color_Create(60, 60, 60, 255));
-        CP_Graphics_DrawCircle(x, y, r);
+        CP_Image_Draw(Heart_Gone, x, y, size, size, 255);
 
         if (i < hs->currentHearts) {
-            CP_Settings_Fill(CP_Color_Create(220, 40, 40, 255));
-            CP_Graphics_DrawCircle(x, y, r - 3.0f);
+            CP_Image_Draw(Heart, x, y, size, size, 255);
         }
 
         if (hs->alpha[i] > 0.0f) {
-            float a = hs->alpha[i] * 255.0f;
-            if (a < 0.0f)   a = 0.0f;
-            if (a > 255.0f) a = 255.0f;
+            int a = (int)(hs->alpha[i] * 255.0f);
+            if (a < 0)   a = 0;
+            if (a > 255) a = 255;
             CP_Settings_Fill(CP_Color_Create(255, 255, 255, (int)a));
-            CP_Graphics_DrawCircle(x, y, r);
+            CP_Graphics_DrawCircle(x, y, size * 0.6f);
         }
     }
 }
-
 void HealthSystem_DrawBar(const HealthSystem* hs,
     float x, float y,
     float width, float height)
