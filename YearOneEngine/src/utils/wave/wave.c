@@ -12,6 +12,7 @@ waveState = 0;
 Input: Either player or enemy pointer
 Output: pointer to the GameEntity */
 GameEntity* Start_Wave(GameEntity* entity, float dt) {
+	
 	// provides rdnm number till TILE_ROWS numbers range from 0-6
 	int rndm = rand() % TILE_ROWS;
 	int tes=rndm;
@@ -25,10 +26,20 @@ GameEntity* Start_Wave(GameEntity* entity, float dt) {
 	entity->accel = (CP_Vector){ (rand() % 2), 0 };
 	if (entity->accel.x >= 1) {
 		entity->accel.x *= 0.01;
+		entity->sprite = CP_Image_Load("Assets/Enemies/Tank_Mouse.png");
 	}
 	if (entity->accel.x == 0) {
 		entity->accel.x = 0.1;
+		entity->sprite = CP_Image_Load("Assets/Enemies/Electric_Mouse.png");
 	}
+	entity->sWidth = CP_Image_GetWidth(entity->sprite);
+	entity->sHeight = CP_Image_GetHeight(entity->sprite);
+	entity->aspectRatio = entity->sWidth / entity->sHeight;
+
+	float scaleX = CP_System_GetWindowWidth() / entity->sWidth;
+	float scaleY = CP_System_GetWindowHeight() / entity->sHeight;
+
+	entity->scale = (scaleX < scaleY) ? scaleX : scaleY;
 
 	entity->accel = CP_Vector_Negate(entity->accel);
 	entity->velocity = CP_Vector_Add(entity->velocity, entity->accel);

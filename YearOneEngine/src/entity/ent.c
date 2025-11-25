@@ -321,7 +321,7 @@ void LateUpdate_Pickups()
 }
 
 
-
+float rotation = 0.f;
 void Draw_Bullets() {
 	for (size_t i = 0; i < playerArr.used; ++i) {
 		ActiveEntity* ent = &playerArr.ActiveEntityArr[i];
@@ -334,7 +334,7 @@ void Draw_Bullets() {
 		for (int j = 0; j < p->bullets.used; j++)
 		{
 			Bullet* pew = &p->bullets.bulletArr[j];
-
+			
 			if (pew->opacity == 255)
 			{
 				if (pew->type == "poison") { 
@@ -342,6 +342,12 @@ void Draw_Bullets() {
 				
 				CP_Settings_Fill(CP_Color_Create(pew->color.red, pew->color.green, pew->color.blue, pew->opacity));
 				CP_Graphics_DrawCircle(pew->centerPos.x, pew->centerPos.y, pew->diameter);
+				if (rotation >= 360) {
+					rotation = 0;
+				}
+
+				CP_Image_DrawAdvanced(pew->yarn, pew->centerPos.x, pew->centerPos.y, pew->diameter, pew->diameter, 255, rotation);
+				rotation += 10;
 			}
 		}
 	}
@@ -433,8 +439,8 @@ void Draw_Entities(void)
 		if (p->label == "fire") { p->color.red = 255; p->color.green = 0;   p->color.blue = 0;   p->color.opacity = 100; }
 		if (p->isSel) { p->color.red = 0;   p->color.green = 0;   p->color.blue = 255; p->color.opacity = 100; }
 
-		CP_Settings_Fill(CP_Color_Create(p->color.red, p->color.green, p->color.blue, p->color.opacity));
-		CP_Graphics_DrawCircle(p->centerPos.x, p->centerPos.y, p->diameter);
+		//CP_Settings_Fill(CP_Color_Create(p->color.red, p->color.green, p->color.blue, p->color.opacity));
+		//CP_Graphics_DrawCircle(p->centerPos.x, p->centerPos.y, p->diameter);
 		CP_Image_Draw(p->sprite, p->centerPos.x, p->centerPos.y, p->diameter, p->diameter, 255);
 		
 		if (p->pickUpIndex > 0) 
@@ -460,9 +466,10 @@ void Draw_Entities(void)
 
 		GameEntity* e = &ent->unit;
 
-		CP_Settings_Fill(CP_Color_Create(e->color.red, e->color.green, e->color.blue, e->color.opacity));
-		CP_Graphics_DrawCircle(e->centerPos.x, e->centerPos.y, e->diameter);
-
+		//CP_Settings_Fill(CP_Color_Create(e->color.red, e->color.green, e->color.blue, e->color.opacity));
+		//CP_Graphics_DrawCircle(e->centerPos.x, e->centerPos.y, e->diameter);
+		CP_Settings_ImageMode(CP_POSITION_CENTER);
+		CP_Image_Draw(e->sprite, e->centerPos.x, e->centerPos.y - (2.5 * unit), e->sWidth* e->scale * 0.1, e->sHeight* e->scale * 0.1, 255);
 	}
 
 	Draw_Bullets();

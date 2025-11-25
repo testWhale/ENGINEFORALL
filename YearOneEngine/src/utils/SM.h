@@ -29,7 +29,7 @@ struct GameEntity {
 	float poisonTimerDecay;
 	float poisonDamage;
 	int isStunned, pickUpIndex, pickUpRemoval;
-	float stunTimer;
+	float stunTimer, sWidth, sHeight, aspectRatio, scale;
 
 	/*Check Values*/
 	int isItOnMap; int isSel; char* label; entSound sound;

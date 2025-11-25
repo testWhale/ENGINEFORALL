@@ -157,8 +157,8 @@ void Shoot_Update(GameEntity* turret, StateMachine* SM, float dt) {
 								enemy->isPoisoned = 1;
 								enemy->poisonDamage = bullet->poisonDmg;
 								enemy->poisonTimerDecay = bullet->poisonDecayTimer;
-								enemyArr.ActiveEntityArr[j].health -= enemy->poisonDamage * dt;
 								Health_PlayHitSfx();
+								enemyArr.ActiveEntityArr[j].health -= enemy->poisonDamage * dt;
 							}
 						}
 
@@ -186,7 +186,7 @@ void Shoot_Update(GameEntity* turret, StateMachine* SM, float dt) {
 
 
 					if (enemy->isPoisoned) {
-						enemyArr.ActiveEntityArr[j].health -= enemy->poisonDamage * (dt);
+						enemyArr.ActiveEntityArr[j].health -= enemy->poisonDamage * dt;
 						enemy->poisonTimerDecay -= dt;
 
 						if (enemy->poisonTimerDecay <= 0) {

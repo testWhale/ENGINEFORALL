@@ -1,7 +1,6 @@
 #include <math.h>
 #include <stdio.h>
 #include "tile/tile.h"
-#include "test.h"
 #include "utils.h"
 CP_MOUSE mouse;
 int IsAreaClicked(float area_center_x, float area_center_y, float area_width, float area_height, float click_x, float click_y)
@@ -80,14 +79,3 @@ int EnemyCrossedLine(GameEntity* enemy) {
 	return enemy->centerPos.x <= rightmost_line;
 }
 
-//int IntitializeEntity(GameEntity* entity, int id, float pos_x, float pos_y, float rotation, CP_BOOL isPlayer) {
-//	if (entity == NULL) {
-//		return 0;
-//	}
-//	entity->id = id;
-//	entity->centerPos.x = pos_x;
-//	entity->centerPos.y = pos_y;
-//	entity->rotation = rotation;
-//	entity->isPlayer = isPlayer;
-//	return 1;
-//}

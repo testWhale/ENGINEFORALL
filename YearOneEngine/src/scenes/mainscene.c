@@ -20,9 +20,10 @@
 #include "mouse.h"
 
 CP_Image Overlay;
-CP_Image Background, TileMap;
+CP_Image Background;
 CP_Image ClickerInfo,PassiveInfo,BlankInfo,PoisonInfo,NormalInfo,WinInfo;
 
+CP_BOOL DeveloperMode = 0;
 ButtonInfo ClickerButton, PauseButton;
 ButtonInfo ClickerUpgrade1, ClickerUpgrade2, ClickerUpgrade3;
 ButtonInfo TroopButton1, TroopButton2, TroopButton3;
@@ -39,7 +40,6 @@ void Main_Scene_Init(void)
     unit = CP_System_GetWindowWidth() / 192.0f;
     myFont = CP_Font_Load("Assets/Fonts/QuinnDoodle.ttf");
     Background = CP_Image_Load("Assets/Misc/BackgroundArt.png");
-    TileMap = CP_Image_Load("Assets/Misc/TileMap.jpg");
 
     ClickerInfo = CP_Image_Load("Assets/Misc/InfoBoxes/ClickPowerInfo.png");
     PassiveInfo = CP_Image_Load("Assets/Misc/InfoBoxes/PassivePowerInfo.png");
@@ -152,6 +152,11 @@ void Main_Scene_Update(void)
         int   moneyEarn = (int)currentMoney;
 
         GameOver_SetData(finalTime, moneyEarn);
+        Free_Pickup();
+        Arr_Free(&enemyArr);
+        /*B_Arr_Free(&(playerArr.ActiveEntityArr->unit.bullets));*/
+        Arr_Free(&playerArr);
+
         CP_Engine_SetNextGameState(GameOver_Init, GameOver_Update, GameOver_Exit);
         return;
     }
@@ -167,17 +172,18 @@ void Main_Scene_Update(void)
     CP_Settings_ImageMode(CP_POSITION_CORNER);
     CP_Image_Draw(Background, 0, 0, 192 * unit, 108 * unit, 255);
 
-    CP_Settings_ImageMode(CP_POSITION_CENTER);
-    CP_Image_Draw(TileMap, 120 * unit, 60 * unit, 108 * unit, 72 * unit, 255);
+    /*CP_Settings_ImageMode(CP_POSITION_CENTER);
+    CP_Image_Draw(TileMap, 120 * unit, 60 * unit, 108 * unit, 72 * unit, 255);*/
 
     Map_Update();
-    //draw(120, 60, 108, 72, 255);
+    CP_Settings_ImageMode(CP_POSITION_CENTER);
+    draw(120, 60, 108, 72, 255);
     /* REFRESH MOUSE HOLDER */
+ 
+    
 
-    if (CP_Input_KeyDown(KEY_T))
-    {
-        Kill_NewWave();
-    }
+
+
     if (!Pause_IsPaused())
     {
         Button_Behavior(&ClickerButton);
@@ -222,9 +228,14 @@ void Main_Scene_Update(void)
     CP_Font_DrawText(clicker1Cost, 10 * unit, 75 * unit);
     CP_Font_DrawText(clicker2Cost, 25 * unit, 75 * unit);
     CP_Font_DrawText("1000$", 40 * unit, 75 * unit);
-    CP_Font_DrawText("50", 10 * unit, 95 * unit);
-    CP_Font_DrawText("50", 25 * unit, 95 * unit);
-    CP_Font_DrawText("50", 40 * unit, 95 * unit);
+    CP_Font_DrawText("50$", 10 * unit, 95 * unit);
+    CP_Font_DrawText("50$", 25 * unit, 95 * unit);
+    CP_Font_DrawText("50$", 40 * unit, 95 * unit);
+
+    if (DeveloperMode==0)
+    CP_Font_DrawText("Press D for Dev Mode", 115 * unit, 99.5 * unit);
+    if (DeveloperMode == 1)
+        CP_Font_DrawText("Q to Quit, W to earn 1000$, E to Instant Kill Wave", 115 * unit, 99.5 * unit);
 
     if (!Pause_IsPaused())
     {
@@ -354,8 +365,16 @@ void Main_Scene_Update(void)
     }
     Passive_System(&currentMoney);
 
-    if (CP_Input_KeyDown(KEY_Q)) CP_Engine_Terminate();  
-    if (CP_Input_KeyDown(KEY_W)) currentMoney += 1000;
+    if (CP_Input_KeyReleased(KEY_D)) DeveloperMode = !DeveloperMode;
+    if (DeveloperMode)
+    {
+        if (CP_Input_KeyDown(KEY_Q)) CP_Engine_Terminate();
+        if (CP_Input_KeyDown(KEY_W)) currentMoney += 1000;
+        if (CP_Input_KeyDown(KEY_E))
+        {
+            Kill_NewWave();
+        }
+    }
 }   
 
     CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
