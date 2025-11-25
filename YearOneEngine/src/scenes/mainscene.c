@@ -23,6 +23,7 @@ CP_Image Overlay;
 CP_Image Background;
 CP_Image ClickerInfo,PassiveInfo,BlankInfo,PoisonInfo,NormalInfo,WinInfo;
 
+CP_BOOL DeveloperMode = 0;
 ButtonInfo ClickerButton, PauseButton;
 ButtonInfo ClickerUpgrade1, ClickerUpgrade2, ClickerUpgrade3;
 ButtonInfo TroopButton1, TroopButton2, TroopButton3;
@@ -182,10 +183,7 @@ void Main_Scene_Update(void)
     
 
 
-    if (CP_Input_KeyDown(KEY_T))
-    {
-        Kill_NewWave();
-    }
+
     if (!Pause_IsPaused())
     {
         Button_Behavior(&ClickerButton);
@@ -230,9 +228,14 @@ void Main_Scene_Update(void)
     CP_Font_DrawText(clicker1Cost, 10 * unit, 75 * unit);
     CP_Font_DrawText(clicker2Cost, 25 * unit, 75 * unit);
     CP_Font_DrawText("1000$", 40 * unit, 75 * unit);
-    CP_Font_DrawText("50", 10 * unit, 95 * unit);
-    CP_Font_DrawText("50", 25 * unit, 95 * unit);
-    CP_Font_DrawText("50", 40 * unit, 95 * unit);
+    CP_Font_DrawText("50$", 10 * unit, 95 * unit);
+    CP_Font_DrawText("50$", 25 * unit, 95 * unit);
+    CP_Font_DrawText("50$", 40 * unit, 95 * unit);
+
+    if (DeveloperMode==0)
+    CP_Font_DrawText("Press D for Dev Mode", 115 * unit, 99.5 * unit);
+    if (DeveloperMode == 1)
+        CP_Font_DrawText("Q to Quit, W to earn 1000$, E to Instant Kill Wave", 115 * unit, 99.5 * unit);
 
     if (!Pause_IsPaused())
     {
@@ -362,8 +365,16 @@ void Main_Scene_Update(void)
     }
     Passive_System(&currentMoney);
 
-    if (CP_Input_KeyDown(KEY_Q)) CP_Engine_Terminate();  
-    if (CP_Input_KeyDown(KEY_W)) currentMoney += 1000;
+    if (CP_Input_KeyReleased(KEY_D)) DeveloperMode = !DeveloperMode;
+    if (DeveloperMode)
+    {
+        if (CP_Input_KeyDown(KEY_Q)) CP_Engine_Terminate();
+        if (CP_Input_KeyDown(KEY_W)) currentMoney += 1000;
+        if (CP_Input_KeyDown(KEY_E))
+        {
+            Kill_NewWave();
+        }
+    }
 }   
 
     HealthSystem_DrawHearts(&gHealth);
