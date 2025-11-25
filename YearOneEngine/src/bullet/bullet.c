@@ -29,7 +29,7 @@ Bullet Bullet_Template(const char* name) {
             .opacity = 0,
             .type = "poison",
             .bulletDmg = 2.0f,
-            .poisonDmg = 10.0f,
+            .poisonDmg = 15.0f,
             .poisonDecayTimer = 5.0f,
             .yarn = CP_Image_Load("Assets/Cats/Yarn/Yarn.png")
         };

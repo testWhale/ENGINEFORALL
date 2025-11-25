@@ -145,8 +145,8 @@ void Init_NewWave(int currWave) {
 		ae.unit = enemy;
 		ae.fsm = (StateMachine){ .currState = EnemyIdleState };
 		/* Difficulty Curving */
-		ae.maxHealth = 100 + pow(currWave, 3/2);
-		ae.health = 100 + pow(currWave, 3/2);
+		ae.maxHealth = 100 + pow(currWave, 3);
+		ae.health = 100 + pow(currWave, 3);
 		printf("health %f\n", enemyArr.ActiveEntityArr[i].health);
 		ae.alive = 1;
 		ae.hasScored = 0;
@@ -158,7 +158,7 @@ void Init_NewWave(int currWave) {
 
 		/* TANK CODE */
 		/* this sets ur enemy health, if enemy is slower than -0.4 than it will be tankier */
-		if (enemyArr.ActiveEntityArr[i].unit.accel.x > -0.4) {
+		if (enemyArr.ActiveEntityArr[i].unit.accel.x > -0.1) {
 			enemyArr.ActiveEntityArr[i].maxHealth += 1005 * -enemyArr.ActiveEntityArr[i].unit.accel.x;
 			enemyArr.ActiveEntityArr[i].health += 1005 * -enemyArr.ActiveEntityArr[i].unit.accel.x;
 			printf("Tank HP %f\n", enemyArr.ActiveEntityArr[i].health);

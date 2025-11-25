@@ -28,12 +28,18 @@ ButtonInfo ClickerUpgrade1, ClickerUpgrade2, ClickerUpgrade3;
 ButtonInfo TroopButton1, TroopButton2, TroopButton3;
 ButtonSound defaultSound;
 CP_Font myFont;
+CP_Sound bgmMusic = NULL;
+CP_BOOL isMusicPlaying = 0;
 float unit;
 
 static HealthSystem gHealth;
 
 void Main_Scene_Init(void)
 {
+    bgmMusic = CP_Sound_LoadMusic("Assets/soundTesters/BGM.wav");
+    
+    //CP_Sound_PlayMusic(bgmMusic);
+
     srand((unsigned)time(NULL));
 
     unit = CP_System_GetWindowWidth() / 192.0f;
@@ -51,6 +57,8 @@ void Main_Scene_Init(void)
         "Assets/soundTesters/ClickSound.wav",
         "Assets/soundTesters/HoverSound.wav",
         "Assets/soundTesters/ReleaseSound.wav");
+
+
 
     Button_Load(&ClickerButton, &defaultSound,
         25 * unit, 40 * unit,
@@ -134,6 +142,15 @@ void Main_Scene_Init(void)
 
 void Main_Scene_Update(void)
 {
+    if (isMusicPlaying == 0){
+        
+        CP_Sound_PlayAdvanced(bgmMusic, 1.0f, 1.0f, TRUE, CP_SOUND_GROUP_0);
+        isMusicPlaying = 1;
+         
+}
+    if (bgmMusic == NULL) {
+        printf("OVERWRITTEN\n");
+    }
     CP_Graphics_ClearBackground(CP_Color_Create(255, 128, 128, 255));
     float dt = Pause_Dt(CP_System_GetDt());
 
@@ -222,11 +239,11 @@ void Main_Scene_Update(void)
     CP_Font_DrawText(statisticString2, 24 * unit, 70 * unit);
 
     CP_Settings_TextSize(4 * unit);
-    sprintf_s(clicker1Cost, 100, "%.0f$ ", Scaling_Cost(clickerUpgrade1Count, 50));
-    sprintf_s(clicker2Cost, 100, "%.0f$ ", Scaling_Cost(clickerUpgrade2Count, 10));
-    sprintf_s(troop1Cost, 100, "%.0f$ ", Scaling_Cost(troop1Count, 50));
-    sprintf_s(troop2Cost, 100, "%.0f$ ", Scaling_Cost(troop2Count, 50));
-    sprintf_s(troop3Cost, 100, "%.0f$ ", Scaling_Cost(troop3Count, 50));
+    sprintf_s(clicker1Cost, 100, "%.0f$ ", Scaling_Cost(clickerUpgrade1Count, 50 ,1.08));
+    sprintf_s(clicker2Cost, 100, "%.0f$ ", Scaling_Cost(clickerUpgrade2Count, 10, 3.0));
+    sprintf_s(troop1Cost, 100, "%.0f$ ", Scaling_Cost(troop1Count, 50, 1.08));
+    sprintf_s(troop2Cost, 100, "%.0f$ ", Scaling_Cost(troop2Count, 50, 1.08));
+    sprintf_s(troop3Cost, 100, "%.0f$ ", Scaling_Cost(troop3Count, 50, 1.08));
     CP_Font_DrawText(clicker1Cost, 10 * unit, 75 * unit);
     CP_Font_DrawText(clicker2Cost, 25 * unit, 75 * unit);
     CP_Font_DrawText("1000$", 40 * unit, 75 * unit);
@@ -280,7 +297,7 @@ void Main_Scene_Update(void)
 
         //normal click upgrade
         if (ClickerUpgrade1.isClicked == 1) {
-            if (Purchase_System(&currentMoney, Scaling_Cost(clickerUpgrade1Count, 50))) {
+            if (Purchase_System(&currentMoney, Scaling_Cost(clickerUpgrade1Count, 50, 1.08))) {
                 clickerUpgrade1Count += 1;
                 Click_Upgrade();
             }
@@ -288,7 +305,7 @@ void Main_Scene_Update(void)
 
         //passive income upgrade
         if (ClickerUpgrade2.isClicked == 1) {
-            if (Purchase_System(&currentMoney, Scaling_Cost(clickerUpgrade2Count, 10))) {
+            if (Purchase_System(&currentMoney, Scaling_Cost(clickerUpgrade2Count, 10, 2.5))) {
                 clickerUpgrade2Count += 1;
                 Passive_Upgrade();
             }
@@ -296,14 +313,14 @@ void Main_Scene_Update(void)
 
         //nuke
         if (ClickerUpgrade3.isClicked == 1) {
-            if (Purchase_System(&currentMoney, 100000)) {
+            if (Purchase_System(&currentMoney, 50000)) {
                 CP_Engine_SetNextGameState(Nuke_Init, Nuke_Update, Nuke_Exit);
             }
         }
 
         //poison turret
         if (TroopButton1.isClicked == 1) {
-            if (Mouse_CanPickup() && Purchase_System(&currentMoney,  50)) {
+            if (Mouse_CanPickup() && Purchase_System(&currentMoney,  150)) {
                 GameEntity player = Make_Template("poison");
                 // compute layout
                 player.centerPos.x = CP_Input_GetMouseX();
@@ -342,7 +359,7 @@ void Main_Scene_Update(void)
 
         //stun turret
         if (TroopButton3.isClicked == 1) {
-            if (Mouse_CanPickup() && Purchase_System(&currentMoney,50) ) {
+            if (Mouse_CanPickup() && Purchase_System(&currentMoney,100) ) {
                 printf("WORDS\n");
                 GameEntity player = Make_Template("stun");
                 // compute layout
@@ -403,6 +420,7 @@ void Main_Scene_Exit(void)
     Button_Free(&TroopButton2);
     Button_Free(&TroopButton3);
     Button_Sound_Free(&defaultSound);
+    //CP_Sound_Free(bgmMusic);
     Del_TempText();
     Free_Pickup();
     

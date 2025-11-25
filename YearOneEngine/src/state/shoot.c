@@ -160,6 +160,11 @@ void Shoot_Update(GameEntity* turret, StateMachine* SM, float dt) {
 								Health_PlayHitSfx();
 								enemyArr.ActiveEntityArr[j].health -= enemy->poisonDamage * dt;
 							}
+							if (!enemy->isStunned) {
+								enemyArr.ActiveEntityArr[j].health -= bullet->bulletDmg;
+								enemy->isStunned = 1;
+								enemy->stunTimer = bullet->stunTimer;
+							}
 						}
 
 						if (strcmp(bullet->type, "normal") == 0) {
@@ -172,6 +177,13 @@ void Shoot_Update(GameEntity* turret, StateMachine* SM, float dt) {
 								enemyArr.ActiveEntityArr[j].health -= bullet->bulletDmg;
 								enemy->isStunned = 1;
 								enemy->stunTimer = bullet->stunTimer;
+							}
+							if (!enemy->isPoisoned) {
+								enemy->isPoisoned = 1;
+								enemy->poisonDamage = bullet->poisonDmg;
+								enemy->poisonTimerDecay = bullet->poisonDecayTimer;
+								Health_PlayHitSfx();
+								enemyArr.ActiveEntityArr[j].health -= enemy->poisonDamage * dt;
 							}
 						}
 
