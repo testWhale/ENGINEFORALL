@@ -407,10 +407,10 @@ void Main_Scene_Update(void)
     /* UI ELEMENTS */
     Draw_WaveCounter();
 
-    /* POPUPS DOWN Here */
-    Draw_TempText(dt);
     CP_Settings_ImageMode(CP_POSITION_CENTER);   
     HealthSystem_DrawHearts(&gHealth);
+    /* POPUPS DOWN Here */
+    Draw_TempText(dt);
 
     Pause_UpdateAndDraw();
     if (Pause_TakeMenuRequest()) {
