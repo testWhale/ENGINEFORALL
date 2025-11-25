@@ -12,4 +12,4 @@ extern int purchaseCount;
 
 int Purchase_System(float* currentMoney, float itemCost);
 void Poor_Feedback(float fontsize, float PosX, float PosY);
-float Scaling_Cost(int purchaseCount, float basePrice);
+float Scaling_Cost(int purchaseCount, float basePrice, float scale);
