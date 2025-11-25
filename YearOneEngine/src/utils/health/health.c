@@ -7,8 +7,8 @@
 
 static CP_Sound s_hitSfx = 0;
 static CP_Sound s_loseSfx = 0;
-static CP_Image Heart = 0; 
-static CP_Image Heart_Gone = 0;
+static CP_Image s_fullHeart = 0;
+static CP_Image s_emptyHeart = 0;
 extern float unit;
 
 void HealthSystem_Init(HealthSystem* hs, int maxHearts, int maxhealth)
@@ -30,12 +30,12 @@ void HealthSystem_Init(HealthSystem* hs, int maxHearts, int maxhealth)
         hs->alpha[i] = 0.0f;
         hs->flashTimer[i] = 0.0f;
     }
+}
 
-    if (!Heart)
-        Heart = CP_Image_Load("Assets/buttons/Health/MilkBowl.png");
-
-    if (!Heart_Gone)
-        Heart_Gone = CP_Image_Load("Assets/buttons/Health/MilkBowlEmpty.png");
+void HealthImage_Load(const char* fullPath, const char* emptyPath)
+{
+    s_fullHeart = (fullPath && *fullPath) ? CP_Image_Load(fullPath) : 0;
+    s_emptyHeart = (emptyPath && *emptyPath) ? CP_Image_Load(emptyPath) : 0;
 }
 
 void HealthSystem_Update(HealthSystem* hs, float deltaTime)
@@ -56,14 +56,14 @@ void HealthSystem_Update(HealthSystem* hs, float deltaTime)
                 float u = t / HEART_FLASH_TIME;
                 if (u < 0.0f) u = 0.0f;
                 if (u > 1.0f) u = 1.0f;
-                hs->alpha[i] = u * u;
+                hs->alpha[i] = u * u; 
             }
             hs->flashTimer[i] = t;
         }
     }
+
     if (hs->currentHearts < 0)              hs->currentHearts = 0;
     if (hs->currentHearts > hs->maxHearts)  hs->currentHearts = hs->maxHearts;
-
     if (hs->health < 0.0f)                  hs->health = 0.0f;
     if (hs->health > hs->maxhealth)         hs->health = hs->maxhealth;
 }
@@ -86,11 +86,9 @@ void HealthSystem_TakeDamage(HealthSystem* hs)
     if (hs->currentHearts <= 0) return;
 
     int lostIndex = hs->currentHearts - 1;
-
     hs->currentHearts -= 1;
 
-    if (s_loseSfx)
-        CP_Sound_Play(s_loseSfx);
+    if (s_loseSfx) CP_Sound_Play(s_loseSfx);
 
     if (lostIndex >= 0 && lostIndex < hs->maxHearts) {
         hs->flashTimer[lostIndex] = HEART_FLASH_TIME;
@@ -100,8 +98,7 @@ void HealthSystem_TakeDamage(HealthSystem* hs)
 
 void Health_PlayHitSfx(void)
 {
-    if (s_hitSfx)
-        CP_Sound_Play(s_hitSfx);
+    if (s_hitSfx) CP_Sound_Play(s_hitSfx);
 }
 
 int HealthSystem_GetHearts(const HealthSystem* hs)
@@ -113,39 +110,48 @@ int HealthSystem_GetHearts(const HealthSystem* hs)
 void HealthSystem_DrawHearts(const HealthSystem* hs)
 {
     if (!hs) return;
-    if (!Heart || !Heart_Gone) return;
-
-    CP_Settings_ImageMode(CP_POSITION_CENTER);
-
-    const float startX = 150.0f * unit;
-    const float y = 10.0f * unit;
-    const float gap = 25.0f * unit;
-    const float size = 10.0f * unit;
+    
+    const float startX = 62.0f * unit;   
+    const float y = 9.0f * unit;   
+    const float gap = 9.0f * unit;   
+    const float size = 9.0f * unit;
 
     for (int i = 0; i < hs->maxHearts; ++i) {
         float x = startX + i * gap;
 
-        CP_Image_Draw(Heart_Gone, x, y, size, size, 255);
-
-        if (i < hs->currentHearts) {
-            CP_Image_Draw(Heart, x, y, size, size, 255);
+        if (!s_fullHeart || !s_emptyHeart) {
+            
+            CP_Settings_Fill(CP_Color_Create(60, 60, 60, 255));
+            CP_Graphics_DrawCircle(x, y, size * 0.5f);
+            if (i < hs->currentHearts) {
+                CP_Settings_Fill(CP_Color_Create(220, 40, 40, 255));
+                CP_Graphics_DrawCircle(x, y, size * 0.5f - 3.0f);
+            }
+            continue;
         }
 
-        if (hs->alpha[i] > 0.0f) {
-            int a = (int)(hs->alpha[i] * 255.0f);
-            if (a < 0)   a = 0;
+     
+        CP_Image_Draw(s_emptyHeart, x, y, size, size, 255);
+
+       
+        if (i < hs->currentHearts)
+            CP_Image_Draw(s_fullHeart, x, y, size, size, 255);
+
+       
+        int a = (int)(hs->alpha[i] * 255.0f);
+        if (a > 0) {
             if (a > 255) a = 255;
-            CP_Settings_Fill(CP_Color_Create(255, 255, 255, (int)a));
-            CP_Graphics_DrawCircle(x, y, size * 0.6f);
+            CP_Image_Draw((i < hs->currentHearts) ? s_fullHeart : s_emptyHeart,
+                x, y, size, size, a);
         }
     }
 }
+
 void HealthSystem_DrawBar(const HealthSystem* hs,
     float x, float y,
     float width, float height)
 {
-    if (!hs || hs->maxhealth <= 0.0f)
-        return;
+    if (!hs || hs->maxhealth <= 0.0f) return;
 
     float pct = hs->health / hs->maxhealth;
     if (pct < 0.0f) pct = 0.0f;
@@ -156,22 +162,19 @@ void HealthSystem_DrawBar(const HealthSystem* hs,
     CP_Settings_Fill(CP_Color_Create(60, 60, 60, 255));
     CP_Graphics_DrawRect(x, y, width, height);
 
+    
     float filledW = width * pct;
     CP_Settings_Fill(CP_Color_Create(57, 255, 20, 255));
     CP_Graphics_DrawRect(x, y, filledW, height);
 }
 
+
 void HealthAudio_Load(const char* hitSfxPath, const char* loseSfxPath)
 {
-    s_hitSfx = 0;
-    s_loseSfx = 0;
-
-    if (hitSfxPath && *hitSfxPath)
-        s_hitSfx = CP_Sound_Load(hitSfxPath);
-
-    if (loseSfxPath && *loseSfxPath)
-        s_loseSfx = CP_Sound_Load(loseSfxPath);
+    s_hitSfx = (hitSfxPath && *hitSfxPath) ? CP_Sound_Load(hitSfxPath) : 0;
+    s_loseSfx = (loseSfxPath && *loseSfxPath) ? CP_Sound_Load(loseSfxPath) : 0;
 }
+
 
 static int circles_overlap(float x1, float y1, float r1,
     float x2, float y2, float r2)
@@ -186,20 +189,18 @@ void Health_DamagePlayersOnEnemyCollisions(int dmgPerTick,
     float maxContactTime,
     float dt)
 {
-    if (maxContactTime <= 0.0f)
-        maxContactTime = 3.0f;
+    if (maxContactTime <= 0.0f) maxContactTime = 3.0f;
 
     const float tickInterval = 0.5f;
+
     const float tileStartX = g_TileMap[0][0].startPos.x;
     const float tileStartY = g_TileMap[0][0].startPos.y;
     const float tileW = g_TileMap[0][0].dim.x;
     const float tileH = g_TileMap[0][0].dim.y;
 
-    for (size_t ei = 0; ei < enemyArr.used; ++ei)
-    {
+    for (size_t ei = 0; ei < enemyArr.used; ++ei) {
         ActiveEntity* enemy = &enemyArr.ActiveEntityArr[ei];
-        if (!enemy->alive || enemy->unit.isPlayer)
-            continue;
+        if (!enemy->alive || enemy->unit.isPlayer) continue;
 
         int touching = 0;
 
@@ -207,11 +208,9 @@ void Health_DamagePlayersOnEnemyCollisions(int dmgPerTick,
         float ey = enemy->unit.centerPos.y;
         float er = 0.5f * enemy->unit.diameter;
 
-        for (size_t pi = 0; pi < playerArr.used; ++pi)
-        {
+        for (size_t pi = 0; pi < playerArr.used; ++pi) {
             ActiveEntity* pl = &playerArr.ActiveEntityArr[pi];
-            if (!pl->alive || !pl->unit.isPlayer)
-                continue;
+            if (!pl->alive || !pl->unit.isPlayer) continue;
 
             float px = pl->unit.centerPos.x;
             float py = pl->unit.centerPos.y;
@@ -221,12 +220,9 @@ void Health_DamagePlayersOnEnemyCollisions(int dmgPerTick,
             int pRow = (int)((py - tileStartY) / tileH);
             int eCol = (int)((ex - tileStartX) / tileW);
             int pCol = (int)((px - tileStartX) / tileW);
+            if (eRow != pRow || eCol != pCol) continue;
 
-            if (eRow != pRow || eCol != pCol)
-                continue;
-
-            if (!circles_overlap(ex, ey, er, px, py, pr))
-                continue;
+            if (!circles_overlap(ex, ey, er, px, py, pr)) continue;
 
             touching = 1;
 
@@ -234,8 +230,7 @@ void Health_DamagePlayersOnEnemyCollisions(int dmgPerTick,
             enemy->isHitting = 1;
             enemy->contactTime += dt;
 
-            if (enemy->contactTime > maxContactTime)
-            {
+            if (enemy->contactTime > maxContactTime) {
                 enemy->isHitting = 0;
                 enemy->contactTime = 0.0f;
                 break;
@@ -244,43 +239,36 @@ void Health_DamagePlayersOnEnemyCollisions(int dmgPerTick,
             int prevTick = (int)(prevTime / tickInterval);
             int currTick = (int)(enemy->contactTime / tickInterval);
 
-            if (currTick > prevTick && pl->alive)
-            {
+            if (currTick > prevTick && pl->alive) {
                 pl->health -= dmgPerTick;
                 Health_PlayHitSfx();
 
-                if (pl->health <= 0)
-                {
+                if (pl->health <= 0) {
                     pl->health = 0;
                     pl->alive = 0;
 
-                    for (int r = 0; r < TILE_ROWS; ++r)
-                    {
-                        for (int c = 0; c < TILE_COLUMNS; ++c)
-                        {
+                    for (int r = 0; r < TILE_ROWS; ++r) {
+                        for (int c = 0; c < TILE_COLUMNS; ++c) {
                             Tile* t = &g_TileMap[r][c];
-                            if (!t->hasEntity)
-                                continue;
+                            if (!t->hasEntity) continue;
                             if (t->centerPos.x == pl->unit.centerPos.x &&
-                                t->centerPos.y == pl->unit.centerPos.y)
-                            {
+                                t->centerPos.y == pl->unit.centerPos.y) {
                                 t->hasEntity = 0;
                                 t->entity = NULL;
                                 t->tsel = 0;
                                 t->currHovered = 0;
                                 t->nextTileCheck = 0;
-                                r = TILE_ROWS;
+                                r = TILE_ROWS; 
                                 break;
                             }
                         }
                     }
                 }
             }
-            break;
+            break; 
         }
 
-        if (!touching)
-        {
+        if (!touching) {
             enemy->isHitting = 0;
             enemy->contactTime = 0.0f;
         }

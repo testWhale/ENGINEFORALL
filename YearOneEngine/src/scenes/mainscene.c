@@ -120,13 +120,13 @@ void Main_Scene_Init(void)
     Load_TempText();
     Map_Init((CP_Vector) { 66 * unit, 24 * unit }, 108 * unit, 72 * unit);
     Init_PlayerDemo();
-
     HealthSystem_Init(&gHealth, 3, 3);
+    HealthImage_Load("Assets/Misc/MilkBowl.png","Assets/Misc/MilkBowlEmpty.png");
     HealthAudio_Load(
         "Assets/soundTesters/Metal Ping by timgormly Id-170957.wav",
         "Assets/soundTesters/Glass Break by unfa Id-221528.wav");
     HealthSystem_ResetTimer(&gHealth);
-
+ 
     Goal_InitFromTileMap(0.45f, 0.25f);
 
     Pause_Init();
@@ -173,9 +173,6 @@ void Main_Scene_Update(void)
     Map_Update();
     //draw(120, 60, 108, 72, 255);
     /* REFRESH MOUSE HOLDER */
- 
-    
-
 
     if (CP_Input_KeyDown(KEY_T))
     {
@@ -361,8 +358,6 @@ void Main_Scene_Update(void)
     if (CP_Input_KeyDown(KEY_W)) currentMoney += 1000;
 }   
 
-    HealthSystem_DrawHearts(&gHealth);
-
     CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
     CP_Settings_TextSize(28.0f);
     CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_TOP);
@@ -378,6 +373,8 @@ void Main_Scene_Update(void)
 
     /* POPUPS DOWN Here */
     Draw_TempText(dt);
+    CP_Settings_ImageMode(CP_POSITION_CENTER);   
+    HealthSystem_DrawHearts(&gHealth);
 
     Pause_UpdateAndDraw();
     if (Pause_TakeMenuRequest()) {

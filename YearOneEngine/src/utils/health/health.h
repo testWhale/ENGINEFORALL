@@ -25,4 +25,5 @@ void HealthSystem_DrawHearts(const HealthSystem* hs);
 void HealthSystem_DrawBar(const HealthSystem* hs, float x, float y, float width, float height);
 void Health_DamagePlayersOnEnemyCollisions(int dmgPerTick,float maxContactTime,float dt);
 void HealthAudio_Load(const char* hitSfxPath, const char* loseSfxPath);
+void HealthImage_Load(const char* fullPath, const char* emptyPath);
 #endif 
