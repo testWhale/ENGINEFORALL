@@ -14,6 +14,7 @@ typedef struct {
 Slider s;
 Slider* Slider_Create(Slider* slider, float x, float y, float width, float height, float* value, float minVal, float maxVal, char* knobSprite);
 void Slider_Draw(Slider* s);
+void Slider_Free(Slider* s);
 
 void Sd_Settings_Init();
 
