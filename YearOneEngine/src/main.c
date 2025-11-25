@@ -1,7 +1,7 @@
 //---------------------------------------------------------
 // file:	main.c
-// author:	[NAME]
-// email:	[DIGIPEN EMAIL ADDRESS]
+// author:	Zachary Ng
+// email:	zacharyhuaen.n@digipen.edu
 //
 // brief:	Main entry point for the sample project
 //			of the CProcessing library

@@ -79,14 +79,3 @@ int EnemyCrossedLine(GameEntity* enemy) {
 	return enemy->centerPos.x <= rightmost_line;
 }
 
-//int IntitializeEntity(GameEntity* entity, int id, float pos_x, float pos_y, float rotation, CP_BOOL isPlayer) {
-//	if (entity == NULL) {
-//		return 0;
-//	}
-//	entity->id = id;
-//	entity->centerPos.x = pos_x;
-//	entity->centerPos.y = pos_y;
-//	entity->rotation = rotation;
-//	entity->isPlayer = isPlayer;
-//	return 1;
-//}
