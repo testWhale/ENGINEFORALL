@@ -25,7 +25,6 @@
     <ClCompile Include="src\utils\UI\Pause.c" />
     <ClCompile Include="src\utils\wave\wave.c" />
     <ClCompile Include="src\main.c" />
-    <ClCompile Include="src\test.c" />
     <ClCompile Include="src\tile\tile.c" />
     <ClCompile Include="src\utils\sound.h" />
     <ClCompile Include="src\utils\arr\State.h" />
@@ -48,7 +47,6 @@
     <ClInclude Include="src\scenes\mainscene.h" />
     <ClInclude Include="src\state\enemy.h" />
     <ClInclude Include="src\state\shoot.h" />
-    <ClInclude Include="src\test.h" />
     <ClInclude Include="src\utils\health\health.h" />
     <ClInclude Include="src\utils\UI\Pause.h" />
     <ClInclude Include="src\utils\wave\wave.h" />
