@@ -1,7 +1,6 @@
 #include <math.h>
 #include <stdio.h>
 #include "tile/tile.h"
-#include "test.h"
 #include "utils.h"
 CP_MOUSE mouse;
 int IsAreaClicked(float area_center_x, float area_center_y, float area_width, float area_height, float click_x, float click_y)
