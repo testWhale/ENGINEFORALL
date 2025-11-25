@@ -10,7 +10,7 @@
 
 CP_Font myFont;
 CP_Image MainMenuBackground;
-ButtonInfo PlayButton, CreditsButton,QuitButton, SettingsButton;
+ButtonInfo PlayButton, CreditsButton, QuitButton, SettingsButton;
 ButtonSound defaultSound;
 
 
@@ -20,7 +20,7 @@ void Main_Menu_Init(void)
     unit = CP_System_GetWindowWidth() / 192.0f;
     myFont = CP_Font_Load("Assets/Fonts/QuinnDoodle.ttf");
     MainMenuBackground = CP_Image_Load("Assets/Misc/MenuScreen.png");
-    
+
 
     Button_Sound_Load(&defaultSound,
         "Assets/soundTesters/ClickSound.wav",
@@ -50,14 +50,6 @@ void Main_Menu_Init(void)
         "Assets/Buttons/MainMenu/QuitNormal.png",
         "Assets/Buttons/MainMenu/QuitHighlight.png",
         "Assets/Buttons/MainMenu/QuitClicked.png", 1);
-
-    Button_Load(&SettingsButton, &defaultSound,
-        156 * unit, 10 * unit,
-        55 * unit, 19.5 * unit,
-        0 * unit,
-        "Assets/Buttons/MainMenu/QuitNormal.png",
-        "Assets/Buttons/MainMenu/QuitHighlight.png",
-        "Assets/Buttons/MainMenu/QuitClicked.png", 1);
 }
 
 void Main_Menu_Update(void)
@@ -66,13 +58,11 @@ void Main_Menu_Update(void)
     CP_Graphics_ClearBackground(CP_Color_Create(255, 128, 128, 255));
     CP_Settings_ImageMode(CP_POSITION_CORNER);
     CP_Image_Draw(MainMenuBackground, 0, 0, 192 * unit, 108 * unit, 255);
-    
+
 
     Button_Behavior(&PlayButton);
     Button_Behavior(&CreditsButton);
     Button_Behavior(&QuitButton);
-    Button_Behavior(&SettingsButton);
-
 
     if (PlayButton.isClicked)
     {
@@ -83,21 +73,12 @@ void Main_Menu_Update(void)
     {
         CP_Engine_SetNextGameState(Credits_Init, Credits_Update, Credits_Exit);
     }
-   
+
 
     if (QuitButton.isClicked)
     {
         CP_Engine_Terminate();
     }
-
-   if (SettingsButton.isClicked)
-    {
-        CP_Engine_SetNextGameState(Sd_Settings_Init, Sd_Settings_Update, Sd_Settings_Exit);
-
-    }
-   
-    
-
 }
 
 void Main_Menu_Exit(void)
@@ -106,7 +87,7 @@ void Main_Menu_Exit(void)
     Button_Free(&PlayButton);
     Button_Free(&CreditsButton);
     Button_Free(&QuitButton);
-    Button_Free(&SettingsButton);
+    //Button_Free(&SettingsButton);
 
     Button_Sound_Free(&defaultSound);
 }

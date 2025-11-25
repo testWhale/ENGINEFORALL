@@ -62,7 +62,7 @@ void Draw_WaveCounter() {
 	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
 	CP_Settings_TextSize(9 * unit);
 	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
-	char label[64];
-	sprintf_s(label, sizeof(label), "Wave Counter: %d", wave);
-	CP_Font_DrawText(label, 120 * unit, 10 * unit);
+	char label[46];
+	sprintf_s(label, sizeof(label), "Wave: %d", wave);
+	CP_Font_DrawText(label, 143 * unit, 14 * unit);
 }

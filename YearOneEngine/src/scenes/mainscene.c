@@ -378,10 +378,10 @@ void Main_Scene_Update(void)
 }   
 
     CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
-    CP_Settings_TextSize(28.0f);
+    CP_Settings_TextSize(46.0f);
     CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_TOP);
 
-    char tbuf[48];
+    char tbuf[58];
     snprintf(tbuf, sizeof(tbuf), "Time: %.1fs", HealthSystem_GetTimer(&gHealth));
     CP_Font_DrawText(tbuf, (float)CP_System_GetWindowWidth() * 0.6f, 8.0f);
     
@@ -416,10 +416,11 @@ void Main_Scene_Exit(void)
     Button_Sound_Free(&defaultSound);
     Del_TempText();
     Free_Pickup();
-    
     currentMoney = 0;
     clickPower = 1;
     passiveIncome = 0;
     clickerUpgrade1Count = 0;
     clickerUpgrade2Count = 0;
+    Arr_Free(&playerArr);
+    Arr_Free(&enemyArr);
 }

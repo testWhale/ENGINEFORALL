@@ -112,4 +112,3 @@ void Sd_Settings_Exit() {
     CP_Image_Free(MainMenuBackground);
 
 }
-

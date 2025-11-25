@@ -5,6 +5,7 @@
 #include "utils/arr.h"
 #include "tile/tile.h"
 
+
 static CP_Sound s_hitSfx = 0;
 static CP_Sound s_loseSfx = 0;
 static CP_Image s_fullHeart = 0;
@@ -111,10 +112,10 @@ void HealthSystem_DrawHearts(const HealthSystem* hs)
 {
     if (!hs) return;
     
-    const float startX = 62.0f * unit;   
-    const float y = 9.0f * unit;   
-    const float gap = 9.0f * unit;   
-    const float size = 9.0f * unit;
+    const float startX = 74.0f * unit;   
+    const float y = 12.5f * unit;   
+    const float gap = 14.0f * unit;   
+    const float size = 14.0f * unit;
 
     for (int i = 0; i < hs->maxHearts; ++i) {
         float x = startX + i * gap;
@@ -185,6 +186,9 @@ static int circles_overlap(float x1, float y1, float r1,
     return (dx * dx + dy * dy) <= (rr * rr);
 }
 
+
+
+
 void Health_DamagePlayersOnEnemyCollisions(int dmgPerTick,
     float maxContactTime,
     float dt)
@@ -242,11 +246,9 @@ void Health_DamagePlayersOnEnemyCollisions(int dmgPerTick,
             if (currTick > prevTick && pl->alive) {
                 pl->health -= dmgPerTick;
                 Health_PlayHitSfx();
-
                 if (pl->health <= 0) {
                     pl->health = 0;
                     pl->alive = 0;
-
                     for (int r = 0; r < TILE_ROWS; ++r) {
                         for (int c = 0; c < TILE_COLUMNS; ++c) {
                             Tile* t = &g_TileMap[r][c];
@@ -258,14 +260,14 @@ void Health_DamagePlayersOnEnemyCollisions(int dmgPerTick,
                                 t->tsel = 0;
                                 t->currHovered = 0;
                                 t->nextTileCheck = 0;
-                                r = TILE_ROWS; 
+                                r = TILE_ROWS;
                                 break;
                             }
                         }
                     }
                 }
             }
-            break; 
+            break;
         }
 
         if (!touching) {
