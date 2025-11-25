@@ -42,7 +42,7 @@ static char  s_tipMsg[96] = "";
 //CP_Image imgOut;
 /* Template Value */
 GameEntity Make_Template(const char* name) {
-	GameEntity e; char* spritePath = "Assets/Cats/n.png"; char* shadowPath = "Assets/Cats/n_s.png";
+	GameEntity e; char* spritePath = "Assets/Cats/n.png"; char* shadowPath = "Assets/Cats/n_s.png"; char* soundPlace = "Assets/soundeffect/units/meow_place.wav";
 	if (name == "player")
 	{
 		spritePath = "Assets/Cats/n.png";
@@ -55,7 +55,9 @@ GameEntity Make_Template(const char* name) {
 
 	if (name == "poison")
 	{
+		soundPlace = "Assets/soundeffect/units/pos_place.wav";
 		Bullet temp = Bullet_Template("poison");
+
 		spritePath = "Assets/Cats/p.png";
 		shadowPath = "Assets/Cats/n_s.png";
 		e = (GameEntity){
@@ -67,6 +69,7 @@ GameEntity Make_Template(const char* name) {
 
 	if (name == "stun")
 	{
+		soundPlace = "Assets/soundeffect/units/elec_place.wav";
 		Bullet temp = Bullet_Template("stun");
 		spritePath = "Assets/Cats/e.png";
 		shadowPath = "Assets/Cats/n_s.png";
@@ -86,6 +89,7 @@ GameEntity Make_Template(const char* name) {
 	}
 	e.sprite = CP_Image_Load(spritePath);
 	e.shadow = CP_Image_Load(shadowPath);
+	e.sound.soundPlace = CP_Sound_Load(soundPlace);
 	return e;
 }
 

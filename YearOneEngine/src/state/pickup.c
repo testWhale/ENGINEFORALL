@@ -106,7 +106,7 @@ void PickedUp_Exit(GameEntity* entity, StateMachine* sm, float dt) {
 	//printf("Player left IDLE state\n");
 	B_Arr_Refresh(&(entity->bullets.bulletArr), entity);
 	entity->isSel = 0;
-	entity->sound.soundPlace = CP_Sound_Load("./Assets/soundeffect/meow.wav");
+	CP_Sound_Play(entity->sound.soundPlace);
 	if (entity->sound.soundPlace == NULL) {
 		printf("HELP");
 	} 

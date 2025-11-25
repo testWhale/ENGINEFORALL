@@ -11,7 +11,7 @@ void Init_PlayerDemo();
 
 void Load_TempText();
 
-void Draw_TempText(float dt);
+void Draw_TempText(float dt); 
 
 void Del_TempText();
 
