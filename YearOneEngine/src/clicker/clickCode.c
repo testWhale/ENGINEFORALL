@@ -22,7 +22,7 @@ void Click_Upgrade() {
 }
 
 void Passive_Upgrade() {
-	passiveIncome += 3;
+	passiveIncome += 10;
 }
 
 void Passive_System(float* currentMoney)

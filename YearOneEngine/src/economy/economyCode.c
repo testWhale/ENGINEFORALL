@@ -33,7 +33,7 @@ void Poor_Feedback(float fontsize,float PosX, float PosY)
 	}
 }
 
-float Scaling_Cost(int purchaseCount, float basePrice)
+float Scaling_Cost(int purchaseCount, float basePrice, float scale)
 {
-	return basePrice * pow(1.08, (double)purchaseCount);
+	return basePrice * pow(scale, (double)purchaseCount);
 }
