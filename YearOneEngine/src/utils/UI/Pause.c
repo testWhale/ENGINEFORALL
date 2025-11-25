@@ -73,7 +73,7 @@ void Pause_Init(void)
     float sliderHeight = 300;
     float sliderX = (292 * unit / 2) - (sliderWidth / 2);
     float sliderY = 80 * unit;
-    Slider_Create(&slider,sliderX, sliderY, sliderWidth, sliderHeight, &volume, 0.0f, 1.0f);
+    Slider_Create(&slider, sliderX, sliderY, sliderWidth, sliderHeight, &volume, 0.0f, 1.0f, "Assets/Sound/Sound.png");
 
 }
 

@@ -13,7 +13,7 @@ ButtonInfo MuteButton;
 ButtonSound defaultSound;
 
 
-Slider* Slider_Create(Slider* slider, float x, float y, float width, float height, float* value, float minVal, float maxVal) {
+Slider* Slider_Create(Slider* slider, float x, float y, float width, float height, float* value, float minVal, float maxVal, char* knobSprite) {
     slider->x = x;
     slider->y = y;
     slider->width = width;
@@ -22,6 +22,7 @@ Slider* Slider_Create(Slider* slider, float x, float y, float width, float heigh
     slider->minValue = minVal;
     slider->maxValue = maxVal;
     slider->dragging = false;
+    slider->knob = CP_Image_Load(knobSprite);
     return slider;
 }
 
@@ -54,9 +55,6 @@ void Slider_Draw(Slider* s) {
     // Clamp knob inside bar
     if (knobX < s->x) knobX = s->x;
     if (knobX > s->x + s->width) knobX = s->x + s->width;
-    CP_Settings_RectMode(CP_POSITION_CORNER);
-    CP_Settings_Fill(CP_Color_Create(255, 0, 0, 255));
-    CP_Graphics_DrawRect(knobX - knobSize / 2, s->y + s->height / 2 - knobSize / 2, knobSize, knobSize);
 
     // Input handling: drag knob or click on track
     bool overKnob = (mx >= knobX - knobSize / 2 && mx <= knobX + knobSize / 2 &&
@@ -73,6 +71,8 @@ void Slider_Draw(Slider* s) {
         if (newT > 1) newT = 1;
         *s->value = s->minValue + newT * (s->maxValue - s->minValue);
     }
+    CP_Settings_ImageMode(CP_POSITION_CORNER);
+    CP_Image_Draw(s->knob, knobX - knobSize / 2, s->y + s->height / 2 - knobSize / 2, knobSize, knobSize, 255);
 
     if (!mousePressed) s->dragging = false;
 }

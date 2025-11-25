@@ -15,20 +15,6 @@ typedef struct {
 	CP_Sound idleMusic;
 }bgSound;
 
-//void soundInit() {
-//	entSound sound;
-//	sound.soundPlace = CP_Sound_Load("Assets/soundeffect/cartoonSounds/meow.wav");
-//	
-//}
 
-//void soundUpdate()
-//{
-//	CP_Sound_Play(soundPlace);
-//}
-//
-//void soundShutdown()
-//{
-//	CP_Sound_Free(soundPlace);
-//}
 
 #endif
