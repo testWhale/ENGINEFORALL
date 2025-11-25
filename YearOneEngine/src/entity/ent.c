@@ -1,4 +1,15 @@
-﻿#include "cprocessing.h"
+﻿//---------------------------------------------------------
+// file:	ent.c
+// author:	Zachary Ng
+// email:	zacharyhuaen.n@digipen.edu
+//
+// brief:	Contains the function definitions for 
+//			sound slider implementation
+//
+// Copyright 2020 DigiPen, All rights reserved.
+//---------------------------------------------------------
+
+#include "cprocessing.h"
 #include "ent.h"
 #include "../SM.h"
 #include "../arr.h"

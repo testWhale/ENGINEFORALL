@@ -3,7 +3,7 @@
 // author:	Zachary Ng
 // email:	zacharyhuaen.n@digipen.edu
 //
-// brief:	Contains the functions for 
+// brief:	Contains the function definitions for 
 //			sound slider implementation
 //
 // Copyright 2020 DigiPen, All rights reserved.

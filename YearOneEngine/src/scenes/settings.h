@@ -1,3 +1,14 @@
+//---------------------------------------------------------
+// file:	settings.h
+// author:	Zachary Ng
+// email:	zacharyhuaen.n@digipen.edu
+//
+// brief:	Contains the declaration functions for 
+//			sound slider implementation
+//
+// Copyright 2020 DigiPen, All rights reserved.
+//---------------------------------------------------------
+
 #ifndef SET_H
 #define SET_H
 #include <stdbool.h>
