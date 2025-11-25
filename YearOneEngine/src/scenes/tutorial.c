@@ -16,7 +16,7 @@ void Tutorial_Init(void)
 	TutorialString[0] = "Assets/Tutorial/Page1.png";
 	TutorialString[1] = "Assets/Tutorial/Page2.png";
 	TutorialString[2] = "Assets/Tutorial/Page3.png";
-	TutorialString[3] = "AssetsTutorial/Page4.png";
+	TutorialString[3] = "Assets/Tutorial/Page4.png";
 	TutorialString[4] = "Assets/Tutorial/Page5.png";
 	TutorialString[5] = "Assets/Tutorial/Page6.png";
 	TutorialString[6] = "Assets/Tutorial/Page7.png";
