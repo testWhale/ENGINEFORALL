@@ -43,7 +43,7 @@ void Main_Scene_Init(void)
 
     ClickerInfo = CP_Image_Load("Assets/Misc/InfoBoxes/ClickPowerInfo.png");
     PassiveInfo = CP_Image_Load("Assets/Misc/InfoBoxes/PassivePowerInfo.png");
-    BlankInfo = CP_Image_Load("Assets/Misc/InfoBoxes/EMPTYINFO.png");
+    BlankInfo = CP_Image_Load("Assets/Misc/InfoBoxes/ElectricCat.png");
     PoisonInfo = CP_Image_Load("Assets/Misc/InfoBoxes/RadioCat.png");
     NormalInfo = CP_Image_Load("Assets/Misc/InfoBoxes/NormalCatInfo.png");
     WinInfo = CP_Image_Load("Assets/Misc/InfoBoxes/WinInfo.png");

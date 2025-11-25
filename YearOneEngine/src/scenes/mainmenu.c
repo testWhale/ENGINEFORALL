@@ -4,6 +4,7 @@
 #include "scenes/mainscene.h"
 #include "scenes/credits.h"
 #include "buttons/buttonCode.h"
+#include "scenes/tutorial.h"
 #include "scenes/settings.h"
 
 
@@ -66,7 +67,7 @@ void Main_Menu_Update(void)
 
     if (PlayButton.isClicked)
     {
-        CP_Engine_SetNextGameState(Main_Scene_Init, Main_Scene_Update, Main_Scene_Exit);
+        CP_Engine_SetNextGameState(Tutorial_Init, Tutorial_Update, Tutorial_Exit);
     }
 
     if (CreditsButton.isClicked)
