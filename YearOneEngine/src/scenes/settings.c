@@ -1,3 +1,14 @@
+//---------------------------------------------------------
+// file:	settings.c
+// author:	Zachary Ng
+// email:	zacharyhuaen.n@digipen.edu
+//
+// brief:	Contains the functions for 
+//			sound slider implementation
+//
+// Copyright 2020 DigiPen, All rights reserved.
+//---------------------------------------------------------
+
 #include "cprocessing.h"
 #include "buttons/buttonCode.h"
 #include "scenes/settings.h"
@@ -12,7 +23,18 @@ CP_Image MainMenuBackground;
 ButtonInfo MuteButton;
 ButtonSound defaultSound;
 
-
+/* Slider_Create()
+Input:
+    slider     - pointer to an allocated Slider struct
+    x, y       - top-left position of slider
+    width, height - size of slider
+    value      - pointer to the float this slider controls
+    minVal     - minimum allowed value
+    maxVal     - maximum allowed value
+    knobSprite - path to knob image file
+Output:
+    Returns the same Slider pointer after initialization
+*/
 Slider* Slider_Create(Slider* slider, float x, float y, float width, float height, float* value, float minVal, float maxVal, char* knobSprite) {
     slider->x = x;
     slider->y = y;
@@ -26,6 +48,20 @@ Slider* Slider_Create(Slider* slider, float x, float y, float width, float heigh
     return slider;
 }
 
+/* Slider_Draw()
+Input:
+    s - pointer to a Slider
+Output:
+    None (draws the slider + updates the value)
+Description:
+    - Draws the background track
+    - Draws filled portion proportional to current value
+    - Draws knob at correct position
+    - Handles:
+        1. clicking on knob
+        2. dragging knob
+        3. clicking on track to jump to value
+*/
 void Slider_Draw(Slider* s) {
     float mx = CP_Input_GetMouseX();
     float my = CP_Input_GetMouseY();
@@ -77,6 +113,15 @@ void Slider_Draw(Slider* s) {
     if (!mousePressed) s->dragging = false;
 }
 
+
+/* Slider_Free()
+Input:
+    s - pointer to a Slider
+Output:
+    None
+Description:
+    Frees the knob sprite loaded for this slider
+*/
 void Slider_Free(Slider* s) {
     CP_Image_Free(s->knob);
 }
