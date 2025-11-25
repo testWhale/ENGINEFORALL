@@ -32,6 +32,7 @@
     <ClCompile Include="src\scenes\mainmenu.c" />
     <ClCompile Include="src\scenes\mainscene.c" />
     <ClCompile Include="src\scenes\settings.c" />
+    <ClCompile Include="src\scenes\tutorial.c" />
     <ClCompile Include="src\state\enemy.c" />
     <ClCompile Include="src\state\pickup.c" />
     <ClCompile Include="src\state\shoot.c" />
@@ -57,8 +58,8 @@
     <ClInclude Include="src\scenes\logo.h" />
     <ClInclude Include="src\scenes\mainmenu.h" />
     <ClInclude Include="src\scenes\mainscene.h" />
-    <ClInclude Include="src\scenes\mouse.h" />
     <ClInclude Include="src\scenes\settings.h" />
+    <ClInclude Include="src\scenes\tutorial.h" />
     <ClInclude Include="src\state\enemy.h" />
     <ClInclude Include="src\state\pickup.h" />
     <ClInclude Include="src\state\shoot.h" />
