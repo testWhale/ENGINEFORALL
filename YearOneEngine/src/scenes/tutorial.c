@@ -10,7 +10,6 @@ const char* TutorialString[instructions];
 int tutcounter = 0;
 
 
-
 void Tutorial_Init(void)
 {
 	unit = CP_System_GetWindowWidth() / 192.0f;
