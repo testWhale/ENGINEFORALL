@@ -1,9 +1,31 @@
+//---------------------------------------------------------
+// file:	SM.c
+// author:	Zachary Ng
+// email:	zacharyhuaen.n@digipen.edu
+//
+// brief:	Contains definition of functions 
+//			StateMachine.
+//
+// Copyright 2020 DigiPen, All rights reserved.
+//---------------------------------------------------------
+
 #include "SM.h"
-//Defined Colours
 #include <string.h>
 #include <stdio.h>
 
-// Transition state code
+/* FSM_SetState()
+Input:
+    StateMachine* fsm     - pointer to the Entity's State
+    GameEntity* data	  - positional data/ flags/ image/ sound data
+    float dt			  - deltaTime
+
+Output:
+    Returns the StateFunction.
+
+Brief:
+    FSM_SetState takes ur currState in fsm and runs the exit function, 
+    then it runs the newState Init() once.
+*/
 StateFunction FSM_SetState(StateMachine* fsm, States newState, GameEntity* data, float dt) {
 	if (fsm->currState.Exit) {
 		fsm->currState.Exit(data, fsm, dt);
@@ -11,59 +33,38 @@ StateFunction FSM_SetState(StateMachine* fsm, States newState, GameEntity* data,
 	fsm->currState = newState;
 	fsm->currState.Init(data, fsm, dt);
 }
+
+/* FSM_Update()
+Input:
+    StateMachine* fsm     - pointer to the Entity's State
+    GameEntity* data	  - positional data/ flags/ image/ sound data
+    float dt			  - deltaTime
+
+Output:
+    Returns the StateFunction.
+
+Brief:
+    FSM_Update takes ur currState in fsm 
+    and runs the Update function,
+*/
 StateFunction FSM_Update(StateMachine* fsm, GameEntity* data, float dt) {
     /*fsm->currState.Init(data, fsm, dt);*/
 	fsm->currState.Update(data, fsm,dt);
 }
+
+/* FSM_Init()
+Input:
+    StateMachine* fsm     - pointer to the Entity's State
+    GameEntity* data	  - positional data/ flags/ image/ sound data
+    float dt			  - deltaTime
+
+Output:
+    Returns the StateFunction.
+
+Brief:
+    FSM_Init takes ur currState in fsm
+    and runs the Init function,
+*/
 StateFunction FSM_Init(StateMachine* fsm, GameEntity* data, float dt) {
     fsm->currState.Init(data, fsm, dt);
 }
-GameEntity MakePlayerTemplate() {
-    GameEntity e = {
-        .centerPos = {100, 100},
-        .rotation = 0,
-        .isPlayer = 1,
-        .forwardVector = {0, 0},
-        .color = {255, 0, 0, 255},
-        .diameter = 50,
-        .stateTimer = 0,
-        .isItOnMap = 0,
-        .isSel = 0,
-        .label = "Player",
-        .bullets = {0}  // zero init the struct
-    };
-
-    B_Arr_Init(10, &e.bullets);
-    return e;
-}
-
-void PrintBulletInfo(GameEntity* entity) {
-
-    for (size_t i = 0; i < entity->bullets.used; i++) {
-        Bullet* b = &entity->bullets.bulletArr[i];
-        printf("  Bullet %d at (%.1f, %.1f)\n", b->id, b->centerPos.x, b->centerPos.y);
-    }
-}
-
-
-
-//GameEntity MakePlayerTemplate() {
-//    GameEntity e = {
-//        .centerPos = {100, 100},
-//        .rotation = 0,
-//        .isPlayer = 1,
-//        .forwardVector = {0, 0},
-//        .color = {255, 0, 0, 255},
-//        .diameter = 50,
-//        .stateTimer = 0,
-//        .isItOnMap = 0,
-//        .isSel = 0,
-//        .label = "Player",
-//        .bullets = {0}  // zero init the struct
-//    };
-//
-//    B_Arr_Init(10, &e.bullets);
-//    return e;
-//}
-//
-

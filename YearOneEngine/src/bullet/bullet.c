@@ -121,7 +121,7 @@ void B_Arr_Del(BulletArr* A, int id) {
     if (A->used == 0) return;
 
     int foundIndex = -1;
-    // loop through until id is found. if [3and 4]
+    // loop through until id is found. if [3 and 4]
     for (int i = 0; i < A->used; i++) {
         if (A->bulletArr[i].id == id) {
             foundIndex = i;

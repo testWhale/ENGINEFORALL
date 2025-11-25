@@ -34,12 +34,6 @@ static float s_tipTimer = 0.0f;
 static int   s_lastWaveSeen = -1;
 static char  s_tipMsg[96] = "";
 
-//CP_Image baseTex;
-//CP_Image normalTex;
-//CP_Color* basePixels;
-//CP_Color* normalPixels;
-//CP_Color* outPixels;
-//CP_Image imgOut;
 /* Template Value */
 GameEntity Make_Template(const char* name) {
 	GameEntity e; char* spritePath = "Assets/Cats/n.png"; char* shadowPath = "Assets/Cats/n_s.png"; char* soundPlace = "Assets/soundeffect/units/meow_place.wav";
