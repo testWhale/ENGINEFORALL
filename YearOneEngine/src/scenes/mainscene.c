@@ -237,7 +237,7 @@ void Main_Scene_Update(void)
 
     CP_Settings_TextSize(4 * unit);
     sprintf_s(clicker1Cost, 100, "%.0f$ ", Scaling_Cost(clickerUpgrade1Count, 50 ,1.08));
-    sprintf_s(clicker2Cost, 100, "%.0f$ ", Scaling_Cost(clickerUpgrade2Count, 10, 3.0));
+    sprintf_s(clicker2Cost, 100, "%.0f$ ", Scaling_Cost(clickerUpgrade2Count, 10, 2.5));
     CP_Font_DrawText(clicker1Cost, 10 * unit, 75 * unit);
     CP_Font_DrawText(clicker2Cost, 25 * unit, 75 * unit);
     CP_Font_DrawText("50000$", 40 * unit, 75 * unit);
