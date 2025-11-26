@@ -238,15 +238,12 @@ void Main_Scene_Update(void)
     CP_Settings_TextSize(4 * unit);
     sprintf_s(clicker1Cost, 100, "%.0f$ ", Scaling_Cost(clickerUpgrade1Count, 50 ,1.08));
     sprintf_s(clicker2Cost, 100, "%.0f$ ", Scaling_Cost(clickerUpgrade2Count, 10, 3.0));
-    sprintf_s(troop1Cost, 100, "%.0f$ ", Scaling_Cost(troop1Count, 50, 1.08));
-    sprintf_s(troop2Cost, 100, "%.0f$ ", Scaling_Cost(troop2Count, 50, 1.08));
-    sprintf_s(troop3Cost, 100, "%.0f$ ", Scaling_Cost(troop3Count, 50, 1.08));
     CP_Font_DrawText(clicker1Cost, 10 * unit, 75 * unit);
     CP_Font_DrawText(clicker2Cost, 25 * unit, 75 * unit);
-    CP_Font_DrawText("1000$", 40 * unit, 75 * unit);
-    CP_Font_DrawText("50$", 10 * unit, 95 * unit);
+    CP_Font_DrawText("50000$", 40 * unit, 75 * unit);
+    CP_Font_DrawText("150$", 10 * unit, 95 * unit);
     CP_Font_DrawText("50$", 25 * unit, 95 * unit);
-    CP_Font_DrawText("50$", 40 * unit, 95 * unit);
+    CP_Font_DrawText("100$", 40 * unit, 95 * unit);
 
     if (DeveloperMode==0)
     CP_Font_DrawText("Press D for Dev Mode", 115 * unit, 99.5 * unit);
