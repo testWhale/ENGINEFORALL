@@ -135,5 +135,6 @@ void Credits_Exit(void)
     CP_Image_Free(logo);
     CP_Image_Free(Credits);
     CP_Image_Free(MainMenuBackground);
-
+    CP_Image_Free(Credits);
+    CP_Image_Free(MainMenuBackground);
 }
