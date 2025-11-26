@@ -3,10 +3,10 @@
 // author:	[Zachary Ng]
 // email:	[zacharyhuaen.n@digipen.edu]
 //
-// brief:	Main entry point for the sample project
-//			of the CProcessing library
+// brief:	contains the Shoot State definitions 
+//			of the player unit.
 //
-// Copyright 2020 DigiPen, All rights reserved.
+// Copyright 2025 DigiPen, All rights reserved.
 //---------------------------------------------------------
 
 #include "shoot.h"

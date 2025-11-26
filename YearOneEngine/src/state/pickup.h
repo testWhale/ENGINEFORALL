@@ -6,7 +6,7 @@
 // brief:	Player States are stored  
 //			of the CProcessing library
 //
-// Copyright 2020 DigiPen, All rights reserved.
+// Copyright 2025 DigiPen, All rights reserved.
 //---------------------------------------------------------
 
 #include "utils/SM.h"

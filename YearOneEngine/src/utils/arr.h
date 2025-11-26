@@ -6,7 +6,7 @@
 // brief:	Contains definition of dynamic array 
 //			
 //
-// Copyright 2020 DigiPen, All rights reserved.
+// Copyright 2025 DigiPen, All rights reserved.
 //---------------------------------------------------------
 
 #ifndef UTILS_ARR_H_INCLUDED

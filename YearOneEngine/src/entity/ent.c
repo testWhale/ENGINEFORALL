@@ -6,7 +6,7 @@
 // brief:	Contains the function definitions for 
 //			sound slider implementation
 //
-// Copyright 2020 DigiPen, All rights reserved.
+// Copyright 2025 DigiPen, All rights reserved.
 //---------------------------------------------------------
 
 #include "cprocessing.h"

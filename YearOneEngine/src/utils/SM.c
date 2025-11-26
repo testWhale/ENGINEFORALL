@@ -6,7 +6,7 @@
 // brief:	Contains definition of functions 
 //			StateMachine.
 //
-// Copyright 2020 DigiPen, All rights reserved.
+// Copyright 2025 DigiPen, All rights reserved.
 //---------------------------------------------------------
 
 #include "SM.h"

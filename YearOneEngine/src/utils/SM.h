@@ -6,7 +6,7 @@
 // brief:	Contains declarations of functions 
 //			StateMachine.
 //
-// Copyright 2020 DigiPen, All rights reserved.
+// Copyright 2025 DigiPen, All rights reserved.
 //---------------------------------------------------------
 
 #ifndef ENT_H
@@ -32,25 +32,28 @@ typedef int EntityID;
 typedef struct GameEntity GameEntity;
 typedef struct StateMachine StateMachine;
 
-
+/* GameEntity
+Brief:
+	GameEntity contains positional, 
+*/
 struct GameEntity {
 	/*Generic Values*/
-	CP_Vector centerPos; float rotation; CP_BOOL isPlayer; 
-	CP_Vector forwardVector, velocity; Color color; float diameter; float stateTimer; 
-	int isPoisoned;
-	float poisonTimerDecay;
-	float poisonDamage;
-	int isStunned, pickUpIndex, pickUpRemoval;
-	float stunTimer, sWidth, sHeight, aspectRatio, scale;
-
-	/*Check Values*/
-	int isItOnMap; int isSel; char* label; entSound sound;
-	BulletArr bullets;
-
+	BulletArr bullets;	 
+	entSound sound;
 	CP_Image sprite, shadow;
-	CP_Vector accel; 
+	CP_Vector accel, centerPos, forwardVector, velocity; 
+	CP_BOOL isPlayer; Color color; 
+	float rotation, diameter, stateTimer;
+	float poisonTimerDecay, poisonDamage;
+	float stunTimer, sWidth, sHeight, aspectRatio, scale;
+	int isStunned, pickUpIndex, pickUpRemoval, isPoisoned;
+	/*Check Values*/
+	int isItOnMap; int isSel; char* label;
+
+ 
 }; //Base For all Entities
 
+// NOTES:
 // Step 1: State function pointer type:
 // When u want to make a function call StateFunction which means pointer to a function.
 // ^void return		^pointer ^typeName StateFunction	^Parameters
