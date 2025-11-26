@@ -6,7 +6,7 @@
 // brief:	Contains declaration of dynamic array 
 //			
 //
-// Copyright 2020 DigiPen, All rights reserved.
+// Copyright 2025 DigiPen, All rights reserved.
 //---------------------------------------------------------
 
 #include <stdlib.h>
