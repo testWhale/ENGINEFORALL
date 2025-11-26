@@ -1,7 +1,7 @@
 //---------------------------------------------------------
 // file:	main.c
-// author:	[Zachary Ng][Quak June Hao (Quinn)]
-// email:	[zacharyhuaen.n@digipen.edu][quak.j@digipen.edu]
+// author:	Zachary Ng
+// email:	zacharyhuaen.n@digipen.edu
 //
 // brief:	Main entry point for the sample project
 //			of the CProcessing library
@@ -24,6 +24,6 @@ int main(void)
 	
 	CP_System_SetWindowSize(1920, 1080);
 	
-	CP_Engine_Run(0);
+	CP_Engine_Run(1);
 	return 0;
 }

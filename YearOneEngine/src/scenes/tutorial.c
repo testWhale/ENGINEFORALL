@@ -77,7 +77,7 @@ void Tutorial_Update(void)
 
 void Tutorial_Exit(void)
 //frees up all the assets
-	tutcounter = 0;
+{	tutcounter = 0;
 	for (int i = 0; i < instructions; i++)
 	{
 		CP_Image_Free(Tutorial[i]);
