@@ -132,10 +132,8 @@ void Credits_Exit(void)
     Button_Free(&BackButton);
     Button_Sound_Free(&defaultSound);
     CP_Sound_Free(creditMusic);
-<<<<<<< Updated upstream
     CP_Image_Free(logo);
-=======
     CP_Image_Free(Credits);
     CP_Image_Free(MainMenuBackground);
->>>>>>> Stashed changes
+
 }
