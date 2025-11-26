@@ -131,4 +131,5 @@ void Credits_Exit(void)
     Button_Free(&BackButton);
     Button_Sound_Free(&defaultSound);
     CP_Sound_Free(creditMusic);
+    CP_Image_Free(logo);
 }
