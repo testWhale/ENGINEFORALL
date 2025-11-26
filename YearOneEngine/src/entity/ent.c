@@ -350,7 +350,7 @@ void Draw_Bullets() {
 					pew->color.red = 255; pew->color.green = 0; pew->color.blue = 255; pew->color.opacity = 255; }
 				
 				CP_Settings_Fill(CP_Color_Create(pew->color.red, pew->color.green, pew->color.blue, pew->opacity));
-				CP_Graphics_DrawCircle(pew->centerPos.x, pew->centerPos.y, pew->diameter);
+				//CP_Graphics_DrawCircle(pew->centerPos.x, pew->centerPos.y, pew->diameter);
 				if (rotation >= 360) {
 					rotation = 0;
 				}

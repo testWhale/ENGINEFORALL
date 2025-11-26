@@ -34,7 +34,9 @@ typedef struct StateMachine StateMachine;
 
 /* GameEntity
 Brief:
-	GameEntity contains positional, 
+	GameEntity contains BulletArr, sound, 
+	Sprite and Shadow info, directional 
+	and positional data, flags. 
 */
 struct GameEntity {
 	/*Generic Values*/
@@ -49,8 +51,6 @@ struct GameEntity {
 	int isStunned, pickUpIndex, pickUpRemoval, isPoisoned;
 	/*Check Values*/
 	int isItOnMap; int isSel; char* label;
-
- 
 }; //Base For all Entities
 
 // NOTES:
