@@ -1,3 +1,14 @@
+//---------------------------------------------------------
+// file:	SM.h
+// author:	Zachary Ng
+// email:	zacharyhuaen.n@digipen.edu
+//
+// brief:	Contains declarations of functions 
+//			StateMachine.
+//
+// Copyright 2020 DigiPen, All rights reserved.
+//---------------------------------------------------------
+
 #ifndef ENT_H
 #define ENT_H
 
@@ -20,6 +31,7 @@
 typedef int EntityID;
 typedef struct GameEntity GameEntity;
 typedef struct StateMachine StateMachine;
+
 
 struct GameEntity {
 	/*Generic Values*/
@@ -44,9 +56,7 @@ struct GameEntity {
 // ^void return		^pointer ^typeName StateFunction	^Parameters
 typedef void (*StateFunction)(float deltaTime);
 
-//Holder of Data for each Entity
-
-//eg: Idle State
+//eg: Idle State: will have 3 functions, Init, Update, Exit.
 typedef struct {
 	void (*Init)(GameEntity* data,  StateMachine* sm, float dt); //replace with T
 	void (*Update)(GameEntity* data,  StateMachine* sm, float dt);
@@ -59,11 +69,38 @@ struct StateMachine {
 
 typedef struct ActiveEntity ActiveEntity;
 
-
-
+/* FSM_SetState()
+Input:
+	StateMachine* fsm     - pointer to the Entity's State
+	States newState		  - the newState to replace currState in fsm
+	GameEntity* data	  - positional data/ flags/ image/ sound data 
+	float dt			  - deltaTime
+	
+Output:
+	Returns the StateFunction.
+*/
 StateFunction FSM_SetState(StateMachine* fsm, States newState, GameEntity* data, float dt); //Replace with T
+
+/* FSM_Update()
+Input:
+	StateMachine* fsm     - pointer to the Entity's State
+	GameEntity* data	  - positional data/ flags/ image/ sound data
+	float dt			  - deltaTime
+
+Output:
+	Returns the StateFunction.
+*/
 StateFunction FSM_Update(StateMachine* fsm, GameEntity* data, float dt);
+
+/* FSM_Init()
+Input:
+	StateMachine* fsm     - pointer to the Entity's State
+	GameEntity* data	  - positional data/ flags/ image/ sound data
+	float dt			  - deltaTime
+
+Output:
+	Returns the StateFunction.
+*/
 StateFunction FSM_Init(StateMachine* fsm, GameEntity* data, float dt);
 
-// Init, Set currState, send function pointer to States.init
 #endif

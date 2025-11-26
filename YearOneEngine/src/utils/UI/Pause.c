@@ -124,7 +124,7 @@ void Pause_UpdateAndDraw(void)
     // Update master volume
     masterVolume = volume;
     CP_Sound_SetGroupVolume(0, masterVolume); // assuming group 0 is your main sound group
-
+    CP_Sound_SetGroupVolume(1, masterVolume);
 
     if (s_btnResume.isClicked) { s_paused = 0; s_btnResume.isClicked = 0; }
     if (s_btnMenu.isClicked) { s_menuRequest = 1; s_btnMenu.isClicked = 0; }

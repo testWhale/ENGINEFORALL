@@ -24,10 +24,13 @@ CP_Font myFont;
 CP_Image MainMenuBackground;
 ButtonInfo PlayButton, CreditsButton, QuitButton, SettingsButton;
 ButtonSound defaultSound;
-
+CP_Sound bgmMusic;
 
 void Main_Menu_Init(void)
 {
+    bgmMusic = CP_Sound_LoadMusic("Assets/soundTesters/BGM.wav");
+
+    CP_Sound_PlayAdvanced(bgmMusic, 1.0f, 1.0f, TRUE, CP_SOUND_GROUP_0);
     //CP_System_Fullscreen();
     unit = CP_System_GetWindowWidth() / 192.0f;
     myFont = CP_Font_Load("Assets/Fonts/QuinnDoodle.ttf");

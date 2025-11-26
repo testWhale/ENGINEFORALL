@@ -38,7 +38,8 @@ static HealthSystem gHealth;
 void Main_Scene_Init(void)
 {
     bgmMusic = CP_Sound_LoadMusic("Assets/soundTesters/BGM.wav");
-    
+
+    CP_Sound_PlayAdvanced(bgmMusic, 1.0f, 1.0f, TRUE, CP_SOUND_GROUP_0);
     //CP_Sound_PlayMusic(bgmMusic);
 
     srand((unsigned)time(NULL));
@@ -405,10 +406,10 @@ void Main_Scene_Update(void)
     /* UI ELEMENTS */
     Draw_WaveCounter();
 
-    /* POPUPS DOWN Here */
-    Draw_TempText(dt);
     CP_Settings_ImageMode(CP_POSITION_CENTER);   
     HealthSystem_DrawHearts(&gHealth);
+    /* POPUPS DOWN Here */
+    Draw_TempText(dt);
 
     Pause_UpdateAndDraw();
     if (Pause_TakeMenuRequest()) {
@@ -429,7 +430,7 @@ void Main_Scene_Exit(void)
     Button_Free(&TroopButton2);
     Button_Free(&TroopButton3);
     Button_Sound_Free(&defaultSound);
-    //CP_Sound_Free(bgmMusic);
+    CP_Sound_Free(bgmMusic);
     Del_TempText();
     Free_Pickup();
     currentMoney = 0;

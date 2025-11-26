@@ -1,12 +1,36 @@
+//---------------------------------------------------------
+// file:	arr.c
+// author:	Zachary Ng
+// email:	zacharyhuaen.n@digipen.edu
+//
+// brief:	Contains declaration of dynamic array 
+//			
+//
+// Copyright 2020 DigiPen, All rights reserved.
+//---------------------------------------------------------
+
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 #include "utils/arr.h"
 #include "State.h"
 
+/*-Global Variables-*/
 TestArr enemyArr;
 TestArr playerArr;
 
+/* Arr_Init()
+Input:
+    size_t maxLength     - copy the maxLength into the TestArr* A.maxLength
+    TestArr* A	         - pointer to dynamic array, it contains the entitySize; used; maxLength;
+    float dt			 - deltaTime
+
+Output:
+    Returns the StateFunction.
+
+Brief:
+    Arr_Init takes ur maxLength and copies it to A.maxLength
+*/
 void Arr_Init(size_t maxLength, TestArr* A) {
     if (!A) return;
     if (maxLength == 0) maxLength = 1;
@@ -22,6 +46,17 @@ void Arr_Init(size_t maxLength, TestArr* A) {
     A->entitySize = sizeof(ActiveEntity);
 }
 
+/* Arr_Insert()
+Input:
+    TestArr* A	         - pointer to dynamic array, it contains the entitySize; used; maxLength;
+    ActiveEntity e	     - is used to copy the value of e into TestArr* A.
+
+Output:
+    Returns the StateFunction.
+
+Brief:
+    Arr_Init takes ur maxLength and copies it to A.maxLength
+*/
 void Arr_Insert(TestArr* A, ActiveEntity e) {
     if (!A) return;
 
@@ -71,6 +106,17 @@ void Arr_Insert(TestArr* A, ActiveEntity e) {
     A->ActiveEntityArr[A->used++] = e;
 }
 
+/* Arr_Del()
+Input:
+    TestArr* A	     - pointer to dynamic array, it contains the entitySize; used; maxLength;
+    int id	         - id is used inside of ActiveEntity, it deletes ActiveEntity from TestArr
+
+Output:
+    Returns the StateFunction.
+
+Brief:
+    Arr_Del uses the id to cmp with TestArr* A-> ActiveEntityArr -> id;
+*/
 void Arr_Del(TestArr* A, int id) {
     if (!A || A->used == 0) return;
     size_t idx = A->used;
@@ -83,6 +129,16 @@ void Arr_Del(TestArr* A, int id) {
    
 }
 
+/* Arr_Free()
+Input:
+    TestArr* A	     - pointer to dynamic array, it contains the entitySize; used; maxLength;
+    
+Output:
+    None
+
+Brief:
+    Arr_Free frees the TestArr Entirely, deleting all ActiveEntity Data.
+*/
 void Arr_Free(TestArr* A) {
     if (!A) return;
     free(A->ActiveEntityArr);

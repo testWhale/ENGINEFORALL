@@ -51,12 +51,12 @@ void Button_Load(ButtonInfo* newBtn,
 
 void Button_Free(ButtonInfo* newBtn)
 {
-	//CP_Image_Free(newBtn->buttonNormal);
-	//CP_Image_Free(newBtn->buttonFeedback);
-	/*CP_Image_Free(newBtn->buttonHighlight);
+	CP_Image_Free(newBtn->buttonNormal);
+	CP_Image_Free(newBtn->buttonFeedback);
+	CP_Image_Free(newBtn->buttonHighlight);
 	CP_Sound_Free(newBtn->soundEffect->onClick);
 	CP_Sound_Free(newBtn->soundEffect->onHover);
-	CP_Sound_Free(newBtn->soundEffect->onRelease);*/
+	CP_Sound_Free(newBtn->soundEffect->onRelease);
 }
 
 void Button_Sound_Load
@@ -78,24 +78,7 @@ void Button_Sound_Free
 	CP_Sound_Free(soundPreset->onRelease);
 }
 
-//void drawSquareButtonNormal(buttonInfo*btnname) {
-//CP_Settings_ImageMode(CP_POSITION_CENTER);
-//CP_Image_Draw( btnname->buttonNormal, btnname->buttonPos.x, btnname->buttonPos.y, btnname->buttonWidth, btnname->buttonHeight, 255);
-//}
-//
-//void drawSquareButtonFeedback(buttonInfo* btnname) {
-//	CP_Settings_ImageMode(CP_POSITION_CENTER);
-//	CP_Image_Draw(btnname->buttonFeedback, btnname->buttonPos.x, btnname->buttonPos.y, btnname->buttonWidth, btnname->buttonHeight, 255);
-//}
-//
-//void drawSquareButtonHighlight(buttonInfo* btnname) {
-//	CP_Settings_ImageMode(CP_POSITION_CENTER);
-//	CP_Image_Draw(btnname->buttonHighlight, btnname->buttonPos.x, btnname->buttonPos.y, btnname->buttonWidth, btnname->buttonHeight, 255);
-//}
-/*
-This function pulls your data and draws the normal frame where nothing is happening.
-In order to make it function please insert a valid image or else it will turn transparent
-*/
+
 void Draw_Button_Normal(ButtonInfo* btnName) {
 	if (btnName->alive) {
 		btnName->transparency_Value = 255;
@@ -134,22 +117,6 @@ void Draw_Button_Highlight(ButtonInfo* btnname) {
 	CP_Settings_ImageMode(CP_POSITION_CENTER);
 	CP_Image_Draw(btnname->buttonHighlight, btnname->buttonPos.x, btnname->buttonPos.y, btnname->buttonWidth, btnname->buttonHeight, btnname->transparency_Value);
 }
-//int isCircleButtonHovered(buttonInfo* btnname, float mousex, float mousey) {
-//	return (sqrt((mousex - btnname->buttonPos.x) * (mousex - btnname->buttonPos.x) + (mousey - btnname->buttonPos.y) * (mousey - btnname->buttonPos.y)) <= btnname->buttonDiameter / 2);
-//}
-//
-//int isSquareButtonHovered(buttonInfo* btnname, float mousex, float mousey){
-//		if ((mousex <= (btnname->buttonPos.x + (btnname->buttonWidth / 2.0)))
-//			&& (mousex >= (btnname->buttonPos.x - (btnname->buttonWidth / 2.0)))
-//				&& (mousey <= (btnname->buttonPos.y + (btnname->buttonHeight / 2.0)))
-//					&& (mousex >= (btnname->buttonPos.y - (btnname->buttonHeight / 2.0))))
-//			{
-//			return 1;
-//			
-//			}
-//
-//		return 0;
-//}
 
 /// <summary>
 /// This function checks if you're hovering over the button
@@ -219,7 +186,7 @@ void Button_Behavior(ButtonInfo* btnname) {
 		if (Is_Button_Pressed(btnname, Is_Any_Button_Hovered(btnname, CP_Input_GetMouseX(), CP_Input_GetMouseY()))) { //draw the clicked frame if you press down
 			Draw_Button_Feedback(btnname);
 			if (CP_Input_MouseTriggered(MOUSE_BUTTON_LEFT)) {
-				CP_Sound_Play(btnname->soundEffect->onClick);
+				CP_Sound_PlayAdvanced(btnname->soundEffect->onClick, 0.5, 1.0, FALSE, CP_SOUND_GROUP_1);
 				printf("1");
 			}
 
@@ -228,7 +195,7 @@ void Button_Behavior(ButtonInfo* btnname) {
 		else {
 			if (Is_Button_Released(btnname, Is_Any_Button_Hovered(btnname, CP_Input_GetMouseX(), CP_Input_GetMouseY())))
 			{ //only return isClicked =1 on release
-				CP_Sound_Play(btnname->soundEffect->onRelease);
+				CP_Sound_PlayAdvanced(btnname->soundEffect->onRelease, 0.5, 1.0, FALSE, CP_SOUND_GROUP_1);
 				btnname->isClicked = 1;
 				printf("2");
 			}
@@ -239,7 +206,7 @@ void Button_Behavior(ButtonInfo* btnname) {
 					Draw_Button_Highlight(btnname);
 					if (!btnname->wasHovered) {
 
-						CP_Sound_Play(btnname->soundEffect->onHover);
+						CP_Sound_PlayAdvanced(btnname->soundEffect->onHover, 4, 1.0, FALSE, CP_SOUND_GROUP_1);
 					}
 					btnname->isSel = 1;
 					btnname->isClicked = 0;
@@ -248,7 +215,7 @@ void Button_Behavior(ButtonInfo* btnname) {
 				{ //if nothing else is happening just draw the Normal Frame and set both isSel and isClicked to negative
 					Draw_Button_Normal(btnname);
 					if (btnname->wasHovered) {
-						CP_Sound_StopAll();
+						CP_Sound_StopGroup(CP_SOUND_GROUP_1);
 					}
 					btnname->isSel = 0;
 					btnname->isClicked = 0;
