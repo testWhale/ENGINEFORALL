@@ -15,8 +15,13 @@ static float elapsed = 0.0f;          // time since screen started
 static const float FADE_DURATION = 3.0f;  // 3 seconds fade
 static float fadeOutStart = 3.0f;      // seconds
 static float fadeOutDuration = 0.5f;   // quick fade-out
+CP_Sound creditMusic;
+
 void Credits_Init(void)
 {
+    creditMusic = CP_Sound_LoadMusic("Assets/soundTesters/cred.wav");
+    CP_Sound_PlayAdvanced(creditMusic, 1.0f, 1.0f, TRUE, CP_SOUND_GROUP_0);
+
     unit = CP_System_GetWindowWidth() / 192.0f;
     myFont = CP_Font_Load("Assets/Fonts/QuinnDoodle.ttf");
     MainMenuBackground = CP_Image_Load("Assets/Misc/MenuScreen2.png");
@@ -125,4 +130,5 @@ void Credits_Exit(void)
 	CP_Font_Free(myFont);
     Button_Free(&BackButton);
     Button_Sound_Free(&defaultSound);
+    CP_Sound_Free(creditMusic);
 }

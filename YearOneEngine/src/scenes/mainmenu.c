@@ -24,13 +24,13 @@ CP_Font myFont;
 CP_Image MainMenuBackground;
 ButtonInfo PlayButton, CreditsButton, QuitButton, SettingsButton;
 ButtonSound defaultSound;
-CP_Sound bgmMusic;
+CP_Sound menuMusic;
 
 void Main_Menu_Init(void)
 {
-    bgmMusic = CP_Sound_LoadMusic("Assets/soundTesters/BGM.wav");
+    menuMusic = CP_Sound_LoadMusic("Assets/soundTesters/mainmenu.wav");
+    CP_Sound_PlayAdvanced(menuMusic, 1.0f, 1.0f, TRUE, CP_SOUND_GROUP_0);
 
-    CP_Sound_PlayAdvanced(bgmMusic, 1.0f, 1.0f, TRUE, CP_SOUND_GROUP_0);
     //CP_System_Fullscreen();
     unit = CP_System_GetWindowWidth() / 192.0f;
     myFont = CP_Font_Load("Assets/Fonts/QuinnDoodle.ttf");
@@ -102,6 +102,7 @@ void Main_Menu_Exit(void)
     Button_Free(&PlayButton);
     Button_Free(&CreditsButton);
     Button_Free(&QuitButton);
+    CP_Sound_Free(menuMusic);
     //Button_Free(&SettingsButton);
 
     Button_Sound_Free(&defaultSound);

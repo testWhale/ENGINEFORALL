@@ -4,14 +4,20 @@
 #include "scenes/mainmenu.h"
 #include "buttons/buttonCode.h"
 
-#define instructions 24
+#define instructions 25
 CP_Image Tutorial[instructions];
 const char* TutorialString[instructions];
 int tutcounter = 0;
-
+CP_Sound tutMusic, tutClickMusic;
 
 void Tutorial_Init(void)
 {
+	tutMusic = CP_Sound_LoadMusic("Assets/soundTesters/tut.wav");
+	CP_Sound_PlayAdvanced(tutMusic, 1.0f, 1.0f, TRUE, CP_SOUND_GROUP_0);
+
+	tutClickMusic = CP_Sound_Load("Assets/soundTesters/next.wav");
+
+
 	unit = CP_System_GetWindowWidth() / 192.0f;
 	TutorialString[0] = "Assets/Tutorial/Page1.png";
 	TutorialString[1] = "Assets/Tutorial/Page2.png";
@@ -36,11 +42,13 @@ void Tutorial_Init(void)
 	TutorialString[20] = "Assets/Tutorial/Page21.png";
 	TutorialString[21] = "Assets/Tutorial/Page22.png";
 	TutorialString[22] = "Assets/Tutorial/Page23.png";
-	TutorialString[23] = "Assets/Tutorial/Page24.png";
+	TutorialString[23] = "Assets/Tutorial/Page25.png";
+	TutorialString[24] = "Assets/Tutorial/Page24.png";
 
 	for (int i = 0; i < instructions; i++)
 	{
 		Tutorial[i] = CP_Image_Load(TutorialString[i]);
+		
 	}
 
 }
@@ -49,9 +57,12 @@ void Tutorial_Update(void)
 {
 	CP_Settings_ImageMode(CP_POSITION_CORNER);
 	CP_Image_Draw(Tutorial[tutcounter], 0, 0, 192 * unit, 108 * unit, 255);
-	if (CP_Input_MouseTriggered(MOUSE_BUTTON_LEFT)) tutcounter += 1;
-	if (tutcounter ==24)CP_Engine_SetNextGameState(Main_Scene_Init, Main_Scene_Update, Main_Scene_Exit);
-
+	if (CP_Input_MouseTriggered(MOUSE_BUTTON_LEFT)) {
+		tutcounter += 1; 
+		CP_Sound_PlayAdvanced(tutClickMusic, 10.0f, 1.0f, FALSE, CP_SOUND_GROUP_0);
+	}
+	if (tutcounter ==25)CP_Engine_SetNextGameState(Main_Scene_Init, Main_Scene_Update, Main_Scene_Exit);
+	if (CP_Input_KeyDown(KEY_S))CP_Engine_SetNextGameState(Main_Scene_Init, Main_Scene_Update, Main_Scene_Exit);
 }
 
 void Tutorial_Exit(void)
@@ -61,4 +72,5 @@ void Tutorial_Exit(void)
 	{
 		CP_Image_Free(Tutorial[i]);
 	}
+	CP_Sound_Free(tutMusic);
 }
