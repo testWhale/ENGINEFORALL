@@ -3,8 +3,8 @@
 // author:	[Zachary Ng]
 // email:	[zacharyhuaen.n@digipen.edu]
 //
-// brief:	Main entry point for the sample project
-//			of the CProcessing library
+// brief:	Contains the declarations of Unit Shoot functions
+//			
 //
 // Copyright 2025 DigiPen, All rights reserved.
 //---------------------------------------------------------

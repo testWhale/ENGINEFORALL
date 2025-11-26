@@ -39,7 +39,7 @@ void Main_Scene_Init(void)
 {
     bgmMusic = CP_Sound_LoadMusic("Assets/soundTesters/BGM.wav");
 
-    CP_Sound_PlayAdvanced(bgmMusic, 1.0f, 1.0f, TRUE, CP_SOUND_GROUP_0);
+    CP_Sound_PlayAdvanced(bgmMusic, 1.7f, 1.0f, TRUE, CP_SOUND_GROUP_0);
     //CP_Sound_PlayMusic(bgmMusic);
 
     srand((unsigned)time(NULL));

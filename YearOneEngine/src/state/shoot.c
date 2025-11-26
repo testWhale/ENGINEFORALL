@@ -18,6 +18,19 @@
 #include <stdio.h>
 #include "utils/wave/wave.h"
 
+
+/* AreCirclesIntersecting()
+Input:
+	Bullet* bullet     - pointer to the bullet
+	GameEntity* enemy  - positional data of enemy
+
+Output:
+	Returns the StateFunction.
+
+Breif: 
+	Used inside of the shoot state to check if 
+	the enemy is in contact with the bullet.
+*/
 int AreCirclesIntersecting(Bullet* bullet, GameEntity* enemy) {
 	CP_Vector vec_c1 = CP_Vector_Set(bullet->centerPos.x, bullet->centerPos.y);
 	CP_Vector vec_c2 = CP_Vector_Set(enemy->centerPos.x, enemy->centerPos.y);
@@ -25,7 +38,16 @@ int AreCirclesIntersecting(Bullet* bullet, GameEntity* enemy) {
 	return (bullet->diameter / 2.0f + enemy->diameter / 2.0f) >= CP_Vector_Distance(vec_c1, vec_c2);
 }
 
-
+/* B_Arr_Refresh()
+Input:
+	Bullet* bullet     - pointer to the bullet
+	GameEntity* turret  - positional data of turret
+Output:
+	NA.
+Breif:
+	Used inside of PickUpExit to magnetise the bullets to the specific turrets 
+	position. Making it visible and ready to be shot.
+*/
 void B_Arr_Refresh(BulletArr* array, GameEntity* turret) {
 	
 	for (int i = 0; i < array->used; i++) {
@@ -35,6 +57,7 @@ void B_Arr_Refresh(BulletArr* array, GameEntity* turret) {
 		//printf("%d %f", turret->bullets.bulletArr[i].id, turret->bullets.bulletArr[i].opacity);
 	}
 }
+
 
 void Shoot(GameEntity* turret, StateMachine* SM, float dt)
 {
@@ -82,7 +105,17 @@ void Shoot_Init( GameEntity* turret, StateMachine* SM, float dt)
 	
 }
 
-
+/* Shoot_Update()
+Input:
+	GameEntity* turret     - pointer to the turret
+	StateMachine* SM  - State of the turret
+	float dt		- deltaTime
+Output:
+	NA.
+Breif:
+	Run inside game Loop, creates the bullet and tracks its position, 
+	Using Bullet_Template to 
+*/
 void Shoot_Update(GameEntity* turret, StateMachine* SM, float dt) {
 	turret->stateTimer += dt;
 	static float shootSpan;
