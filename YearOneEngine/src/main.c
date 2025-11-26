@@ -24,6 +24,6 @@ int main(void)
 	
 	CP_System_SetWindowSize(1920, 1080);
 	
-	CP_Engine_Run(1);
+	CP_Engine_Run(0);
 	return 0;
 }

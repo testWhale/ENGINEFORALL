@@ -1,24 +1,33 @@
+//---------------------------------------------------------
+// file: pause.c
+// author: Xavier Lim
+// email: yipfengxavier.lim@digipen.edu
+//
+// brief: Implements the Pause system.
+//   - Provides pause toggle and overlay rendering
+//   - Handles pause/resume/menu buttons
+//   - Integrates volume slider control
+//
+// Copyright 2025 DigiPen, All rights reserved.
+//---------------------------------------------------------
+
 #include "pause.h"
 #include "cprocessing.h"
 #include "buttons/buttonCode.h"
 #include "scenes/mainmenu.h"
 #include "scenes/settings.h"
 
-
-
-static int s_paused = 0;
-static int s_menuRequest = 0;
-
 /* Sound Settings */
 extern float volume;
 extern float masterVolume;
 CP_Font myFont;
 
+static int s_paused = 0;  // pause state flag
+static int s_menuRequest = 0; // menu request flag
 static ButtonInfo  s_btnPause;
 static ButtonInfo  s_btnResume;
 static ButtonInfo  s_btnMenu;
 static ButtonSound s_pauseSound;
-
 static CP_Image s_overlay = 0;
 static float unit = 1.0f;
 
@@ -34,11 +43,64 @@ static float unit = 1.0f;
 #define MENU_H    "Assets/Buttons/pause/MenuHovered.png"
 #define MENU_C    "Assets/Buttons/pause/MenuClicked.png"
 
-int   Pause_IsPaused(void) { return s_paused; }
-void  Pause_SetPaused(int on) { s_paused = (on != 0); }
+/* Pause_IsPaused()
+Input:
+    None
+Output:
+    int - 1 if paused, 0 otherwise
+Description:
+    - Returns current pause state
+*/
+
+int Pause_IsPaused(void) { return s_paused; }
+
+/* Pause_SetPaused()
+Input:
+    on - 1 to enable pause, 0 to disable
+Output:
+    None
+Description:
+    - Sets pause state explicitly
+*/
+
+void Pause_SetPaused(int on) { s_paused = (on != 0); }
+
+/* Pause_Dt()
+Input:
+    dt - delta time (seconds)
+Output:
+    float - adjusted delta time
+Description:
+    - Returns 0.0f if paused
+    - Returns original delta time if not paused
+*/
+
 float Pause_Dt(float dt) { return s_paused ? 0.0f : dt; }
-int   Pause_TakeMenuRequest(void) { int r = s_menuRequest; s_menuRequest = 0; return r; }
-Slider slider;
+
+/* Pause_TakeMenuRequest()
+Input:
+    None
+Output:
+    int - menu request flag
+Description:
+    - Checks if player requested to open pause menu
+    - Resets flag after returning
+*/
+
+int Pause_TakeMenuRequest(void) { int r = s_menuRequest; s_menuRequest = 0; return r; }
+
+Slider slider; // volume slider
+
+/* Pause_Init()
+Input:
+    None
+Output:
+    None
+Description:
+    - Initializes pause system state
+    - Loads button assets and overlay
+    - Creates volume slider
+*/
 
 void Pause_Init(void)
 {
@@ -66,8 +128,10 @@ void Pause_Init(void)
         23.0f * unit, 8.0f * unit, 0.0f,
         MENU_N, MENU_H, MENU_C, 1);
 
+    // Pause overlay and font where all button will be at.
     s_overlay = CP_Image_Load("Assets/Buttons/pause/PauseOverlay.png");
     myFont = CP_Font_Load("Assets/Fonts/QuinnDoodle.ttf");
+
     // Centered slider
     float sliderWidth = 2000;
     float sliderHeight = 300;
@@ -77,6 +141,17 @@ void Pause_Init(void)
 
 }
 
+/* Pause_UpdateAndDraw()
+Input:
+    None
+Output:
+    None
+Description:
+    - Updates pause system logic
+    - Draws pause overlay, buttons, and volume slider
+    - Handles button clicks for resume and menu
+*/
+
 void Pause_UpdateAndDraw(void)
 {
     float W = (float)CP_System_GetWindowWidth();
@@ -84,6 +159,8 @@ void Pause_UpdateAndDraw(void)
     float cx = W * 0.5f;
     float cy = H * 0.5f;
     float buttonScale = 0.58f;
+
+    // If not paused, only update pause button
     if (!s_paused)
     {
         Button_Behavior(&s_btnPause);
@@ -97,13 +174,11 @@ void Pause_UpdateAndDraw(void)
     int nativeW = CP_Image_GetWidth(s_btnResume.buttonNormal);
     int nativeH = CP_Image_GetHeight(s_btnResume.buttonNormal);
 
-    // Apply size to both buttons (assuming same artwork size)
+    // Scale buttons based on artwork size
     s_btnResume.buttonWidth = nativeW * buttonScale;
     s_btnResume.buttonHeight = nativeH * buttonScale;
     s_btnMenu.buttonWidth = nativeW * buttonScale;
     s_btnMenu.buttonHeight = nativeH * buttonScale;
-
-   
 
     Button_Behavior(&s_btnResume);
     Button_Behavior(&s_btnMenu);
@@ -130,6 +205,16 @@ void Pause_UpdateAndDraw(void)
     if (s_btnMenu.isClicked) { s_menuRequest = 1; s_btnMenu.isClicked = 0; s_paused = 0; }
 }
 
+
+/* Pause_Exit()
+Input:
+    None
+Output:
+    None
+Description:
+    - Cleans up pause system resources
+    - Resets pause state and menu request
+*/
 
 void Pause_Exit(void)
 {
