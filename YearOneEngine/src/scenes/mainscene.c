@@ -1,3 +1,14 @@
+//---------------------------------------------------------
+// file:	mainscene.c
+// author:	[Quak June Hao (Quinn)]
+// email:	[quak.j@digipen.edu]
+//
+// brief:	This code contains the scene for the main game section of the game
+//
+// Copyright 2025 DigiPen, All rights reserved.
+//---------------------------------------------------------
+
+
 #include "cprocessing.h"
 #include "utils/utils.h"
 #include "mainscene.h"
@@ -48,6 +59,8 @@ void Main_Scene_Init(void)
     myFont = CP_Font_Load("Assets/Fonts/QuinnDoodle.ttf");
     Background = CP_Image_Load("Assets/Misc/BackgroundArt.png");
 
+
+    //this loads all the info boxes
     ClickerInfo = CP_Image_Load("Assets/Misc/InfoBoxes/ClickPowerInfo.png");
     PassiveInfo = CP_Image_Load("Assets/Misc/InfoBoxes/PassivePowerInfo.png");
     BlankInfo = CP_Image_Load("Assets/Misc/InfoBoxes/ElectricCat.png");
@@ -55,13 +68,15 @@ void Main_Scene_Init(void)
     NormalInfo = CP_Image_Load("Assets/Misc/InfoBoxes/NormalCatInfo.png");
     WinInfo = CP_Image_Load("Assets/Misc/InfoBoxes/WinInfo.png");
 
+
+    //loading of default button sound pack
     Button_Sound_Load(&defaultSound,
         "Assets/soundTesters/ClickSound.wav",
         "Assets/soundTesters/HoverSound.wav",
         "Assets/soundTesters/ReleaseSound.wav");
 
 
-
+    //loading of all the buttons.
     Button_Load(&ClickerButton, &defaultSound,
         25 * unit, 40 * unit,
         40 * unit, 40 * unit,
@@ -221,13 +236,14 @@ void Main_Scene_Update(void)
         Draw_Button_Normal(&TroopButton3);
     }
 
+    //prepares money string to print and show
     CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
     CP_Settings_TextSize(9 * unit);
     sprintf_s(moneyString, 10, "%.0f$", currentMoney);
-
     CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
     CP_Font_DrawText(moneyString, 25 * unit, 10 * unit);
 
+    //prepares statistic string to print and show
     CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_BOTTOM);
     CP_Settings_TextSize(4 * unit);
     sprintf_s(statisticString, 100, "Click Power : %d ", clickPower);
@@ -235,6 +251,8 @@ void Main_Scene_Update(void)
     CP_Font_DrawText(statisticString, 24 * unit, 65 * unit);
     CP_Font_DrawText(statisticString2, 24 * unit, 70 * unit);
 
+
+    //prepares cost string to print and show
     CP_Settings_TextSize(4 * unit);
     sprintf_s(clicker1Cost, 100, "%.0f$ ", Scaling_Cost(clickerUpgrade1Count, 50 ,1.08));
     sprintf_s(clicker2Cost, 100, "%.0f$ ", Scaling_Cost(clickerUpgrade2Count, 10, 2.5));

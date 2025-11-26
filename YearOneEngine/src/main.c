@@ -1,7 +1,7 @@
 //---------------------------------------------------------
 // file:	main.c
-// author:	Zachary Ng
-// email:	zacharyhuaen.n@digipen.edu
+// author:	[Zachary Ng][Quak June Hao (Quinn)]
+// email:	[zacharyhuaen.n@digipen.edu][quak.j@digipen.edu]
 //
 // brief:	Main entry point for the sample project
 //			of the CProcessing library

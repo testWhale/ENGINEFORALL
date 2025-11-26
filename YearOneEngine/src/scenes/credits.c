@@ -1,10 +1,20 @@
+//---------------------------------------------------------
+// file:	credits.h
+// author:	[Quak June Hao (Quinn)]
+// email:	[quak.j@digipen.edu]
+//
+// brief:	This code contains the behavior for the credits section of the game
+//
+// Copyright 2025 DigiPen, All rights reserved.
+//---------------------------------------------------------
+
 #include <cprocessing.h>
 #include "utils/utils.h"
 #include "scenes/mainmenu.h"
 #include "buttons/buttonCode.h"
 
 CP_Font myFont;
-CP_Image MainMenuBackground,Sam,Credits;
+CP_Image MainMenuBackground,Credits;
 ButtonInfo BackButton;
 ButtonSound defaultSound;
 char CreditsString[100];
@@ -25,7 +35,6 @@ void Credits_Init(void)
     unit = CP_System_GetWindowWidth() / 192.0f;
     myFont = CP_Font_Load("Assets/Fonts/QuinnDoodle.ttf");
     MainMenuBackground = CP_Image_Load("Assets/Misc/MenuScreen2.png");
-    Sam = CP_Image_Load("Assets/buttonTesters/Catboy.png");
     Credits = CP_Image_Load("Assets/Misc/Credits.png");
     CreditsY = 150 * unit;
 
@@ -104,14 +113,6 @@ void Credits_Update(void)
 
 
     CreditsY -= 0.3 * unit;
-    /*CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
-    CP_Settings_TextSize(4 * unit);
-    sprintf_s(CreditsString, 100, "We do not have credits yet, for now please enjoy this picture");
-
-    CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
-    CP_Font_DrawText(CreditsString, 70 * unit, 90 * unit);
-    CP_Image_Draw(Sam, 100 * unit, 10 * unit, 70 * unit, 70 * unit, 255);*/
-  
     Button_Behavior(&BackButton);
 
    
@@ -132,4 +133,8 @@ void Credits_Exit(void)
     Button_Sound_Free(&defaultSound);
     CP_Sound_Free(creditMusic);
     CP_Image_Free(logo);
+    CP_Image_Free(Credits);
+    CP_Image_Free(MainMenuBackground);
+    CP_Image_Free(Credits);
+    CP_Image_Free(MainMenuBackground);
 }

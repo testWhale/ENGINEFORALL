@@ -1,7 +1,7 @@
 //---------------------------------------------------------
-// file:	mainscene.c
-// author:	[][Zachary Ng][Ding Yi Chaw Maung]
-// email:	[][zacharyhuaen.n@digipen.edu][dingyichaw.maung@digipen.edu]
+// file:	mainmenu.c
+// author:	[Quak June Hao (Quinn)][Zachary Ng][Ding Yi Chaw Maung]
+// email:	[quak.j@digipen.edu][zacharyhuaen.n@digipen.edu][dingyichaw.maung@digipen.edu]
 //
 // brief:	Contains the function definitions for 
 //			all in game behaviour
@@ -103,7 +103,7 @@ void Main_Menu_Exit(void)
     Button_Free(&CreditsButton);
     Button_Free(&QuitButton);
     CP_Sound_Free(menuMusic);
-    //Button_Free(&SettingsButton);
+    CP_Image_Free(MainMenuBackground);
 
     Button_Sound_Free(&defaultSound);
 }

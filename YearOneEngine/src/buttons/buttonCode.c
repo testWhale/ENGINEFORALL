@@ -1,13 +1,12 @@
-/*!
-@file buttonCode.c
-@author Quak June Hao (quak.j)
-@course Software Engineering Project (CSD1401)
-@section A
-@GAM 100
-@date 28/10/25
-@links this file has a header file connected named buttonCode.h 
-@brief This file contains buttons code that handles button behavior and feedback
-*/
+//---------------------------------------------------------
+// file:	buttonCode.c
+// author:	[Quak June Hao (Quinn)]
+// email:	[quak.j@digipen.edu]
+//
+// brief:	This code contains behavior for the button behavior and generation system
+//
+// Copyright 2025 DigiPen, All rights reserved.
+//---------------------------------------------------------
 
 #include "cprocessing.h"
 #include "buttonCode.h"
@@ -48,6 +47,7 @@ void Button_Load(ButtonInfo* newBtn,
 	newBtn->soundEffect = soundPreset;
 	newBtn->alive = alive;
 	}
+
 
 void Button_Free(ButtonInfo* newBtn)
 {
@@ -90,10 +90,6 @@ void Draw_Button_Normal(ButtonInfo* btnName) {
 					btnName->buttonWidth, btnName->buttonHeight, btnName->transparency_Value);
 }
 
-/// <summary>
-/// This function draws the feedback frame for the specific button
-/// </summary>
-/// <param name="btnName">Just insert your specific button name</param>
 void Draw_Button_Feedback(ButtonInfo* btnName) {
 	if (btnName->alive) {
 		btnName->transparency_Value = 255;
@@ -118,13 +114,7 @@ void Draw_Button_Highlight(ButtonInfo* btnname) {
 	CP_Image_Draw(btnname->buttonHighlight, btnname->buttonPos.x, btnname->buttonPos.y, btnname->buttonWidth, btnname->buttonHeight, btnname->transparency_Value);
 }
 
-/// <summary>
-/// This function checks if you're hovering over the button
-/// </summary>
-/// <param name="btnName">Insert the name of your button here</param>
-/// <param name="mouseX">Just use CP_Get_MouseX</param>
-/// <param name="mouseY"></param>
-/// <returns></returns>
+
 int Is_Any_Button_Hovered(ButtonInfo* btnName, float mouseX, float mouseY) {
 	if (btnName->buttonDiameter) {
 		return (sqrt((mouseX - btnName->buttonPos.x) * (mouseX - btnName->buttonPos.x) + (mouseY - btnName->buttonPos.y) * (mouseY - btnName->buttonPos.y)) <= btnName->buttonDiameter / 2);
