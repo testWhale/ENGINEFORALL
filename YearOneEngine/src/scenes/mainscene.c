@@ -38,7 +38,8 @@ static HealthSystem gHealth;
 void Main_Scene_Init(void)
 {
     bgmMusic = CP_Sound_LoadMusic("Assets/soundTesters/BGM.wav");
-    
+
+    CP_Sound_PlayAdvanced(bgmMusic, 1.0f, 1.0f, TRUE, CP_SOUND_GROUP_0);
     //CP_Sound_PlayMusic(bgmMusic);
 
     srand((unsigned)time(NULL));
@@ -431,7 +432,7 @@ void Main_Scene_Exit(void)
     Button_Free(&TroopButton2);
     Button_Free(&TroopButton3);
     Button_Sound_Free(&defaultSound);
-    //CP_Sound_Free(bgmMusic);
+    CP_Sound_Free(bgmMusic);
     Del_TempText();
     Free_Pickup();
     currentMoney = 0;
