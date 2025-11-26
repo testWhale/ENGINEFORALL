@@ -38,7 +38,8 @@ static HealthSystem gHealth;
 void Main_Scene_Init(void)
 {
     bgmMusic = CP_Sound_LoadMusic("Assets/soundTesters/BGM.wav");
-    
+
+    CP_Sound_PlayAdvanced(bgmMusic, 1.0f, 1.0f, TRUE, CP_SOUND_GROUP_0);
     //CP_Sound_PlayMusic(bgmMusic);
 
     srand((unsigned)time(NULL));
@@ -143,15 +144,6 @@ void Main_Scene_Init(void)
 
 void Main_Scene_Update(void)
 {
-    if (isMusicPlaying == 0){
-        
-        CP_Sound_PlayAdvanced(bgmMusic, 1.0f, 1.0f, TRUE, CP_SOUND_GROUP_0);
-        isMusicPlaying = 1;
-         
-}
-    if (bgmMusic == NULL) {
-        printf("OVERWRITTEN\n");
-    }
     CP_Graphics_ClearBackground(CP_Color_Create(255, 128, 128, 255));
     float dt = Pause_Dt(CP_System_GetDt());
 

@@ -248,7 +248,7 @@ void Button_Behavior(ButtonInfo* btnname) {
 				{ //if nothing else is happening just draw the Normal Frame and set both isSel and isClicked to negative
 					Draw_Button_Normal(btnname);
 					if (btnname->wasHovered) {
-						CP_Sound_StopAll();
+						/*CP_Sound_StopAll*///
 					}
 					btnname->isSel = 0;
 					btnname->isClicked = 0;

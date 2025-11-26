@@ -56,6 +56,7 @@ void Tutorial_Update(void)
 
 void Tutorial_Exit(void)
 {
+	tutcounter = 0;
 	for (int i = 0; i < instructions; i++)
 	{
 		CP_Image_Free(Tutorial[i]);
