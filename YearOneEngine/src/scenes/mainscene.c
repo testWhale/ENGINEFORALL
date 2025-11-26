@@ -237,7 +237,7 @@ void Main_Scene_Update(void)
 
     CP_Settings_TextSize(4 * unit);
     sprintf_s(clicker1Cost, 100, "%.0f$ ", Scaling_Cost(clickerUpgrade1Count, 50 ,1.08));
-    sprintf_s(clicker2Cost, 100, "%.0f$ ", Scaling_Cost(clickerUpgrade2Count, 10, 3.0));
+    sprintf_s(clicker2Cost, 100, "%.0f$ ", Scaling_Cost(clickerUpgrade2Count, 10, 2.5));
     sprintf_s(troop1Cost, 100, "%.0f$ ", Scaling_Cost(troop1Count, 50, 1.08));
     sprintf_s(troop2Cost, 100, "%.0f$ ", Scaling_Cost(troop2Count, 50, 1.08));
     sprintf_s(troop3Cost, 100, "%.0f$ ", Scaling_Cost(troop3Count, 50, 1.08));
