@@ -144,6 +144,15 @@ void Main_Scene_Init(void)
 
 void Main_Scene_Update(void)
 {
+    if (isMusicPlaying == 0){
+        
+        CP_Sound_PlayAdvanced(bgmMusic, 1.0f, 1.0f, TRUE, CP_SOUND_GROUP_0);
+        isMusicPlaying = 1;
+         
+}
+    if (bgmMusic == NULL) {
+        printf("OVERWRITTEN\n");
+    }
     CP_Graphics_ClearBackground(CP_Color_Create(255, 128, 128, 255));
     float dt = Pause_Dt(CP_System_GetDt());
 
@@ -423,7 +432,7 @@ void Main_Scene_Exit(void)
     Button_Free(&TroopButton2);
     Button_Free(&TroopButton3);
     Button_Sound_Free(&defaultSound);
-    //CP_Sound_Free(bgmMusic);
+    CP_Sound_Free(bgmMusic);
     Del_TempText();
     Free_Pickup();
     currentMoney = 0;
