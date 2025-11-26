@@ -149,9 +149,7 @@ void Main_Scene_Update(void)
         isMusicPlaying = 1;
          
 }
-    if (bgmMusic == NULL) {
-        printf("OVERWRITTEN\n");
-    }
+    
     CP_Graphics_ClearBackground(CP_Color_Create(255, 128, 128, 255));
     float dt = Pause_Dt(CP_System_GetDt());
 

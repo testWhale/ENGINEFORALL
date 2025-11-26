@@ -1,3 +1,14 @@
+//---------------------------------------------------------
+// file:	mainscene.c
+// author:	[][Zachary Ng][Ding Yi Chaw Maung]
+// email:	[][zacharyhuaen.n@digipen.edu][dingyichaw.maung@digipen.edu]
+//
+// brief:	Contains the function definitions for 
+//			all in game behaviour
+//
+// Copyright 2020 DigiPen, All rights reserved.
+//---------------------------------------------------------
+
 #include <cprocessing.h>
 #include "utils/utils.h"
 #include "mainmenu.h"

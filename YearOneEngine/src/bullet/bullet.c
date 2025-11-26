@@ -1,21 +1,20 @@
+//---------------------------------------------------------
+// file:	bullet.c
+// author:	[Zachary Ng][Ding Yi Chaw Maung]
+// email:	[zacharyhuaen.n@digipen.edu][dingyichaw.maung@digipen.edu]
+//
+// brief:	Properties and behaviour of the different "bullet" types 
+//
+// Copyright  2020 DigiPen, All rights reserved.
+//---------------------------------------------------------
 #include "bullet.h"
 #include "../utils/arr/State.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-// for strcmp, memset
-//ARR_(Bullet)
-//typedef struct {
-//    int id;
-//    char label[45];
-//    CP_Image img;
-//    char* filepath;
-//    CP_Vector leftTCornerPos;
-//}UI;
-//
-//ARR_(UI)
 
+//Properties of different bullet templates for normal, poison and stun attack
 Bullet Bullet_Template(const char* name) {
     Bullet bullet = { 0 };
     int dt = CP_System_GetDt();

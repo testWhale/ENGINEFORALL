@@ -1,10 +1,9 @@
 //---------------------------------------------------------
 // file:	shoot.c
-// author:	[Zachary Ng]
-// email:	[zacharyhuaen.n@digipen.edu]
+// authors:	[Zachary Ng][Ding Yi Chaw Maung]
+// email:	[zacharyhuaen.n@digipen.edu][dingyichaw.maung@digipen.edu]
 //
-// brief:	Main entry point for the sample project
-//			of the CProcessing library
+// brief:	All bullet interactions and feedback from enemies relayed in this code
 //
 // Copyright 2020 DigiPen, All rights reserved.
 //---------------------------------------------------------
@@ -18,6 +17,7 @@
 #include <stdio.h>
 #include "utils/wave/wave.h"
 
+//code for when bullet hits enemy
 int AreCirclesIntersecting(Bullet* bullet, GameEntity* enemy) {
 	CP_Vector vec_c1 = CP_Vector_Set(bullet->centerPos.x, bullet->centerPos.y);
 	CP_Vector vec_c2 = CP_Vector_Set(enemy->centerPos.x, enemy->centerPos.y);
@@ -25,7 +25,7 @@ int AreCirclesIntersecting(Bullet* bullet, GameEntity* enemy) {
 	return (bullet->diameter / 2.0f + enemy->diameter / 2.0f) >= CP_Vector_Distance(vec_c1, vec_c2);
 }
 
-
+//refreshes the independent bullet array that each turret has
 void B_Arr_Refresh(BulletArr* array, GameEntity* turret) {
 	
 	for (int i = 0; i < array->used; i++) {
@@ -35,6 +35,7 @@ void B_Arr_Refresh(BulletArr* array, GameEntity* turret) {
 		//printf("%d %f", turret->bullets.bulletArr[i].id, turret->bullets.bulletArr[i].opacity);
 	}
 }
+
 
 void Shoot(GameEntity* turret, StateMachine* SM, float dt)
 {
@@ -61,7 +62,6 @@ void Shoot(GameEntity* turret, StateMachine* SM, float dt)
 		{
 			B_Arr_Del(&(turret->bullets), bullet->id);
 		}
-		//// Check for collision with green circle 
 
 		//loop through all enemies and check if they are being hit
 		for (int j = 0; j < enemyArr.used; j++)
@@ -82,11 +82,13 @@ void Shoot_Init( GameEntity* turret, StateMachine* SM, float dt)
 	
 }
 
-
+//code for conditions for turrets to shoot, and the type of bullet being shot with its respective interactions
+//with enemies
 void Shoot_Update(GameEntity* turret, StateMachine* SM, float dt) {
 	turret->stateTimer += dt;
 	static float shootSpan;
 	Bullet b;
+	//shootspan is the firing rate of a bullet for each template
 		if (turret->label == "poison") {
 			b = Bullet_Template("poison");
 
@@ -106,12 +108,13 @@ void Shoot_Update(GameEntity* turret, StateMachine* SM, float dt) {
 	int crossedLine = 0;
 	int turretRow = (turret->centerPos.y - g_TileMap[0][0].startPos.y) / g_TileMap[0][0].dim.y;
 
+	
 	if (Is_Circle_Clicked(turret->centerPos.x, turret->centerPos.y, turret->diameter, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
-		//FSM_SetState(SM, SelectedState, turret, dt);
 		return;
 	}
 
 	for (int i = 0; i < enemyArr.used; i++) {
+		//loops through enemy entities
 		GameEntity* enemy = &enemyArr.ActiveEntityArr[i].unit;
 		int enemyRow = (enemy->centerPos.y - g_TileMap[0][0].startPos.y) / g_TileMap[0][0].dim.y;
 			if (enemyRow == turretRow && EnemyCrossedLine(&enemyArr.ActiveEntityArr[i].unit)) {
@@ -120,6 +123,7 @@ void Shoot_Update(GameEntity* turret, StateMachine* SM, float dt) {
 		}
 	}
 
+	//only shoots if enemies cross into the battlefield
 	if (crossedLine && turret->stateTimer >= shootSpan) {
 		turret->stateTimer = 0;
 		
@@ -127,7 +131,7 @@ void Shoot_Update(GameEntity* turret, StateMachine* SM, float dt) {
 		B_Arr_Insert(&(turret->bullets), b);
 		
 	}
-	
+
 		for (int i = 0; i < turret->bullets.used; i++) {
 			 /* Bullets that are currently being shot */
 			Bullet* bullet = &turret->bullets.bulletArr[i];
@@ -152,6 +156,7 @@ void Shoot_Update(GameEntity* turret, StateMachine* SM, float dt) {
 					if (AreCirclesIntersecting(bullet, enemy)) {
 						{ enemy->color.red = 255; enemy->color.green = 0; enemy->color.blue = 0;   enemy->color.opacity = 255; }
 
+						//behaviours when special bullet type effects are applied on enemies
 						if (strcmp(bullet->type, "poison")==0) {
 							if (!enemy->isPoisoned) {
 								enemy->isPoisoned = 1;

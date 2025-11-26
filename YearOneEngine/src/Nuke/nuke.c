@@ -1,3 +1,12 @@
+//---------------------------------------------------------
+// file:	nuke.c
+// author:	Ding Yi Chaw Maung
+// email:	dingyichaw.maung@digipen.edu
+//
+// brief:	Endgame scene, for when the player wins
+//
+// Copyright  2020 DigiPen, All rights reserved.
+//---------------------------------------------------------
 #include "nuke.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -18,11 +27,14 @@ void Nuke_Update(void) {
 	float dt = CP_System_GetDt();
 	CP_Graphics_ClearBackground(CP_Color_Create(0, 0, 0, 255));
 	
+	//draws nuke
 	CP_Settings_Fill(CP_Color_Create(0, 255, 0, 255));
 	CP_Graphics_DrawCircle(nukeX, nukeY, 60);
 
+	//drops nuke
 	nukeY += nukeDropSpeed * dt;
 
+	//nuke explodes
 	if (nukeY >= 1080 / 2.0f) {
 		CP_Settings_Fill(CP_Color_Create(255, 0, 0, 255));
 		CP_Graphics_DrawCircle(nukeX, nukeY, 500);

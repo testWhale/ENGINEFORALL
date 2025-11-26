@@ -1,7 +1,7 @@
 ﻿//---------------------------------------------------------
 // file:	ent.c
-// author:	Zachary Ng
-// email:	zacharyhuaen.n@digipen.edu
+// author:	[Zachary Ng][Ding Yi Chaw Maung]
+// email:	[zacharyhuaen.n@digipen.edu][dingyichaw.maung@digipen.edu]
 //
 // brief:	Contains the function definitions for 
 //			sound slider implementation
