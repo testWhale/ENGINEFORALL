@@ -127,7 +127,7 @@ void Pause_UpdateAndDraw(void)
 
 
     if (s_btnResume.isClicked) { s_paused = 0; s_btnResume.isClicked = 0; }
-    if (s_btnMenu.isClicked) { s_menuRequest = 1; s_btnMenu.isClicked = 0; }
+    if (s_btnMenu.isClicked) { s_menuRequest = 1; s_btnMenu.isClicked = 0; s_paused = 0; }
 }
 
 
