@@ -1,9 +1,17 @@
+//---------------------------------------------------------
+// file:	credits.h
+// author:	[Quak June Hao (Quinn)]
+// email:	[quak.j@digipen.edu]
+//
+// brief:	This code contains the scene for the tutorial section of the game
+//
+// Copyright 2025 DigiPen, All rights reserved.
+//---------------------------------------------------------
 
 #include <cprocessing.h>
 #include <math.h>
 
-currentMoney = 10000;
-float timer = 2;
+currentMoney = 0;
 
 int Purchase_System(float *currentMoney,float itemCost)
 	{
@@ -20,19 +28,7 @@ int Purchase_System(float *currentMoney,float itemCost)
 		}
 	}
 
-void Poor_Feedback(float fontsize,float PosX, float PosY)
-{ 
-	timer -= CP_System_GetDt();
-	if (timer >0.0f)
-	{
-		CP_Settings_TextSize(fontsize);
-		CP_Font_DrawText("YOURE POOR", PosX, PosY);
-	}
-	if (timer <= 0)
-	{
-		timer = 2;
-	}
-}
+
 
 float Scaling_Cost(int purchaseCount, float basePrice, float scale)
 {

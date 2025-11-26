@@ -1,3 +1,15 @@
+//---------------------------------------------------------
+// file:	clickCode.c
+// author:	[Quak June Hao (Quinn)][Zachary Ng]
+// email:	[quak.j@digipen.edu][zacharyhuaen.n@digipen.edu]
+//
+// brief:	This code contains behavior for the clicker system
+//
+// Copyright 2025 DigiPen, All rights reserved.
+//---------------------------------------------------------
+
+
+
 #include "cprocessing.h"
 #include "clickCode.h"
 #include <math.h>
@@ -8,10 +20,14 @@ clickPurchaseAmount = 0;
 OneCountdown = 1.0f;
 passiveIncome = 0;
 
+
+//this function generates money from one click
 void One_Click(float* currentMoney) 
 {
 	*currentMoney += clickPower;
 }
+
+
 void Reward_Click(float* currentMoney) {
 	int rndm = rand() % 10;
 	*currentMoney += rndm;
