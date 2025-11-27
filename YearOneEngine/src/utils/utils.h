@@ -1,3 +1,12 @@
+//---------------------------------------------------------
+// file:	utils.c
+// author:	[Ding Yi Chaw Maung]
+// email:	[dingyichaw.maung@digipen.edu]
+//
+// brief:	declaration of different flag utilities used 
+//
+// Copyright 2025 DigiPen, All rights reserved.
+//---------------------------------------------------------
 #ifndef UTIL_H
 #define UTIL_H
 #include "utils/arr.h"

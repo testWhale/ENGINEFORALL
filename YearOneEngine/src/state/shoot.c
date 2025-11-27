@@ -1,7 +1,7 @@
 //---------------------------------------------------------
 // file:	shoot.c
-// author:	[Zachary Ng]
-// email:	[zacharyhuaen.n@digipen.edu]
+// author:	[Zachary Ng][Ding Yi Chaw Maung]
+// email:	[zacharyhuaen.n@digipen.edu][dingyichaw.maung@digipen.edu]
 //
 // brief:	contains the Shoot State definitions 
 //			of the player unit.
@@ -185,6 +185,7 @@ void Shoot_Update(GameEntity* turret, StateMachine* SM, float dt) {
 					if (AreCirclesIntersecting(bullet, enemy)) {
 						{ enemy->color.red = 255; enemy->color.green = 0; enemy->color.blue = 0;   enemy->color.opacity = 255; }
 
+						//poison effects, still checks for stun so the conditions dont overlap
 						if (strcmp(bullet->type, "poison")==0) {
 							if (!enemy->isPoisoned) {
 								enemy->isPoisoned = 1;
@@ -200,11 +201,13 @@ void Shoot_Update(GameEntity* turret, StateMachine* SM, float dt) {
 							}
 						}
 
+						//normal
 						if (strcmp(bullet->type, "normal") == 0) {
 							enemyArr.ActiveEntityArr[j].health -= bullet->bulletDmg;
 							Health_PlayHitSfx();
 						}
 
+						//stun, checks for poison status effect as well
 						if (strcmp(bullet->type, "stun") == 0) {
 							if (!enemy->isStunned) {
 								enemyArr.ActiveEntityArr[j].health -= bullet->bulletDmg;

@@ -1,3 +1,13 @@
+//---------------------------------------------------------
+// file:	enemy.c
+// author:	[Zachary Ng][Ding Yi Chaw Maung]
+// email:	[zacharyhuaen.n@digipen.edu][dingyichaw.maung@digipen.edu]
+//
+// brief:	contains the Shoot State definitions 
+//			of the player unit.
+//
+// Copyright 2025 DigiPen, All rights reserved.
+//---------------------------------------------------------
 
 #include "enemy.h"
 #include "tile/tile.h"

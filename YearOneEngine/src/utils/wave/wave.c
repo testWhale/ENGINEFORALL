@@ -1,3 +1,12 @@
+//---------------------------------------------------------
+// file:	wave.c
+// author:	[Zachary Ng][Ding Yi Chaw Maung]
+// email:	[zacharyhuaen.n@digipen.edu][dingyichaw.maung@digipen.edu]
+//
+// brief:	logic for wave system in the game, and speed of enemy units
+//
+// Copyright 2025 DigiPen, All rights reserved.
+//---------------------------------------------------------
 #include "wave.h"
 #include "tile/tile.h"
 #include "scenes/mainmenu.h"

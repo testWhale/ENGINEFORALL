@@ -1,8 +1,18 @@
+//---------------------------------------------------------
+// file:	utils.c
+// author:	[Ding Yi Chaw Maung]
+// email:	[dingyichaw.maung@digipen.edu]
+//
+// brief:	logic for different flag utilities used 
+//
+// Copyright 2025 DigiPen, All rights reserved.
+//---------------------------------------------------------
 #include <math.h>
 #include <stdio.h>
 #include "tile/tile.h"
 #include "utils.h"
 CP_MOUSE mouse;
+
 int IsAreaClicked(float area_center_x, float area_center_y, float area_width, float area_height, float click_x, float click_y)
 {
 	if (click_x >= area_center_x - (area_width / 2) && click_x <= area_center_x + (area_width / 2) &&
@@ -74,6 +84,7 @@ int Is_Right_Clicked() {
 	}
 }
 
+//checks for when the enemy crosses a certain threshold to trigger turrets to start shooting
 int EnemyCrossedLine(GameEntity* enemy) {
 	float rightmost_line = g_TileMap[0][TILE_COLUMNS - 1].endPos.x;
 	return enemy->centerPos.x <= rightmost_line;
