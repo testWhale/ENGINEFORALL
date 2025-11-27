@@ -34,7 +34,7 @@ static float s_tipTimer = 0.0f;
 static int   s_lastWaveSeen = -1;
 static char  s_tipMsg[96] = "";
 
-/* Template Value */
+/* All bullet template types and their individual characteristics */
 GameEntity Make_Template(const char* name) {
 	GameEntity e; char* spritePath = "Assets/Cats/n.png"; char* shadowPath = "Assets/Cats/n_s.png"; char* soundPlace = "Assets/soundeffect/units/meow_place.wav";
 	if (name == "player")
@@ -401,6 +401,7 @@ void Draw_Entities(void)
 			}
 			if (!ent->isHitting)
 			{
+				//checks if enemy is in stunned state and completely halts movement logic for stated time
 				if (ent->unit.isStunned) {
 					ent->unit.stunTimer -= dt;
 
