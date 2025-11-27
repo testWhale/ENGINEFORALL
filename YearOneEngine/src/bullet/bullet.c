@@ -30,7 +30,7 @@ Bullet Bullet_Template(const char* name) {
             .bulletDmg = 2.0f,
             .poisonDmg = 15.0f,
             .poisonDecayTimer = 5.0f,
-            .yarn = CP_Image_Load("Assets/Cats/Yarn/Yarn.png")
+            .yarn = CP_Image_Load("Assets/Cats/Yarn/pos.png")
         };
        
     }

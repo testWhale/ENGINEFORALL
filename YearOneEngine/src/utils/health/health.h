@@ -1,8 +1,32 @@
+//---------------------------------------------------------
+// file: health.h
+// author: Xavier Lim
+// email: yipfengxavier.lim@digipen.edu
+//
+// brief: Funcion declaration for the HealthSystem interface.
+//  
+// Copyright 2025 DigiPen, All rights reserved.
+//---------------------------------------------------------
+
 #ifndef HEALTH_H_INCLUDED 
 #define HEALTH_H_INCLUDED 
 
-#define MAX_HEARTS_CAP 6 
-#define HEART_FLASH_TIME 1.5f 
+#define MAX_HEARTS_CAP 6  // for future proofing max amount of heart is 6 but only using 3
+#define HEART_FLASH_TIME 1.5f // heart flash for 1.5s when damage
+
+/* health struct
+Description:
+    - Stores player health state
+    - Tracks hearts, timers, alpha transparency for flashing
+Members:
+    maxHearts     - maximum number of hearts allowed
+    currentHearts - current number of hearts remaining
+    timer         - general timer for health events
+    health        - current health value
+    maxhealth     - maximum health value
+    alpha[]       - transparency values for each heart
+    flashTimer[]  - timers for flashing effect per heart
+*/
 
 typedef struct {
 	int maxHearts;
