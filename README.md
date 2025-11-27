@@ -13,4 +13,4 @@ Directory	Description
 | **src/scenes**  | Scene management, transitions, and different game state screens.                |
 | **src/state**   | Game state machine (FSM/HFSM), modes, and state transitions.                    |
 | **src/tile**    | Tilemap logic, grid interactions, environment data, and rendering.              |
-| **src/utils**   | Helper functions, math utilities, debug tools, and shared utilities.            |
+| **src/utils**   | Helper functions, main FSM functions, math utilities, debug tools, and shared utilities.            |
