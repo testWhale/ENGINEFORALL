@@ -3,8 +3,7 @@
 // author:	Zachary Ng
 // email:	zacharyhuaen.n@digipen.edu
 //
-// brief:	Contains declarations of functions 
-//			StateMachine.
+// brief:	Declares state machine types and helpers.
 //
 // Copyright 2025 DigiPen, All rights reserved.
 //---------------------------------------------------------
@@ -34,9 +33,7 @@ typedef struct StateMachine StateMachine;
 
 /* GameEntity
 Brief:
-	GameEntity contains BulletArr, sound, 
-	Sprite and Shadow info, directional 
-	and positional data, flags. 
+	GameEntity stores sprites, sounds, physics data, and state flags.
 */
 struct GameEntity {
 	/*Generic Values*/
@@ -74,35 +71,38 @@ typedef struct ActiveEntity ActiveEntity;
 
 /* FSM_SetState()
 Input:
-	StateMachine* fsm     - pointer to the Entity's State
-	States newState		  - the newState to replace currState in fsm
-	GameEntity* data	  - positional data/ flags/ image/ sound data 
-	float dt			  - deltaTime
-	
+	StateMachine* fsm - machine to switch
+	States newState - new state to activate
+	GameEntity* data - entity data
+	float dt - delta time
 Output:
-	Returns the StateFunction.
+	StateFunction for the current state
+Brief:
+	Stops the old state, switches the machine, and runs the new Init.
 */
-StateFunction FSM_SetState(StateMachine* fsm, States newState, GameEntity* data, float dt); //Replace with T
+StateFunction FSM_SetState(StateMachine* fsm, States newState, GameEntity* data, float dt);
 
 /* FSM_Update()
 Input:
-	StateMachine* fsm     - pointer to the Entity's State
-	GameEntity* data	  - positional data/ flags/ image/ sound data
-	float dt			  - deltaTime
-
+	StateMachine* fsm - machine to update
+	GameEntity* data - entity data
+	float dt - delta time
 Output:
-	Returns the StateFunction.
+	StateFunction for the current state
+Brief:
+	Calls the current state's Update function.
 */
 StateFunction FSM_Update(StateMachine* fsm, GameEntity* data, float dt);
 
 /* FSM_Init()
 Input:
-	StateMachine* fsm     - pointer to the Entity's State
-	GameEntity* data	  - positional data/ flags/ image/ sound data
-	float dt			  - deltaTime
-
+	StateMachine* fsm - machine to initialize
+	GameEntity* data - entity data
+	float dt - delta time
 Output:
-	Returns the StateFunction.
+	StateFunction for the current state
+Brief:
+	Calls the current state's Init callback.
 */
 StateFunction FSM_Init(StateMachine* fsm, GameEntity* data, float dt);
 

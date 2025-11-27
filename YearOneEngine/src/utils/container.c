@@ -1,8 +1,27 @@
+//---------------------------------------------------------
+// file:	container.c
+// author:	[Ding Yi Chaw Maung]
+// email:	[dingyichaw.maung@digipen.edu]
+//
+// brief:	Manages container arrays and draws background panels.
+//
+// Copyright 2025 DigiPen, All rights reserved.
+//---------------------------------------------------------
+
 #include "cprocessing.h"
 #include "container.h"
 #include <stdio.h>
 #include <stdlib.h>
 
+/* ContArr_Init()
+Input:
+    size_t maxLength - how many containers to reserve
+    ContArr* Array - array structure to fill
+Output:
+    ContArr current global array
+Brief:
+    Sets up the container array and allocates space for each entry.
+*/
 ContArr ContArr_Init(size_t maxLength, ContArr* Array) {
 
 	containersArr.maxLength = maxLength;
@@ -16,6 +35,15 @@ ContArr ContArr_Init(size_t maxLength, ContArr* Array) {
 	return containersArr;
 }
 
+/* ContArr_Insert()
+Input:
+    ContArr* Array - array to insert into
+    Container Entity - container data to store
+Output:
+    void
+Brief:
+    Grows the buffer if needed and appends the new container.
+*/
 void ContArr_Insert(ContArr* Array, Container Entity) {
 	if (Array->used >= Array->maxLength) {
 		Array->maxLength *= 2;
@@ -30,6 +58,14 @@ void ContArr_Insert(ContArr* Array, Container Entity) {
 	Array->used++;
 }
 
+/* ContArr_Free()
+Input:
+    ContArr* Array - array to clear
+Output:
+    void
+Brief:
+    Frees the array buffer and resets counts.
+*/
 void ContArr_Free(ContArr* Array) {
 	free(Array->container);
 	Array->container = NULL;
@@ -39,6 +75,14 @@ void ContArr_Free(ContArr* Array) {
 }
 
 /*------------------Definitions: Container ---------------------*/
+/* Container_Init()
+Input:
+    Container* contain - container to prepare
+Output:
+    void
+Brief:
+    Loads the background image and scales the container to the screen.
+*/
 void Container_Init(Container* contain) {
 	
 	contain->bg = CP_Image_Load(contain->bg_filepath);
@@ -63,16 +107,41 @@ void Container_Init(Container* contain) {
 	contain->height *= scale;
 }
 
+/* Container_Draw()
+Input:
+    Container* contain - container to draw
+Output:
+    void
+Brief:
+    Draws the container background image at its stored position.
+*/
 void Container_Draw(Container* contain) {
 	int width = contain->width;
 	int height = contain->height;
 	CP_Image_Draw(contain->bg, contain->leftTopPos.x, contain->leftTopPos.y, width, height, 255);
 }
 
+/* Container_Destroy()
+Input:
+    Container* contain - container holding the image
+Output:
+    void
+Brief:
+    Frees the background image.
+*/
 void Container_Destroy(Container* contain) {
 	CP_Image_Free(contain->bg);
 }
 
+/* getContainer()
+Input:
+    char* Slabel - label to look for
+    ContArr* Array - array to search
+Output:
+    Container* pointer when the label matches
+Brief:
+    Finds a container by label in the array.
+*/
 Container* getContainer(char* Slabel, ContArr* Array) {
 	for (int i = 0; i < Array->maxLength; i++) {
 		if (strcmp(Slabel, Array->container[i].label) == 0) {

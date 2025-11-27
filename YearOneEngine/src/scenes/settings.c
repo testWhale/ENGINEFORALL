@@ -52,15 +52,9 @@ Slider* Slider_Create(Slider* slider, float x, float y, float width, float heigh
 Input:
     s - pointer to a Slider
 Output:
-    None (draws the slider + updates the value)
-Description:
-    - Draws the background track
-    - Draws filled portion proportional to current value
-    - Draws knob at correct position
-    - Handles:
-        1. clicking on knob
-        2. dragging knob
-        3. clicking on track to jump to value
+    void
+Brief:
+    Draws the track and knob, clamps the value, and responds to mouse input.
 */
 void Slider_Draw(Slider* s) {
     float mx = CP_Input_GetMouseX();
@@ -127,31 +121,14 @@ void Slider_Free(Slider* s) {
 }
 
 
-
-// Draw settings tab for all CP_Sound groups
-void Sd_Settings_Update() {
-    if (!settingsTabOpen) return;
-
-    //CP_Graphics_ClearBackground(CP_Color_Create(255, 128, 128, 255));
-    //CP_Settings_ImageMode(CP_POSITION_CORNER);
-    //CP_Image_Draw(MainMenuBackground, 0, 0, 192 * unit, 108 * unit, 255);
-    //// Center slider horizontally
-    //float sliderWidth = 200;
-    //float sliderX = (192 * unit / 2) - (sliderWidth / 2);
-    //s.x = sliderX;
-    //s.y = 80 * unit; // vertical position
-    //s.width = sliderWidth;
-    //// Draw slider
-    //Slider_Draw(&s);
-    //// Draw label above slider
-    //CP_Settings_TextSize(28.0f);
-    //CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_TOP);
-    //CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
-    //CP_Font_DrawText("Volume Slider", s.x, s.y - 20);
-
-}
-
-// Draw the settings tab (call every frame)
+/* Sd_Settings_Exit()
+Input:
+    None
+Output:
+    void
+Brief:
+    Releases fonts and images used by the tab.
+*/
 void Sd_Settings_Exit() {
     CP_Font_Free(myFont);
     CP_Image_Free(MainMenuBackground);

@@ -18,8 +18,14 @@ waveFlag = 0;
 waveState = 0;
 
 /* Start_Wave()
-Input: Either player or enemy pointer
-Output: pointer to the GameEntity */
+Input:
+    GameEntity* entity - enemy entity spawn position is initialized
+    float dt - delta time parameter (currently unused but reserved for future animation tweaks)
+Output:
+    GameEntity* (same pointer) after randomizing starting position, sprite, and velocity
+Brief:
+    Places the enemy/player on a random tile row, prepares enemy with velocity and accelelartion configures its texture/accelelartion
+*/
 GameEntity* Start_Wave(GameEntity* entity, float dt) {
 	
 	// provides rdnm number till TILE_ROWS numbers range from 0-6
@@ -56,9 +62,15 @@ GameEntity* Start_Wave(GameEntity* entity, float dt) {
 	printf("Accel %f\n", entity->velocity.x);
 }
 
-/* MoveWave()
-Input: Either player or enemy 
-Output: pointer to the GameEntity */
+/* Move_Wave()
+Input:
+    GameEntity* entity - entity whose velocity/position should be advanced
+    float dt - delta time for motion integration
+Output:
+    GameEntity* (same pointer) after updating velocity and center position
+Brief:
+    Advances the entity along its current acceleration, moving it across the screen each frame.
+*/
 GameEntity* Move_Wave(GameEntity* entity, float dt) {
 	 
 	entity->velocity = CP_Vector_Add(entity->velocity, entity->accel);
@@ -66,6 +78,14 @@ GameEntity* Move_Wave(GameEntity* entity, float dt) {
 }
 
 
+/* Draw_WaveCounter()
+Input:
+    None
+Output:
+    void
+Brief:
+    Renders the on-screen wave number label near the top-left corner.
+*/
 void Draw_WaveCounter() {
 	/* Draw Wave Counter */
 	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
