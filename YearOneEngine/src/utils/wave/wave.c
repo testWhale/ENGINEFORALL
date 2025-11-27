@@ -1,7 +1,7 @@
 //---------------------------------------------------------
 // file:	wave.c
-// author:	[Zachary Ng][Ding Yi Chaw Maung]
-// email:	[zacharyhuaen.n@digipen.edu][dingyichaw.maung@digipen.edu]
+// author:	[Zachary Ng]
+// email:	[zacharyhuaen.n@digipen.edu]
 //
 // brief:	logic for wave system in the game, and speed of enemy units
 //

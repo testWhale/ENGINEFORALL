@@ -1,7 +1,7 @@
 //---------------------------------------------------------
 // file:	wave.h
-// author:	[Zachary Ng][Ding Yi Chaw Maung]
-// email:	[zacharyhuaen.n@digipen.edu][dingyichaw.maung@digipen.edu]
+// author:	[Zachary Ng]
+// email:	[zacharyhuaen.n@digipen.edu]
 //
 // brief:	declaration for wave functions and enemy speeds in each wave
 //

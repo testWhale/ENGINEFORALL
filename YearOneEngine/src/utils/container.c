@@ -1,7 +1,7 @@
 //---------------------------------------------------------
 // file:	container.c
-// author:	[Ding Yi Chaw Maung]
-// email:	[dingyichaw.maung@digipen.edu]
+// author:	[Zachary Ng]
+// email:	[zacnghuaen.n@digipen.edu]
 //
 // brief:	Manages container arrays and draws background panels.
 //

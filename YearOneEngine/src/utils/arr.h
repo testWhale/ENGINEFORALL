@@ -1,7 +1,7 @@
 //---------------------------------------------------------
 // file:	arr.h
-// author:	Zachary Ng
-// email:	zacharyhuaen.n@digipen.edu
+// author:	[Zachary Ng]
+// email:	[zacnghuaen.n@digipen.edu]
 //
 // brief:	Contains definition of dynamic array 
 //			

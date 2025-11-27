@@ -1,3 +1,12 @@
+//---------------------------------------------------------
+// file:	mouse.h
+// author:	[Zachary Ng]
+// email:	[zacnghuaen.n@digipen.edu]
+//
+// brief:	Declarations that implements mouse/ pickup count utilities for UI interactions.
+//
+// Copyright 2025 DigiPen, All rights reserved.
+//---------------------------------------------------------
 #ifndef MOUSE_H
 #define MOUSE_H
 

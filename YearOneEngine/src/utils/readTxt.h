@@ -1,7 +1,7 @@
 //---------------------------------------------------------
 // file:	readTxt.h
-// author:	[Ding Yi Chaw Maung]
-// email:	[dingyichaw.maung@digipen.edu]
+// author:	[Zachary Ng]
+// email:	[zacnghuaen.n@digipen.edu]
 //
 // brief:	Declares the helper that loads container data from text.
 //

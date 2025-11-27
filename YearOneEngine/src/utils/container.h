@@ -1,7 +1,7 @@
 //---------------------------------------------------------
 // file:	container.h
-// author:	[Ding Yi Chaw Maung]
-// email:	[dingyichaw.maung@digipen.edu]
+// author:	[Zachary Ng]
+// email:	[zacnghuaen.n@digipen.edu]
 //
 // brief:	Types and functions for container panels and their array.
 //

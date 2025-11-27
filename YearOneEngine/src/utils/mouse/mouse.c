@@ -1,7 +1,7 @@
 //---------------------------------------------------------
 // file:	mouse.c
-// author:	[Zachary Ng][Ding Yi Chaw Maung]
-// email:	[zacharyhuaen.n@digipen.edu][dingyichaw.maung@digipen.edu]
+// author:	[Zachary Ng]
+// email:	[zacnghuaen.n@digipen.edu]
 //
 // brief:	Implements mouse/ pickup count utilities for UI interactions.
 //

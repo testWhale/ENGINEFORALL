@@ -1,7 +1,7 @@
 //---------------------------------------------------------
 // file:	readTxt.c
-// author:	[Ding Yi Chaw Maung]
-// email:	[dingyichaw.maung@digipen.edu]
+// author:	[Zachary Ng]
+// email:	[zacnghuaen.n@digipen.edu]
 //
 // brief:	Loads container data from text files into the array.
 //

@@ -1,7 +1,7 @@
 //---------------------------------------------------------
 // file:	arr.c
-// author:	Zachary Ng
-// email:	zacharyhuaen.n@digipen.edu
+// author:	[Zachary Ng]
+// email:	[zacnghuaen.n@digipen.edu]
 //
 // brief:	Contains declaration of dynamic array 
 //			
@@ -13,7 +13,6 @@
 #include <string.h>
 #include <stdio.h>
 #include "utils/arr.h"
-#include "State.h"
 
 /*-Global Variables-*/
 TestArr enemyArr;
