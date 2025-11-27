@@ -49,7 +49,6 @@
     <ClInclude Include="src\utils\health\health.h" />
     <ClInclude Include="src\utils\UI\Pause.h" />
     <ClInclude Include="src\utils\wave\wave.h" />
-    <ClInclude Include="DataTypes.h" />
     <ClInclude Include="src\utils\arr.h" />
     <ClInclude Include="src\utils\backend\containerStates.h" />
     <ClInclude Include="src\utils\container.h" />
