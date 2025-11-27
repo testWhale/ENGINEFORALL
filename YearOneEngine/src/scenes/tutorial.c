@@ -1,3 +1,13 @@
+//---------------------------------------------------------
+// file:	tutorial.c
+// author:	[Quak June Hao (Quinn)]
+// email:	[quak.j@digipen.edu]
+//
+// brief:	This code contains behavior for the tutorial portion of the game
+//
+// Copyright 2025 DigiPen, All rights reserved.
+//---------------------------------------------------------
+
 #include <cprocessing.h>
 #include "utils/utils.h"
 #include "scenes/mainscene.h"
@@ -17,7 +27,7 @@ void Tutorial_Init(void)
 
 	tutClickMusic = CP_Sound_Load("Assets/soundTesters/next.wav");
 
-
+	//this loads all the tutorial pictures
 	unit = CP_System_GetWindowWidth() / 192.0f;
 	TutorialString[0] = "Assets/Tutorial/Page1.png";
 	TutorialString[1] = "Assets/Tutorial/Page2.png";
@@ -66,11 +76,12 @@ void Tutorial_Update(void)
 }
 
 void Tutorial_Exit(void)
-{
-	tutcounter = 0;
+//frees up all the assets
+{	tutcounter = 0;
 	for (int i = 0; i < instructions; i++)
 	{
 		CP_Image_Free(Tutorial[i]);
 	}
 	CP_Sound_Free(tutMusic);
+	CP_Sound_Free(tutClickMusic);
 }

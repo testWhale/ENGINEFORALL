@@ -1,13 +1,13 @@
-/*!
-@file buttonCode.h
-@author Quak June Hao (quak.j)
-@course Software Engineering Project (CSD1401)
-@section A
-@GAM 100
-@date 28/10/25
-@links this file has a function file that is named buttonCode.c
-@brief This header file has functions that helps handle button behavior and feedback
-*/
+//---------------------------------------------------------
+// file:	buttonCode.h
+// author:	[Quak June Hao (Quinn)]
+// email:	[quak.j@digipen.edu]
+//
+// brief:	This code contains declaration for the button behavior and generation system
+//
+// Copyright 2025 DigiPen, All rights reserved.
+//---------------------------------------------------------
+
 
 #include "cprocessing.h"
 typedef struct ButtonSound {
@@ -48,22 +48,45 @@ void Button_Load(ButtonInfo* newbtn,
     const char* buttonNormalPath,
     const char* buttonFeedbackPath,
     const char* buttonHighlightPath,
-
-    /*EXTRA */
     int alive );
+
+/// <summary>
+/// This frees up all relevant assets with your button
+/// </summary>
+/// <param name="newbtn">insert button name here</param>
 void Button_Free(ButtonInfo* newbtn);
 
+
+/// <summary>
+/// This Loads your soundpack for your buttons
+/// </summary>
+/// <param name="soundPreset">Insert Preset Name</param>
+/// <param name="soundClickPath">insert path as a string</param>
+/// <param name="soundHoverPath">insert path as a string</param>
+/// <param name="soundReleasePath">insert path as a string/param>
 void Button_Sound_Load(ButtonSound* soundPreset, const char* soundClickPath, const char* soundHoverPath, const char* soundReleasePath);
+
+/// <summary>
+/// This frees up the soundpack
+/// </summary>
+/// <param name="soundPreset">insert soundpack name</param>
 void Button_Sound_Free(ButtonSound* soundPreset);
 
+
+//this 3 functions handle behavior of drawing the buttons
+//insert the button name as necessaru
 void Draw_Button_Normal(ButtonInfo* btnname);
 void Draw_Button_Feedback(ButtonInfo* btnname);
 void Draw_Button_Highlight(ButtonInfo* btnname);
 
-//int isSquareButtonHovered(buttonInfo* btnname, float mousex, float mousey);
-//int isCircleButtonHovered(b uttonInfo* btnname, float mousex, float mousey);
+
+//helper functions to help check for behavior in a button
 int Is_Any_Button_Hovered(ButtonInfo* btnname, float mousex, float mousey);
 int Is_Button_Pressed(ButtonInfo* btnname, int isHovered);
 int Is_Button_Released(ButtonInfo* btnname, int isHovered);
 
+/// <summary>
+/// this renders the whole behavior of a button
+/// </summary>
+/// <param name="btnname">insert the button struct name</param>
 void Button_Behavior(ButtonInfo* btnname);
