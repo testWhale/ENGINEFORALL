@@ -110,7 +110,7 @@ void Pause_Init(void)
     
     Button_Sound_Load(&s_pauseSound,
         "Assets/Sound_Effects/ClickSound.wav",
-        "Assets/Sound_Effects/HoverSound.wav",
+        "Assets/Sound_Effects/hoverSound.mp3",
         "Assets/Sound_Effects/ReleaseSound.wav");
     unit = CP_System_GetWindowWidth() / 192.0f;
     Button_Load(&s_btnPause, &s_pauseSound,

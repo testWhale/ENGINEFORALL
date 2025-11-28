@@ -28,7 +28,7 @@ CP_Sound menuMusic;
 
 void Main_Menu_Init(void)
 {
-    menuMusic = CP_Sound_LoadMusic("Assets/Sound_Effects/mainmenu.wav");
+    menuMusic = CP_Sound_LoadMusic("Assets/Sound_Effects/mainMenu.mp3");
     CP_Sound_PlayAdvanced(menuMusic, 1.0f, 1.0f, TRUE, CP_SOUND_GROUP_0);
 
     //CP_System_Fullscreen();
@@ -39,7 +39,7 @@ void Main_Menu_Init(void)
 
     Button_Sound_Load(&defaultSound,
         "Assets/Sound_Effects/ClickSound.wav",
-        "Assets/Sound_Effects/HoverSound.wav",
+        "Assets/Sound_Effects/hoverSound.mp3",
         "Assets/Sound_Effects/ReleaseSound.wav");
 
     Button_Load(&PlayButton, &defaultSound,

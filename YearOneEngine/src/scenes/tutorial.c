@@ -22,7 +22,7 @@ CP_Sound tutMusic, tutClickMusic;
 
 void Tutorial_Init(void)
 {
-	tutMusic = CP_Sound_LoadMusic("Assets/Sound_Effects/tut.wav");
+	tutMusic = CP_Sound_LoadMusic("Assets/Sound_Effects/tut.mp3");
 	CP_Sound_PlayAdvanced(tutMusic, 1.0f, 1.0f, TRUE, CP_SOUND_GROUP_0);
 
 	tutClickMusic = CP_Sound_Load("Assets/Sound_Effects/next.wav");

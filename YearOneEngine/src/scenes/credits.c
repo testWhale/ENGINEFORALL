@@ -29,7 +29,7 @@ CP_Sound creditMusic;
 
 void Credits_Init(void)
 {
-    creditMusic = CP_Sound_LoadMusic("Assets/Sound_Effects/cred.wav");
+    creditMusic = CP_Sound_LoadMusic("Assets/Sound_Effects/cred.mp3");
     CP_Sound_PlayAdvanced(creditMusic, 1.0f, 1.0f, TRUE, CP_SOUND_GROUP_0);
 
     unit = CP_System_GetWindowWidth() / 192.0f;
@@ -40,7 +40,7 @@ void Credits_Init(void)
 
     Button_Sound_Load(&defaultSound,
         "Assets/Sound_Effects/ClickSound.wav",
-        "Assets/Sound_Effects/HoverSound.wav",
+        "Assets/Sound_Effects/hoverSound.mp3",
         "Assets/Sound_Effects/ReleaseSound.wav");
 
     Button_Load(&BackButton, &defaultSound,

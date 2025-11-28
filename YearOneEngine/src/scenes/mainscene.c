@@ -47,7 +47,7 @@ static HealthSystem gHealth;
 
 void Main_Scene_Init(void)
 {
-    bgmMusic = CP_Sound_LoadMusic("Assets/Sound_Effects/BGM.wav");
+    bgmMusic = CP_Sound_LoadMusic("Assets/Sound_Effects/BGM.mp3");
 
     CP_Sound_PlayAdvanced(bgmMusic, 1.7f, 1.0f, TRUE, CP_SOUND_GROUP_0);
     //CP_Sound_PlayMusic(bgmMusic);
@@ -71,7 +71,7 @@ void Main_Scene_Init(void)
     //loading of default button sound pack
     Button_Sound_Load(&defaultSound,
         "Assets/Sound_Effects/ClickSound.wav",
-        "Assets/Sound_Effects/HoverSound.wav",
+        "Assets/Sound_Effects/hoverSound.mp3",
         "Assets/Sound_Effects/ReleaseSound.wav");
 
 
