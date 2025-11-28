@@ -42,9 +42,9 @@ void Nuke_Init(void) {
     explode = CP_Image_Load("Assets/Misc/explosion.jpg");
     nukeX = 1920 / 2.0f;   // center horizontally
     nukeY = 0.0f;          // start at top
-    drop = CP_Sound_Load("Assets/soundTesters/Designed, Tonal, Bomb, Falling, WWII SND7490.wav");
-    boom = CP_Sound_Load("Assets/soundTesters/Huge Explosion by CGEffex Id-93834.wav");
-    boom2 = CP_Sound_Load("Assets/soundTesters/Huge Explosion Part 1   Shockwave by bevibeldesign Id-366091.wav");
+    drop = CP_Sound_Load("Assets/Sound_Effects/Designed, Tonal, Bomb, Falling, WWII SND7490.wav");
+    boom = CP_Sound_Load("Assets/Sound_Effects/Huge Explosion by CGEffex Id-93834.wav");
+    boom2 = CP_Sound_Load("Assets/Sound_Effects/Huge Explosion Part 1   Shockwave by bevibeldesign Id-366091.wav");
     CP_Sound_SetGroupVolume(0, 2.0f);
     CP_Sound_Play(drop);
 }

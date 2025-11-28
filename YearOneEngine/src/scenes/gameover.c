@@ -58,7 +58,7 @@ void GameOver_Init(void) {
     GO_timer = GO_fade = 0.0f;
     GO_font = CP_Font_Load("Assets/Fonts/Quinndoodle.ttf");
     if (GO_font) CP_Font_Set(GO_font);
-    KO = CP_Sound_Load("Assets/soundTesters/Game Over Arcade by myfox14 Id-382310.wav");
+    KO = CP_Sound_Load("Assets/Sound_Effects/Game Over Arcade by myfox14 Id-382310.wav");
     CP_Sound_Play(KO);
     CP_Settings_RectMode(CP_POSITION_CORNER);
     CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);

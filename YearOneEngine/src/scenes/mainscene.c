@@ -47,7 +47,7 @@ static HealthSystem gHealth;
 
 void Main_Scene_Init(void)
 {
-    bgmMusic = CP_Sound_LoadMusic("Assets/soundTesters/BGM.wav");
+    bgmMusic = CP_Sound_LoadMusic("Assets/Sound_Effects/BGM.wav");
 
     CP_Sound_PlayAdvanced(bgmMusic, 1.7f, 1.0f, TRUE, CP_SOUND_GROUP_0);
     //CP_Sound_PlayMusic(bgmMusic);
@@ -70,9 +70,9 @@ void Main_Scene_Init(void)
 
     //loading of default button sound pack
     Button_Sound_Load(&defaultSound,
-        "Assets/soundTesters/ClickSound.wav",
-        "Assets/soundTesters/HoverSound.wav",
-        "Assets/soundTesters/ReleaseSound.wav");
+        "Assets/Sound_Effects/ClickSound.wav",
+        "Assets/Sound_Effects/HoverSound.wav",
+        "Assets/Sound_Effects/ReleaseSound.wav");
 
 
     //loading of all the buttons.
@@ -146,14 +146,14 @@ void Main_Scene_Init(void)
     HealthSystem_Init(&gHealth, 3, 3);
     HealthImage_Load("Assets/Misc/MilkBowl.png","Assets/Misc/MilkBowlEmpty.png");
     HealthAudio_Load(
-        "Assets/soundTesters/Metal Ping by timgormly Id-170957.wav",
-        "Assets/soundTesters/Glass Break by unfa Id-221528.wav");
+        "Assets/Sound_Effects/Metal Ping by timgormly Id-170957.wav",
+        "Assets/Sound_Effects/Glass Break by unfa Id-221528.wav");
     HealthSystem_ResetTimer(&gHealth);
  
     Goal_InitFromTileMap(0.45f, 0.25f);
 
     Pause_Init();
-    setup("Assets/Map/TM2.png", "Assets/Map/Test3.png");
+    setup("Assets/Map/TM.png", "Assets/Map/NM.png");
 }
 
 void Main_Scene_Update(void)
