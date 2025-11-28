@@ -20,6 +20,7 @@
 static float nukeX, nukeY;             // position of the nuke
 static float nukeDropSpeed = 80.0f;    // falling speed
 static int explosionStage = 0;         // current explosion stage
+
 static float explosionTimer = 0.0f;    // timer for explosion stage transitions
 static CP_Sound drop;                  // drop sound
 static CP_Sound boom;                  // first explosion sound
@@ -40,7 +41,7 @@ Description:
 void Nuke_Init(void) {
     nuke = CP_Image_Load("Assets/Misc/Nuke.jpg");
     explode = CP_Image_Load("Assets/Misc/explosion.jpg");
-    nukeX = 1920 / 2.0f;   // center horizontally
+    nukeX = 1600 / 2.0f;   // center horizontally
     nukeY = 0.0f;          // start at top
     drop = CP_Sound_Load("Assets/Sound_Effects/Designed, Tonal, Bomb, Falling, WWII SND7490.wav");
     boom = CP_Sound_Load("Assets/Sound_Effects/Huge Explosion by CGEffex Id-93834.wav");
@@ -71,7 +72,7 @@ void Nuke_Update(void) {
         nukeY += nukeDropSpeed * dt; // move down
 
         // Impact point reached
-        if (nukeY >= 540) {
+        if (nukeY >= 450) {
             explosionStage = 1;
             explosionTimer = 0.0f;
             CP_Sound_Play(boom); // play first explosion sound
