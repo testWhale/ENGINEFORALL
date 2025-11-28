@@ -70,9 +70,9 @@ void Main_Scene_Init(void)
 
     //loading of default button sound pack
     Button_Sound_Load(&defaultSound,
-        "Assets/Sound_Effects/ClickSound.wav",
+        "Assets/Sound_Effects/clickSound.mp3",
         "Assets/Sound_Effects/hoverSound.mp3",
-        "Assets/Sound_Effects/ReleaseSound.wav");
+        "Assets/Sound_Effects/releaseSound.mp3");
 
 
     //loading of all the buttons.
@@ -146,8 +146,8 @@ void Main_Scene_Init(void)
     HealthSystem_Init(&gHealth, 3, 3);
     HealthImage_Load("Assets/Misc/MilkBowl.png","Assets/Misc/MilkBowlEmpty.png");
     HealthAudio_Load(
-        "Assets/Sound_Effects/Metal Ping by timgormly Id-170957.wav",
-        "Assets/Sound_Effects/Glass Break by unfa Id-221528.wav");
+        "Assets/Sound_Effects/MmetalPing.mp3",
+        "Assets/Sound_Effects/GglassBreak.mp3");
     HealthSystem_ResetTimer(&gHealth);
  
     Goal_InitFromTileMap(0.45f, 0.25f);

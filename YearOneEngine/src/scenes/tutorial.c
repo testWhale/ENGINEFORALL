@@ -25,7 +25,7 @@ void Tutorial_Init(void)
 	tutMusic = CP_Sound_LoadMusic("Assets/Sound_Effects/tut.mp3");
 	CP_Sound_PlayAdvanced(tutMusic, 1.0f, 1.0f, TRUE, CP_SOUND_GROUP_0);
 
-	tutClickMusic = CP_Sound_Load("Assets/Sound_Effects/next.wav");
+	tutClickMusic = CP_Sound_Load("Assets/Sound_Effects/next.mp3");
 
 	//this loads all the tutorial pictures
 	unit = CP_System_GetWindowWidth() / 192.0f;

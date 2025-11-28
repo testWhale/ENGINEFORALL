@@ -44,8 +44,8 @@ void Nuke_Init(void) {
     nukeX = 1600 / 2.0f;   // center horizontally
     nukeY = 0.0f;          // start at top
     drop = CP_Sound_Load("Assets/Sound_Effects/bombFalling.mp3");
-    boom = CP_Sound_Load("Assets/Sound_Effects/explode1.wav");
-    boom2 = CP_Sound_Load("Assets/Sound_Effects/explode2.wav");
+    boom = CP_Sound_Load("Assets/Sound_Effects/explode1.mp3");
+    boom2 = CP_Sound_Load("Assets/Sound_Effects/explode2.mp3");
     CP_Sound_SetGroupVolume(0, 2.0f);
     CP_Sound_Play(drop);
 }

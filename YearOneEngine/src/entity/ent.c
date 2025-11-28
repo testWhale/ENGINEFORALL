@@ -42,7 +42,7 @@ Brief:
     Builds a reusable GameEntity prototype by configuring sprites, sounds, and default state for each role.
 */
 GameEntity Make_Template(const char* name) {
-	GameEntity e; char* spritePath = "Assets/Cats/n.png"; char* shadowPath = "Assets/Cats/n_s.png"; char* soundPlace = "Assets/Sound_Effects/units/meow_place.wav";
+	GameEntity e; char* spritePath = "Assets/Cats/n.png"; char* shadowPath = "Assets/Cats/n_s.png"; char* soundPlace = "Assets/Sound_Effects/units/meowPlace.mp3";
 	if (name == "player")
 	{
 		spritePath = "Assets/Cats/n.png";
@@ -55,7 +55,7 @@ GameEntity Make_Template(const char* name) {
 
 	if (name == "poison")
 	{
-		soundPlace = "Assets/Sound_Effects/units/pos_place.wav";
+		soundPlace = "Assets/Sound_Effects/units/posPlace.mp3";
 		Bullet temp = Bullet_Template("poison");
 
 		spritePath = "Assets/Cats/p.png";
@@ -69,7 +69,7 @@ GameEntity Make_Template(const char* name) {
 
 	if (name == "stun")
 	{
-		soundPlace = "Assets/Sound_Effects/units/elec_place.wav";
+		soundPlace = "Assets/Sound_Effects/units/elecPlace.mp3";
 		Bullet temp = Bullet_Template("stun");
 		spritePath = "Assets/Cats/e.png";
 		shadowPath = "Assets/Cats/n_s.png";

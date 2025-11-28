@@ -39,9 +39,9 @@ void Credits_Init(void)
     CreditsY = 150 * unit;
 
     Button_Sound_Load(&defaultSound,
-        "Assets/Sound_Effects/ClickSound.wav",
+        "Assets/Sound_Effects/clickSound.mp3",
         "Assets/Sound_Effects/hoverSound.mp3",
-        "Assets/Sound_Effects/ReleaseSound.wav");
+        "Assets/Sound_Effects/releaseSound.mp3");
 
     Button_Load(&BackButton, &defaultSound,
         156 * unit, 92 * unit,

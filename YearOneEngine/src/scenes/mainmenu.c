@@ -38,9 +38,9 @@ void Main_Menu_Init(void)
 
 
     Button_Sound_Load(&defaultSound,
-        "Assets/Sound_Effects/ClickSound.wav",
+        "Assets/Sound_Effects/clickSound.mp3",
         "Assets/Sound_Effects/hoverSound.mp3",
-        "Assets/Sound_Effects/ReleaseSound.wav");
+        "Assets/Sound_Effects/releaseSound.mp3");
 
     Button_Load(&PlayButton, &defaultSound,
         36 * unit, 92 * unit,
