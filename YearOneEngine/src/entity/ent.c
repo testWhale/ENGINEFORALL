@@ -14,7 +14,6 @@
 #include "../SM.h"
 #include "../arr.h"
 #include "../state/enemy.h"
-#include "../utils/arr/State.h"
 #include "../wave/wave.h"
 #include "health.h"
 #include "../container.h"
@@ -34,7 +33,14 @@ static float s_tipTimer = 0.0f;
 static int   s_lastWaveSeen = -1;
 static char  s_tipMsg[96] = "";
 
-/* All bullet template types and their individual characteristics */
+/* Make_Template()
+Input:
+    const char* name - key describing which entity template to produce (player, enemy, stun, etc.)
+Output:
+    GameEntity populated with data (sprite, stats, physics) matching the requested template
+Brief:
+    Builds a reusable GameEntity prototype by configuring sprites, sounds, and default state for each role.
+*/
 GameEntity Make_Template(const char* name) {
 	GameEntity e; char* spritePath = "Assets/Cats/n.png"; char* shadowPath = "Assets/Cats/n_s.png"; char* soundPlace = "Assets/soundeffect/units/meow_place.wav";
 	if (name == "player")
@@ -87,7 +93,14 @@ GameEntity Make_Template(const char* name) {
 	return e;
 }
 
-/*LOADS IN PLAYER & ENEMY ARRAY */
+/* Init_PlayerDemo()
+Input:
+    None
+Output:
+    void
+Brief:
+    Seeds the player and enemy arrays with default units, assigns FSMs, and places player units in their starting positions.
+*/
 void Init_PlayerDemo() {
 
 	GameEntity player = Make_Template("player");
@@ -141,6 +154,14 @@ void Init_PlayerDemo() {
 	//Read_File("Assets/containers");
 }
 
+/* Init_NewWave()
+Input:
+    int currWave - index of the wave to spawn, used for scaling enemy count and health
+Output:
+    void
+Brief:
+    Clears and repopulates the enemy container for the next wave, applying difficulty curves and starting their wave logic.
+*/
 void Init_NewWave(int currWave) {
 	GameEntity enemy = Make_Template("enemy");
 	/* FOR ENEMY UNITS */
@@ -175,7 +196,14 @@ void Init_NewWave(int currWave) {
 	}
 }
 
-/* Completely Kills all active Enemies */
+/* Kill_NewWave()
+Input:
+    None
+Output:
+    void
+Brief:
+    Removes every enemy from the active array by iteratively deleting each entry until the container is empty.
+*/
 void Kill_NewWave() {
 	{
 		printf("test;");
@@ -185,6 +213,14 @@ void Kill_NewWave() {
 	}
 }
 
+/* Load_TempText()
+Input:
+    None
+Output:
+    void
+Brief:
+    Prepares temporary UI buttons (wave prompts) and resets tooltip timers for the wave tip system.
+*/
 void Load_TempText() {
 	Button_Load(&NewWave2Button, &defaultSound,
 		96 * unit, 60 * unit,
@@ -207,6 +243,14 @@ void Load_TempText() {
 	s_tipMsg[0] = '\0';
 }
 
+/* Draw_TempText()
+Input:
+    float dt - frame delta time for animations/timers
+Output:
+    void
+Brief:
+    Renders and updates the temporary wave buttons, tracks tooltips, and briefly shows contextual tips when new waves appear.
+*/
 void Draw_TempText(float dt) {
 	if (waveFlag) {
 		waveState += (dt * 2);
@@ -273,17 +317,41 @@ void Draw_TempText(float dt) {
 		CP_Font_DrawText(s_tipMsg, cx, cy);
 	}
 }
+/* Del_TempText()
+Input:
+    None
+Output:
+    void
+Brief:
+    Tears down the temporary buttons by freeing their resources to avoid leaks.
+*/
 void Del_TempText() {
 	Button_Free(&NewWaveButton);
 	Button_Free(&NewWave2Button);
 }
 
 /* Mouse Refresh after Loop */
-// Compare function for qsort descending
+/* compare_desc()
+Input:
+    const void* a - pointer to first index value
+    const void* b - pointer to second index value
+Output:
+    int representing descending order result for qsort
+Brief:
+    Orders integers so that higher indices come first, which keeps deletions from shuffling the array incorrectly.
+*/
 int compare_desc(const void* a, const void* b) {
 	return (*(int*)b - *(int*)a);
 }
 
+/* LateUpdate_Pickups()
+Input:
+    None
+Output:
+    void
+Brief:
+    Cleans up any pickups marked for removal by reindexing remaining items and deleting pickup handles.
+*/
 void LateUpdate_Pickups()
 {
 	int removedIndices[64]; // adjust max pickups if needed
@@ -331,6 +399,14 @@ void LateUpdate_Pickups()
 
 
 float rotation = 0.f;
+/* Draw_Bullets()
+Input:
+    None
+Output:
+    void
+Brief:
+    Iterates player bullets, colors them by type, and renders each sprite with a spinning animation.
+*/
 void Draw_Bullets() {
 	for (size_t i = 0; i < playerArr.used; ++i) {
 		ActiveEntity* ent = &playerArr.ActiveEntityArr[i];
@@ -363,6 +439,14 @@ void Draw_Bullets() {
 }
 
 float newDT=0;
+/* Draw_Entities()
+Input:
+    None
+Output:
+    void
+Brief:
+    Advances all player/enemy FSMs, draws shadows/health bars, triggers new waves, and renders every active entity.
+*/
 void Draw_Entities(void)
 {
 	float dt = CP_System_GetDt();
@@ -557,7 +641,14 @@ static float* nzArr = NULL;          /* normal Z */
 
 static CP_Image* texDirs = NULL;     /* array of precomputed directional textures */
 
-/* Helpers */
+/* clampf01()
+Input:
+    float v - value to clamp
+Output:
+    float constrained to range [0,1]
+Brief:
+    Helper that bounds a value to the normalized zero-to-one range before reusing it in lighting calculations.
+*/
 static inline float clampf01(float v) {
 	/* clamp value to 0..1 */
 	if (v < 0.0f) return 0.0f;
@@ -565,7 +656,15 @@ static inline float clampf01(float v) {
 	return v;
 }
 
-/* Setup */
+/* setup()
+Input:
+    const char* basePath - filepath for the base sprite texture
+    const char* normalPath - filepath for the normal map texture
+Output:
+    void
+Brief:
+    Loads textures, extracts pixel data, and precomputes directional lighting textures for future drawing calls.
+*/
 void setup(const char* basePath, const char* normalPath) {
 	/* load textures */
 	baseTex = CP_Image_Load(basePath);
@@ -647,7 +746,18 @@ void setup(const char* basePath, const char* normalPath) {
 	printf("CS_Setup: Precomputed %d directional textures (%dx%d)\n", NUM_DIRS, texW, texH);
 }
 
-/* Draw */
+/* draw()
+Input:
+    float worldX - world-space X coordinate for rendering
+    float worldY - world-space Y coordinate for rendering
+    float drawW - width of the drawn sprite in world units
+    float drawH - height of the drawn sprite in world units
+    int alpha - alpha blend used when rendering the lighting overlay
+Output:
+    void
+Brief:
+    Blends multiple precomputed directional textures based on mouse pointing direction and draws the sprite on screen.
+*/
 void draw(float worldX, float worldY, float drawW, float drawH, int alpha) {
 	if (!texDirs) return;
 
@@ -686,7 +796,14 @@ void draw(float worldX, float worldY, float drawW, float drawH, int alpha) {
 	CP_Settings_Tint(CP_Color_Create(1.0f, 1.0f, 1.0f, 1.0f));
 }
 
-/* Cleanup */
+/* cleanup()
+Input:
+    None
+Output:
+    void
+Brief:
+    Releases all textures and data arrays allocated during setup so the module can be safely unloaded.
+*/
 void cleanup(void) {
 	/* free directional textures */
 	for (int d = 0; d < NUM_DIRS; ++d) {

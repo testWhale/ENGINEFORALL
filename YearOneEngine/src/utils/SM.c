@@ -15,16 +15,14 @@
 
 /* FSM_SetState()
 Input:
-    StateMachine* fsm     - pointer to the Entity's State
-    GameEntity* data	  - positional data/ flags/ image/ sound data
-    float dt			  - deltaTime
-
+    StateMachine* fsm - state machine to switch
+    States newState - state to become active
+    GameEntity* data - entity data passed to state callbacks
+    float dt - delta time
 Output:
-    Returns the StateFunction.
-
+    StateFunction for the current state
 Brief:
-    FSM_SetState takes ur currState in fsm and runs the exit function, 
-    then it runs the newState Init() once.
+    Runs the old state's Exit, swaps in the new state, and runs its Init.
 */
 StateFunction FSM_SetState(StateMachine* fsm, States newState, GameEntity* data, float dt) {
 	if (fsm->currState.Exit) {
@@ -36,16 +34,13 @@ StateFunction FSM_SetState(StateMachine* fsm, States newState, GameEntity* data,
 
 /* FSM_Update()
 Input:
-    StateMachine* fsm     - pointer to the Entity's State
-    GameEntity* data	  - positional data/ flags/ image/ sound data
-    float dt			  - deltaTime
-
+    StateMachine* fsm - machine being updated
+    GameEntity* data - entity data for the state
+    float dt - delta time
 Output:
-    Returns the StateFunction.
-
+    StateFunction for the current state
 Brief:
-    FSM_Update takes ur currState in fsm 
-    and runs the Update function,
+    Calls the current state's Update callback.
 */
 StateFunction FSM_Update(StateMachine* fsm, GameEntity* data, float dt) {
     /*fsm->currState.Init(data, fsm, dt);*/
@@ -54,16 +49,13 @@ StateFunction FSM_Update(StateMachine* fsm, GameEntity* data, float dt) {
 
 /* FSM_Init()
 Input:
-    StateMachine* fsm     - pointer to the Entity's State
-    GameEntity* data	  - positional data/ flags/ image/ sound data
-    float dt			  - deltaTime
-
+    StateMachine* fsm - machine whose current state needs init
+    GameEntity* data - data passed into callbacks
+    float dt - delta time
 Output:
-    Returns the StateFunction.
-
+    StateFunction for the current state
 Brief:
-    FSM_Init takes ur currState in fsm
-    and runs the Init function,
+    Runs the current state's Init callback.
 */
 StateFunction FSM_Init(StateMachine* fsm, GameEntity* data, float dt) {
     fsm->currState.Init(data, fsm, dt);

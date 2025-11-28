@@ -8,7 +8,6 @@
 // Copyright  2020 DigiPen, All rights reserved.
 //---------------------------------------------------------
 #include "bullet.h"
-#include "../utils/arr/State.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

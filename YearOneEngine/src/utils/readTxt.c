@@ -1,8 +1,26 @@
+//---------------------------------------------------------
+// file:	readTxt.c
+// author:	[Zachary Ng]
+// email:	[zacnghuaen.n@digipen.edu]
+//
+// brief:	Loads container data from text files into the array.
+//
+// Copyright 2025 DigiPen, All rights reserved.
+//---------------------------------------------------------
+
 #include <stdio.h>
 #include "container.h"
 #include "readTxt.h"
 #define _countof(arr) (sizeof(arr) / sizeof((arr)[0]))
 
+/* Read_File()
+Input:
+    char* filePath - path to the containers data file
+Output:
+    void
+Brief:
+    Reads each container record and adds it to the array.
+*/
 void Read_File(char* filePath) {
     FILE* f = fopen("./Assets/containers.txt", "r");
     Container c; 

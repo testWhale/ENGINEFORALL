@@ -11,10 +11,8 @@
     <ClCompile Include="src\scenes\gameover.c" />
     <ClCompile Include="src\scenes\mainmenu.c" />
     <ClCompile Include="src\scenes\mainscene.c" />
-    <ClCompile Include="src\state\enemy.c" />
     <ClCompile Include="src\state\pickup.c" />
     <ClCompile Include="src\state\shoot.c" />
-    <ClCompile Include="src\tile\layout.c" />
     <ClCompile Include="src\utils\arr.c" />
     <ClCompile Include="src\utils\backend\containerStates.c" />
     <ClCompile Include="src\utils\container.c" />
@@ -34,6 +32,7 @@
     <ClCompile Include="src\scenes\logo.c" />
     <ClCompile Include="src\scenes\settings.c" />
     <ClCompile Include="src\scenes\tutorial.c" />
+    <ClCompile Include="src\state\enemy.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\bullet\bullet.h" />
@@ -46,12 +45,10 @@
     <ClInclude Include="src\scenes\gameover.h" />
     <ClInclude Include="src\scenes\mainmenu.h" />
     <ClInclude Include="src\scenes\mainscene.h" />
-    <ClInclude Include="src\state\enemy.h" />
     <ClInclude Include="src\state\shoot.h" />
     <ClInclude Include="src\utils\health\health.h" />
     <ClInclude Include="src\utils\UI\Pause.h" />
     <ClInclude Include="src\utils\wave\wave.h" />
-    <ClInclude Include="DataTypes.h" />
     <ClInclude Include="src\utils\arr.h" />
     <ClInclude Include="src\utils\backend\containerStates.h" />
     <ClInclude Include="src\utils\container.h" />
@@ -60,12 +57,12 @@
     <ClInclude Include="src\tile\tile.h" />
     <ClInclude Include="src\utils\utils.h" />
     <ClInclude Include="src\Nuke\nuke.h" />
-    <ClInclude Include="src\scenes\mouse.h" />
     <ClInclude Include="src\state\pickup.h" />
     <ClInclude Include="src\utils\mouse\mouse.h" />
     <ClInclude Include="src\scenes\logo.h" />
     <ClInclude Include="src\scenes\settings.h" />
     <ClInclude Include="src\scenes\tutorial.h" />
+    <ClInclude Include="src\state\enemy.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="src\utils\backend\containers.txt" />

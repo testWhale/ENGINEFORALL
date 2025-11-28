@@ -13,6 +13,19 @@
 #include "utils.h"
 CP_MOUSE mouse;
 
+/* IsAreaClicked()
+Input:
+    float area_center_x - center of the hit area
+    float area_center_y - center of the hit area
+    float area_width - width of the area
+    float area_height - height of the area
+    float click_x - last click X
+    float click_y - last click Y
+Output:
+    int (1 if clicked inside, otherwise 0)
+Brief:
+    Returns 1 when the mouse clicked inside the given rectangle.
+*/
 int IsAreaClicked(float area_center_x, float area_center_y, float area_width, float area_height, float click_x, float click_y)
 {
 	if (click_x >= area_center_x - (area_width / 2) && click_x <= area_center_x + (area_width / 2) &&
@@ -25,6 +38,17 @@ int IsAreaClicked(float area_center_x, float area_center_y, float area_width, fl
 	}
 	return 0;
 }
+/* IsImgHovered()
+Input:
+    CP_Vector leftTopBound - top-left of the hit area
+    float area_width - width of the area
+    float area_height - height of the area
+    CP_Vector mouse - mouse position
+Output:
+    int (0 none, 1 hover, 2 clicked)
+Brief:
+    Reports whether the mouse is over the area and if it clicked.
+*/
 int IsImgHovered(CP_Vector leftTopBound, float area_width, float area_height, CP_Vector mouse)
 {
 	if (CP_Input_MouseClicked()) {
@@ -39,6 +63,18 @@ int IsImgHovered(CP_Vector leftTopBound, float area_width, float area_height, CP
 		return 0; }
 }
 
+/* Is_Circle_Clicked()
+Input:
+    float circle_center_x - circle center X
+    float circle_center_y - circle center Y
+    float diameter - circle size
+    float click_x - click X
+    float click_y - click Y
+Output:
+    int (1 if circle clicked, otherwise 0)
+Brief:
+    Returns 1 when the click is inside the circle and double-clicked.
+*/
 int Is_Circle_Clicked(float circle_center_x, float circle_center_y, float diameter, float click_x, float click_y) {
 	//find the dist btwn the point clicked and the center of the circle.
 	float radius = diameter / 2.0f;
@@ -54,6 +90,18 @@ int Is_Circle_Clicked(float circle_center_x, float circle_center_y, float diamet
 	return 0;
 }
 
+/* Is_Mouse_Released()
+Input:
+    float circle_center_x - circle center X
+    float circle_center_y - circle center Y
+    float diameter - circle size
+    float click_x - click X
+    float click_y - click Y
+Output:
+    int (1 when mouse down inside circle, else 0)
+Brief:
+    Tracks whether the left mouse button is held inside the circle.
+*/
 int Is_Mouse_Released(float circle_center_x, float circle_center_y, float diameter, float click_x, float click_y) {
 	//find the dist btwn the point clicked and the center of the circle.
 	float radius = diameter / 2.0f;
@@ -76,6 +124,14 @@ int Is_Mouse_Released(float circle_center_x, float circle_center_y, float diamet
 
 }
 
+/* Is_Right_Clicked()
+Input:
+    None
+Output:
+    int (1 when right button releases)
+Brief:
+    Returns 1 when the right mouse button is released.
+*/
 int Is_Right_Clicked() {
 
 	if (CP_Input_MouseReleased(MOUSE_BUTTON_RIGHT))
@@ -84,7 +140,14 @@ int Is_Right_Clicked() {
 	}
 }
 
-//checks for when the enemy crosses a certain threshold to trigger turrets to start shooting
+/* EnemyCrossedLine()
+Input:
+    GameEntity* enemy - enemy to test
+Output:
+    int (1 if enemy crossed the finish line)
+Brief:
+    Returns non-zero when the enemy reaches the rightmost tile edge.
+*/
 int EnemyCrossedLine(GameEntity* enemy) {
 	float rightmost_line = g_TileMap[0][TILE_COLUMNS - 1].endPos.x;
 	return enemy->centerPos.x <= rightmost_line;

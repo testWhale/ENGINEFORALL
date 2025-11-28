@@ -1,13 +1,29 @@
+//---------------------------------------------------------
+// file:	pickup.c
+// author:	[Zachary Ng]
+// email:	zacharyhuaen.n@digipen.edu
+//
+// brief:	Handles idle, pickup, and selection states for player units.
+//
+// Copyright 2025 DigiPen, All rights reserved.
+//---------------------------------------------------------
 #include "pickup.h"
 #include "utils/utils.h"
 #include "utils/arr.h"
 #include "utils/container.h"
 #include "tile/tile.h"
 #include "shoot.h"
-#include "./scenes/mouse.h"
 #include "utils/mouse/mouse.h"
 
 
+/* Check_ForSel()
+Input:
+    None
+Output:
+    int (1 if any player entity is selected, otherwise 0)
+Brief:
+    Scans the player array to see if a unit is marked as selected.
+*/
 int Check_ForSel() {
 	int count2 = 0;
 	for (int i = 0; i < playerArr.used; i++) {
@@ -19,6 +35,14 @@ int Check_ForSel() {
 	}
 	return 0;
 }
+/* deselectEnt()
+Input:
+    None
+Output:
+    void
+Brief:
+    Resets selection flags and color on every player entity.
+*/
 void deselectEnt() {
 		for (int j = 0; j < MAX_ENTITIES; j++) {
 			ActiveEntity* entity2 = &playerArr.ActiveEntityArr[j];
@@ -30,6 +54,16 @@ void deselectEnt() {
 } 
 
 /*---------------------------------IDLE CODE-----------------------------*/
+/* Idle_Init()
+Input:
+    GameEntity* entity - entity entering idle
+    StateMachine* sm - state machine owning the entity
+    float dt - delta time
+Output:
+    void
+Brief:
+    Clears timers and sets the idle color.
+*/
 void Idle_Init(GameEntity* entity, StateMachine* sm, float dt) {
 	//printf("Player entered IDLE::INIT state\n");
 	entity->color.red = 100;
@@ -38,6 +72,16 @@ void Idle_Init(GameEntity* entity, StateMachine* sm, float dt) {
 	entity->stateTimer = 0.0f;
 
 }
+/* Idle_Update()
+Input:
+    GameEntity* entity - entity in idle state
+    StateMachine* sm - its state machine
+    float dt - delta time
+Output:
+    void
+Brief:
+    Advances idle timers and switches to pickup when needed.
+*/
 void Idle_Update(GameEntity* entity, StateMachine* sm, float dt) {
 	entity->stateTimer += dt;
 	// Example: Transition to Attack if "attack" input detected
@@ -54,11 +98,31 @@ void Idle_Update(GameEntity* entity, StateMachine* sm, float dt) {
 		return;
 	}
 }
+/* Idle_Exit()
+Input:
+    GameEntity* entity - entity leaving idle
+    StateMachine* sm - its state machine
+    float dt - delta time
+Output:
+    void
+Brief:
+    Placeholder for cleanup when leaving idle.
+*/
 void Idle_Exit(GameEntity* entity, StateMachine* sm, float dt) {
 	//printf("LEAVING IDLE state\n");
 }
 
 /*---------------------------------PickUp Functions-----------------------------*/
+/* PickedUp_Init()
+Input:
+    GameEntity* entity - entity being picked up
+    StateMachine* sm - its state machine
+    float dt - delta time
+Output:
+    void
+Brief:
+    Claims a pickup slot, changes colors, and gets ready to drag.
+*/
 void PickedUp_Init(GameEntity* entity, StateMachine* sm, float dt) {
 	cursor = 0; //mouse is not free to perform more actions on buttons
 	printf("Before %d\n", entity->pickUpIndex);
@@ -78,6 +142,16 @@ void PickedUp_Init(GameEntity* entity, StateMachine* sm, float dt) {
 		entity->isSel = 1;
 	}
 }
+/* PickedUp_Update()
+Input:
+    GameEntity* entity - entity being dragged
+    StateMachine* sm - its state machine
+    float dt - delta time
+Output:
+    void
+Brief:
+    Tracks the mouse, updates position, and drops the unit on right click.
+*/
 void PickedUp_Update(GameEntity* entity, StateMachine* sm, float dt) {
 	cursor = 0; //mouse is not free to perform more actions on buttons
 	int col = entity->pickUpIndex % 3;
@@ -102,6 +176,16 @@ void PickedUp_Update(GameEntity* entity, StateMachine* sm, float dt) {
 	}
 }
 
+/* PickedUp_Exit()
+Input:
+    GameEntity* entity - entity leaving pickup state
+    StateMachine* sm - its state machine
+    float dt - delta time
+Output:
+    void
+Brief:
+    Resets entity flags, refreshes bullets, and plays place sound.
+*/
 void PickedUp_Exit(GameEntity* entity, StateMachine* sm, float dt) {
 	//printf("Player left IDLE state\n");
 	B_Arr_Refresh(&(entity->bullets.bulletArr), entity);
@@ -116,6 +200,16 @@ void PickedUp_Exit(GameEntity* entity, StateMachine* sm, float dt) {
 }
 
 /*---------------------------------SELECT FUNCTION-----------------------------*/
+/* Sel_Init()
+Input:
+    GameEntity* entity - entity becoming selected
+    StateMachine* sm - its state machine
+    float dt - delta time
+Output:
+    void
+Brief:
+    Clears other selections and marks this unit as selected.
+*/
 void Sel_Init(GameEntity* entity, StateMachine* sm, float dt) {
 	// ok inside of selectState:
 	/* 1. Exit out of all previous SelStates for every other entity. 
@@ -133,6 +227,16 @@ void Sel_Init(GameEntity* entity, StateMachine* sm, float dt) {
 	entity->isSel = 1;
 	
 }
+/* Sel_Update()
+Input:
+    GameEntity* entity - currently selected unit
+    StateMachine* sm - its state machine
+    float dt - delta time
+Output:
+    void
+Brief:
+    Keeps highlight on the selected unit and exits selection when clicked again.
+*/
 void Sel_Update(GameEntity* entity, StateMachine* sm, float dt) {
 	Hover_TileAt(entity, (CP_Vector) { entity->centerPos.x, entity->centerPos.y });
 	//Container_Draw( getContainer(entity->label, &containersArr) );
@@ -143,6 +247,16 @@ void Sel_Update(GameEntity* entity, StateMachine* sm, float dt) {
 	Shoot_Update(entity, sm, dt);
 }
 
+/* Sel_Exit()
+Input:
+    GameEntity* entity - unit leaving selection
+    StateMachine* sm - its state machine
+    float dt - delta time
+Output:
+    void
+Brief:
+    Clears selection flags and stops tile hover.
+*/
 void Sel_Exit(GameEntity* entity, StateMachine* sm, float dt) {
 	//printf("BYE SELECTION\n");
 	entity->isSel = 0;

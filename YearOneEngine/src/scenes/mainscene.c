@@ -28,7 +28,6 @@
 #include <stdlib.h>
 #include "gameover.h"
 #include "mainmenu.h"
-#include "mouse.h"
 
 CP_Image Overlay;
 CP_Image Background;

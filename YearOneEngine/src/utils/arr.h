@@ -1,7 +1,7 @@
 //---------------------------------------------------------
 // file:	arr.h
-// author:	Zachary Ng
-// email:	zacharyhuaen.n@digipen.edu
+// author:	[Zachary Ng]
+// email:	[zacnghuaen.n@digipen.edu]
 //
 // brief:	Contains definition of dynamic array 
 //			
@@ -42,19 +42,46 @@ typedef struct TestArr {
 extern TestArr enemyArr;
 extern TestArr playerArr;
 
+/* Arr_Init()
+Input:
+    size_t maxLength - slots to reserve
+    TestArr* Array - target array
+Output:
+    void
+Brief:
+    Allocates ActiveEntity storage and clears counters.
+*/
 void Arr_Init(size_t maxLength, TestArr* Array);
+
+/* Arr_Insert()
+Input:
+    TestArr* Array - array to append into
+    ActiveEntity Entity - value to add
+Output:
+    void
+Brief:
+    Grows the buffer if needed and sets up the new entity.
+*/
 void Arr_Insert(TestArr* Array, ActiveEntity Entity);
+
+/* Arr_Del()
+Input:
+    TestArr* Array - array to remove from
+    int id - id of the entity to delete
+Output:
+    void
+Brief:
+    Finds the entity by id and packs the array by replacing it with the last entry.
+*/
 void Arr_Del(TestArr* Array, int id);
 
 /* Arr_Free()
 Input:
-    TestArr* A	     - pointer to dynamic array, it contains the entitySize; used; maxLength;
-
+    TestArr* Array - array to free
 Output:
-    None
-
+    void
 Brief:
-    Arr_Free frees the TestArr Entirely, deleting all ActiveEntity Data.
+    Releases the array buffer and resets metadata.
 */
 void Arr_Free(TestArr* Array);
 

@@ -1,3 +1,13 @@
+//---------------------------------------------------------
+// file:	logo.c
+// author:	[Zachary Ng]
+// email:	zacharyhuaen.n@digipen.edu
+//
+// brief:	Shows the splash logo and fades into the main menu.
+//
+// Copyright 2025 DigiPen, All rights reserved.
+//---------------------------------------------------------
+
 #include "logo.h"
 #include "cprocessing.h"
 #include "mainmenu.h"
@@ -6,6 +16,14 @@ CP_Image justinFace = NULL;
 float elapsed = 0.0f;          // time since screen started
 const float FADE_DURATION = 3.0f;  // 3 seconds fade
 
+/* Logo_Init()
+Input:
+    None
+Output:
+    void
+Brief:
+    Loads the logo img, clears the screen, and resets the timer.
+*/
 void Logo_Init(void)
 {
     elapsed = 0; // reset timer
@@ -18,6 +36,14 @@ void Logo_Init(void)
     }
 }
 
+/* Logo_Update()
+Input:
+    None
+Output:
+    void
+Brief:
+    Advances the fade timer, draws the logo with alpha, and switches to the main menu after the fade.
+*/
 void Logo_Update(void)
 {
     elapsed += CP_System_GetDt();
@@ -51,6 +77,14 @@ void Logo_Update(void)
     }
 }
 
+/* Logo_Exit()
+Input:
+    None
+Output:
+    void
+Brief:
+    Frees the logo image.
+*/
 void Logo_Exit(void)
 {
     CP_Image_Free(justinFace);
