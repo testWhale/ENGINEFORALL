@@ -11,6 +11,6 @@ Directory	Description
 | **src/goal**    | Win/loss conditions, objectives, and goal-tracking systems.                     |
 | **src/Nuke**    | Nuke mechanics, effects, animations, and high-impact event handling.            |
 | **src/scenes**  | Scene management, transitions, and different game state screens.                |
-| **src/state**   | Game state machine (FSM/HFSM), modes, and state transitions.                    |
+| **src/state**   | StateMachine modes, and state transitions.                    |
 | **src/tile**    | Tilemap logic, grid interactions, environment data, and rendering.              |
-| **src/utils**   | Helper functions, math utilities, debug tools, and shared utilities.            |
+| **src/utils**   | Helper functions, main FSM functions, math utilities, debug tools, and shared utilities.            |
