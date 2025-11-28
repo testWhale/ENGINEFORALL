@@ -22,8 +22,9 @@ int main(void)
 {
 	CP_Engine_SetNextGameState(Logo_Init, Logo_Update, Logo_Exit);
 	
-	CP_System_SetWindowSize(1920, 1080);
+	CP_System_SetWindowSize(1600, 900);
+
 	
-	CP_Engine_Run(1);
+	CP_Engine_Run(0);
 	return 0;
 }
