@@ -16,7 +16,7 @@
 #include "./utils/SM.h"
 /*---------------------------------IDLE CODE-----------------------------*/
 void Enemy_IdleInit(GameEntity* entity, StateMachine* sm, float dt) {
-	printf("Player entered IDLE::INIT state\n");
+	
 	entity->color.red = 255;
 	entity->color.green = 255;
 	entity->color.blue = 0;
@@ -27,7 +27,7 @@ void Enemy_IdleUpdate(GameEntity* entity, StateMachine* sm, float dt) {
 	entity->stateTimer += dt;
 }
 void Enemy_IdleExit(GameEntity* entity, StateMachine* sm, float dt) {
-	printf("LEAVING IDLE state\n");
+	
 }
 
 /*---------------------------------States Assigning-----------------------------*/

@@ -30,5 +30,5 @@ int Purchase_System(float *currentMoney,float itemCost)
 
 float Scaling_Cost(int purchaseCount, float basePrice, float scale)
 {
-	return basePrice * pow(scale, (double)purchaseCount);
+	return (float)(basePrice * pow((double)scale, (double)purchaseCount));
 }

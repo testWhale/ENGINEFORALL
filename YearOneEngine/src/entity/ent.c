@@ -19,8 +19,10 @@
 #include "../buttons/buttonCode.h"
 #include "../scenes/mainmenu.h"
 #include "../economy/economyCode.h"
+#include "clicker/clickCode.h"
 #include "state/shoot.h"
 #include "utils/mouse/mouse.h"
+#include "utils/UI/pause.h"
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>

@@ -53,7 +53,7 @@ void B_Arr_Refresh(BulletArr* array, GameEntity* turret) {
 		array->bulletArr[i].centerPos.x = turret->centerPos.x;
 		array->bulletArr[i].centerPos.y = turret->centerPos.y;
 		array->bulletArr[i].opacity = 255;
-		printf("%d %f", turret->bullets.bulletArr[i].id, turret->bullets.bulletArr[i].opacity);
+
 	}
 }
 
@@ -136,7 +136,7 @@ void Shoot_Update(GameEntity* turret, StateMachine* SM, float dt) {
 	}
 	
 	int crossedLine = 0;
-	int turretRow = (turret->centerPos.y - g_TileMap[0][0].startPos.y) / g_TileMap[0][0].dim.y;
+	int turretRow = (int)((turret->centerPos.y - g_TileMap[0][0].startPos.y) / g_TileMap[0][0].dim.y);
 
 	if (Is_Circle_Clicked(turret->centerPos.x, turret->centerPos.y, turret->diameter, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
 		//FSM_SetState(SM, SelectedState, turret, dt);
@@ -145,7 +145,7 @@ void Shoot_Update(GameEntity* turret, StateMachine* SM, float dt) {
 
 	for (int i = 0; i < enemyArr.used; i++) {
 		GameEntity* enemy = &enemyArr.ActiveEntityArr[i].unit;
-		int enemyRow = (enemy->centerPos.y - g_TileMap[0][0].startPos.y) / g_TileMap[0][0].dim.y;
+		int enemyRow = (int)((enemy->centerPos.y - g_TileMap[0][0].startPos.y) / g_TileMap[0][0].dim.y);
 			if (enemyRow == turretRow && EnemyCrossedLine(&enemyArr.ActiveEntityArr[i].unit)) {
 				crossedLine = 1;
 				break;
@@ -190,7 +190,7 @@ void Shoot_Update(GameEntity* turret, StateMachine* SM, float dt) {
 								enemy->isPoisoned = 1;
 								enemy->poisonDamage = bullet->poisonDmg;
 								enemy->poisonTimerDecay = bullet->poisonDecayTimer;
-								Health_PlayHitSfx();
+								
 								enemyArr.ActiveEntityArr[j].health -= enemy->poisonDamage * dt;
 							}
 							if (!enemy->isStunned) {
@@ -203,7 +203,7 @@ void Shoot_Update(GameEntity* turret, StateMachine* SM, float dt) {
 						//normal
 						if (strcmp(bullet->type, "normal") == 0) {
 							enemyArr.ActiveEntityArr[j].health -= bullet->bulletDmg;
-							Health_PlayHitSfx();
+							
 						}
 
 						//stun, checks for poison status effect as well
@@ -217,7 +217,7 @@ void Shoot_Update(GameEntity* turret, StateMachine* SM, float dt) {
 								enemy->isPoisoned = 1;
 								enemy->poisonDamage = bullet->poisonDmg;
 								enemy->poisonTimerDecay = bullet->poisonDecayTimer;
-								Health_PlayHitSfx();
+							
 								enemyArr.ActiveEntityArr[j].health -= enemy->poisonDamage * dt;
 							}
 						}

@@ -38,7 +38,7 @@ void Map_Init(CP_Vector startPos, float width, float height) {
 			g_TileMap[i][j].dim = (CP_Vector){ t_width, t_height };
 			g_TileMap[i][j].entity = NULL;
 			g_TileMap[i][j].hasEntity = 0;
-			g_TileMap[i][j].nextTileCheck = NULL;
+			g_TileMap[i][j].nextTileCheck = 0;
 			g_TileMap[i][j].tcolor = WHITE;
 			g_TileMap[i][j].currHovered = 0;
 
@@ -58,29 +58,28 @@ void Map_Init(CP_Vector startPos, float width, float height) {
 int Set_OnTile(GameEntity* Entity, CP_Vector mouse) {
 	float y = mouse.y - g_TileMap[0][0].startPos.y;
 	float x = mouse.x - g_TileMap[0][0].startPos.x;
-	if (y < 0 || x < 0) { return; }
-	int row = (y) / g_TileMap[0][0].dim.y;
+	if (y < 0 || x < 0) { return 0; }
+	int row = (int)((y) / g_TileMap[0][0].dim.y);
 	
-	int col = (x) / g_TileMap[0][0].dim.x; 
-	printf("ROW NOT GOOD: %d %d", row, col);
-	printf("The Value %f %f", mouse.x - g_TileMap[0][0].startPos.x, mouse.y - g_TileMap[0][0].startPos.y);
+	int col = (int)((x) / g_TileMap[0][0].dim.x);
+	
 	if (row < 0 || row > TILE_ROWS || col < 0 || col > TILE_COLUMNS) {  return 0; }
 	Tile* c_tile = &g_TileMap[row][col];
 
 	if (row < 0 || row >= TILE_ROWS || col < 0 || col >= TILE_COLUMNS) {
-		return;
+		return 0;
 	}
 	if (1 == c_tile->hasEntity) {
-		printf("Cannot Place Unit Here.\n");
+		
 		CP_Settings_Fill(CP_Color_Create(255, 0, 0, 255));
 		//Entity->centerPos = (CP_Vector){ 0,0 };
-		return NULL;
+		return 0;
 	}
 	if (1 == c_tile->nextTileCheck) {
-		printf("Cannot Place, Enemy Too Close.\n");
+		
 		CP_Settings_Fill(CP_Color_Create(255, 0, 0, 255));
 		//Entity->centerPos = (CP_Vector){ 0,0 };
-		return NULL;
+		return 0;
 	}
 	else {
 		c_tile->hasEntity = 1;
@@ -88,6 +87,7 @@ int Set_OnTile(GameEntity* Entity, CP_Vector mouse) {
 
 		Entity->centerPos = c_tile->centerPos; //magnetise entity to tile
 		c_tile->entity = Entity; //in case tile needs entity data give it
+		return 1;
 	}
 
 }
@@ -105,10 +105,10 @@ Tile* Hover_TileAt(GameEntity* Entity, CP_Vector mouse) {
 	if (mouse.x > g_TileMap[0][TILE_COLUMNS - 1].startPos.x) mouse.x = g_TileMap[0][TILE_COLUMNS - 1].startPos.x;
 	if (mouse.y > g_TileMap[TILE_ROWS - 1][0].startPos.y) mouse.y = g_TileMap[TILE_ROWS - 1][0].startPos.y;
 
-	int row = (mouse.y - g_TileMap[0][0].startPos.y) / g_TileMap[0][0].dim.y;
-	int col = (mouse.x - g_TileMap[0][0].startPos.x) / g_TileMap[0][0].dim.x;
+	int row = (int)((mouse.y - g_TileMap[0][0].startPos.y) / g_TileMap[0][0].dim.y);
+	int col = (int)((mouse.x - g_TileMap[0][0].startPos.x) / g_TileMap[0][0].dim.x);
 	if (row < 0 || row >= TILE_ROWS || col < 0 || col >= TILE_COLUMNS) {
-		return;
+		return 0;
 	}
 	Tile* c_tile = &g_TileMap[row][col];
 	c_tile->currHovered = 1;
@@ -126,8 +126,8 @@ void Hover_Tile_Exit() {
 
 
 void Sel_AfterPlaced(GameEntity* Entity, CP_Vector mouse) {
-	int row = mouse.y / g_TileMap[0][0].dim.y;
-	int col = mouse.x / g_TileMap[0][0].dim.x;
+	int row = (int) (mouse.y / g_TileMap[0][0].dim.y);
+	int col = (int) (mouse.x / g_TileMap[0][0].dim.x);
 	Tile* c_tile = &g_TileMap[row][col];
 	c_tile->tsel = 1;
 	if (row < 0 || row >= TILE_ROWS || col < 0 || col >= TILE_COLUMNS) {

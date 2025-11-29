@@ -16,7 +16,7 @@
 #include "buttons/buttonCode.h"
 #include "scenes/mainmenu.h"
 #include "scenes/settings.h"
-
+#include <stdio.h>
 /* Sound Settings */
 extern float volume;
 extern float masterVolume;

@@ -78,16 +78,6 @@ Brief:
 */
 int IsImgHovered(CP_Vector leftTopBound, float area_width, float area_height, CP_Vector mouse);
 
-/* AreCirclesIntersecting()
-Input:
-    GameEntity* bullet - bullet to test
-    GameEntity* enemy - enemy to test
-Output:
-    int (non-zero if they overlap)
-Brief:
-    Checks whether two circles (bullet/enemy) overlap.
-*/
-int AreCirclesIntersecting(GameEntity* bullet, GameEntity* enemy);
 
 /* EnemyCrossedLine()
 Input:

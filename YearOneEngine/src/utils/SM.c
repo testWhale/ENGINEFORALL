@@ -30,6 +30,7 @@ StateFunction FSM_SetState(StateMachine* fsm, States newState, GameEntity* data,
 	}
 	fsm->currState = newState;
 	fsm->currState.Init(data, fsm, dt);
+    return 0;
 }
 
 /* FSM_Update()
@@ -45,6 +46,7 @@ Brief:
 StateFunction FSM_Update(StateMachine* fsm, GameEntity* data, float dt) {
     /*fsm->currState.Init(data, fsm, dt);*/
 	fsm->currState.Update(data, fsm,dt);
+    return 0;
 }
 
 /* FSM_Init()
@@ -59,4 +61,5 @@ Brief:
 */
 StateFunction FSM_Init(StateMachine* fsm, GameEntity* data, float dt) {
     fsm->currState.Init(data, fsm, dt);
+    return 0;
 }

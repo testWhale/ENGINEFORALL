@@ -106,7 +106,7 @@ void Credits_Update(void)
         height * 0.5f,
         drawW,
         drawH,
-        alpha);
+        (int)alpha);
 
     CP_Settings_ImageMode(CP_POSITION_CORNER);
     CP_Image_Draw(Credits, 0, CreditsY, 168 * unit, 700 * unit, 255);

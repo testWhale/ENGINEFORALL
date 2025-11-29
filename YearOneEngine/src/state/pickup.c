@@ -63,7 +63,7 @@ Brief:
     Clears timers and sets the idle color.
 */
 void Idle_Init(GameEntity* entity, StateMachine* sm, float dt) {
-	printf("Player entered IDLE::INIT state\n");
+	
 	entity->color.red = 100;
 	entity->color.green = 100;
 	entity->color.blue = 255;
@@ -107,7 +107,7 @@ Brief:
     Placeholder for cleanup when leaving idle.
 */
 void Idle_Exit(GameEntity* entity, StateMachine* sm, float dt) {
-	printf("LEAVING IDLE state\n");
+	
 }
 
 /*---------------------------------PickUp Functions-----------------------------*/
@@ -123,13 +123,12 @@ Brief:
 */
 void PickedUp_Init(GameEntity* entity, StateMachine* sm, float dt) {
 	cursor = 0; //mouse is not free to perform more actions on buttons
-	printf("Before %d\n", entity->pickUpIndex);
 	///* Assigns order BEFORE switching state */
 	//
 	
 	entity->pickUpIndex = Mouse_GetPickupCount(); // gives first pickup id: 1 
 	Mouse_AddPickup(); // increments pickup for next item, now count points to 2 
-	printf("after %d\n", entity->pickUpIndex);
+	
 	if (1 == entity->isItOnMap) { //When it is onMap -> SelectedState
 		//FSM_SetState(sm, SelectedState, entity, dt);
 	} else {
@@ -167,7 +166,6 @@ void PickedUp_Update(GameEntity* entity, StateMachine* sm, float dt) {
 		if (Set_OnTile(entity, (CP_Vector) { CP_Input_GetMouseX(), CP_Input_GetMouseY() })) // Set_OnTile returns a tile that closley matches the curr Mouse Pos
 		{
 			entity->pickUpRemoval = 1;
-			printf("removing %d %d\n", entity->pickUpRemoval, entity->pickUpIndex);
 			FSM_SetState(sm, IdleState, entity, dt);
 		}
 		return;
@@ -185,12 +183,11 @@ Brief:
     Resets entity flags, refreshes bullets, and plays place sound.
 */
 void PickedUp_Exit(GameEntity* entity, StateMachine* sm, float dt) {
-	printf("Player left IDLE state\n");
-	B_Arr_Refresh(&(entity->bullets.bulletArr), entity);
+	B_Arr_Refresh(&(entity->bullets), entity);
 	entity->isSel = 0;
 	CP_Sound_Play(entity->sound.soundPlace);
 	if (entity->sound.soundPlace == NULL) {
-		printf("HELP");
+		
 	} 
 
 	Hover_Tile_Exit(); // Stop Highlighting the currTile
@@ -256,7 +253,6 @@ Brief:
     Clears selection flags and stops tile hover.
 */
 void Sel_Exit(GameEntity* entity, StateMachine* sm, float dt) {
-	printf("BYE SELECTION\n");
 	entity->isSel = 0;
 	Check_ForSel();
 	Hover_Tile_Exit();

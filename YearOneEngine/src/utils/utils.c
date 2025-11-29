@@ -53,14 +53,18 @@ int IsImgHovered(CP_Vector leftTopBound, float area_width, float area_height, CP
 {
 	if (CP_Input_MouseClicked()) {
 		if ((mouse.x >= leftTopBound.x) && (mouse.x <= (leftTopBound.x + area_width)) &&
-			(mouse.y >= leftTopBound.y) && (mouse.y <= (leftTopBound.y + area_height))) {
+			(mouse.y >= leftTopBound.y) && (mouse.y <= (leftTopBound.y + area_height))) 
+		{
 			return 2;
 		}
-	} else{
+	} 
+	else {
 		if ((mouse.x >= leftTopBound.x) && (mouse.x <= (leftTopBound.x + area_width)) &&
-			(mouse.y >= leftTopBound.y) && (mouse.y <= (leftTopBound.y + area_height))) {
-			return 1; }
-		return 0; }
+			(mouse.y >= leftTopBound.y) && (mouse.y <= (leftTopBound.y + area_height))) 
+			{ return 1; }
+		return 0;
+	}
+	return 0;
 }
 
 /* Is_Circle_Clicked()
@@ -121,7 +125,7 @@ int Is_Mouse_Released(float circle_center_x, float circle_center_y, float diamet
 	}
 	
 
-
+	return 0;
 }
 
 /* Is_Right_Clicked()
@@ -138,6 +142,7 @@ int Is_Right_Clicked() {
 	{
 		return 1;
 	}
+	return 0;
 }
 
 /* EnemyCrossedLine()

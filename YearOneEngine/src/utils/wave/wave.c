@@ -11,11 +11,12 @@
 #include "tile/tile.h"
 #include "scenes/mainmenu.h"
 #include <stdlib.h>
+#include <stdio.h>
 #include <time.h>
 
 wave = 0;
 waveFlag = 0;
-waveState = 0;
+float waveState = 0;
 
 /* Start_Wave()
 Input:
@@ -38,7 +39,7 @@ void Start_Wave(GameEntity* entity, float dt) {
 	entity->centerPos.x += 2000;
 	
 	/* This sets a random speed value for each enemy*/
-	entity->accel = (CP_Vector){ (rand() % 2), 0 };
+	entity->accel = (CP_Vector){ (float)(rand() % 2), 0 };
 	if (entity->accel.x >= 1) {
 		entity->accel.x *= (float)0.04;
 		entity->sprite = CP_Image_Load("Assets/Enemies/Tank_Mouse.png");
@@ -47,8 +48,8 @@ void Start_Wave(GameEntity* entity, float dt) {
 		entity->accel.x = (float)0.1;
 		entity->sprite = CP_Image_Load("Assets/Enemies/Electric_Mouse.png");
 	}
-	entity->sWidth = CP_Image_GetWidth(entity->sprite);
-	entity->sHeight = CP_Image_GetHeight(entity->sprite);
+	entity->sWidth = (float)CP_Image_GetWidth(entity->sprite);
+	entity->sHeight = (float)CP_Image_GetHeight(entity->sprite);
 	entity->aspectRatio = entity->sWidth / entity->sHeight;
 
 	float scaleX = CP_System_GetWindowWidth() / entity->sWidth;
@@ -59,7 +60,7 @@ void Start_Wave(GameEntity* entity, float dt) {
 	entity->accel = CP_Vector_Negate(entity->accel);
 	entity->velocity = CP_Vector_Add(entity->velocity, entity->accel);
 	
-	printf("Accel %f\n", entity->velocity.x);
+	
 }
 
 /* Move_Wave()

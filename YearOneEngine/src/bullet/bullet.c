@@ -68,7 +68,7 @@ Bullet Bullet_Template(char* name) {
 /* ---------------- INIT ---------------- */
 BulletArr* B_Arr_Init(size_t initialCapacity, BulletArr* A) {
     //BulletArr_Init(initialCapacity, A);
-    A->bulletArr = (BulletArr*)calloc(initialCapacity, sizeof(Bullet));
+    A->bulletArr = (Bullet*)calloc(initialCapacity, sizeof(Bullet));
     if (!A->bulletArr) {
         fprintf(stderr, "Bullet array malloc failed!\n");
         exit(EXIT_FAILURE);

@@ -14,6 +14,7 @@
 #include "clickCode.h"
 #include <math.h>
 #include <time.h>
+#include <stdlib.h> 
 
 clickPower = 1;
 clickPurchaseAmount = 0;
