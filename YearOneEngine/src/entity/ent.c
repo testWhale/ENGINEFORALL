@@ -16,7 +16,6 @@
 #include "../state/enemy.h"
 #include "../wave/wave.h"
 #include "health.h"
-#include "../container.h"
 #include "../buttons/buttonCode.h"
 #include "../scenes/mainmenu.h"
 #include "../economy/economyCode.h"
@@ -119,7 +118,7 @@ void Init_PlayerDemo() {
 		ae.alive = 1;
 		ae.hasScored = 0;
 		ae.lastLeftmostX = 0.0f;
-		//printf("turrent ID: %d", ae.id);
+		printf("turrent ID: %d", ae.id);
 
 		Arr_Insert(&playerArr, ae);
 		playerArr.ActiveEntityArr[i].unit.centerPos.x = player.centerPos.x + i * 100.0f;
@@ -252,7 +251,7 @@ Brief:
 void Draw_TempText(float dt) {
 	if (waveFlag) {
 		waveState += (dt * 2);
-		//printf("DT: %f\n", waveState);
+		printf("DT: %f\n", waveState);
 		CP_Graphics_DrawRect(CP_Input_GetMouseX(), CP_Input_GetMouseY(), 50, 50);
 		NewWaveButton.alive = 1; NewWave2Button.alive = 1;
 		Button_Behavior(&NewWaveButton);

@@ -21,7 +21,7 @@ Output:
 Brief:
     Initializes an entity so it can enter the active wave with randomized lane/texture/acceleration.
 */
-GameEntity* Start_Wave(GameEntity* entity, float dt);
+void Start_Wave(GameEntity* entity, float dt);
 
 /* Move_Wave()
 Input:
@@ -32,7 +32,7 @@ Output:
 Brief:
     Steps the entity forward by adding acceleration to its velocity and translating it across the level.
 */
-GameEntity* Move_Wave(GameEntity* entity, float dt);
+void Move_Wave(GameEntity* entity, float dt);
 
 /* Draw_WaveCounter()
 Input:

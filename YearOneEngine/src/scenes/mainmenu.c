@@ -44,7 +44,7 @@ void Main_Menu_Init(void)
 
     Button_Load(&PlayButton, &defaultSound,
         36 * unit, 92 * unit,
-        55 * unit, 19.5 * unit,
+        55 * unit, 19.5f * unit,
         0 * unit,
         "Assets/Buttons/MainMenu/PlayNormal.png",
         "Assets/Buttons/MainMenu/PlayHighlight.png",
@@ -52,7 +52,7 @@ void Main_Menu_Init(void)
 
     Button_Load(&CreditsButton, &defaultSound,
         96 * unit, 92 * unit,
-        55 * unit, 19.5 * unit,
+        55 * unit, 19.5f * unit,
         0 * unit,
         "Assets/Buttons/MainMenu/CreditsNormal.png",
         "Assets/Buttons/MainMenu/CreditsHighlight.png",
@@ -60,7 +60,7 @@ void Main_Menu_Init(void)
 
     Button_Load(&QuitButton, &defaultSound,
         156 * unit, 92 * unit,
-        55 * unit, 19.5 * unit,
+        55 * unit, 19.5f * unit,
         0 * unit,
         "Assets/Buttons/MainMenu/QuitNormal.png",
         "Assets/Buttons/MainMenu/QuitHighlight.png",

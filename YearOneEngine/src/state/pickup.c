@@ -10,7 +10,6 @@
 #include "pickup.h"
 #include "utils/utils.h"
 #include "utils/arr.h"
-#include "utils/container.h"
 #include "tile/tile.h"
 #include "shoot.h"
 #include "utils/mouse/mouse.h"
@@ -29,7 +28,6 @@ int Check_ForSel() {
 	for (int i = 0; i < playerArr.used; i++) {
 		ActiveEntity entity = playerArr.ActiveEntityArr[i];
 		if (entity.unit.isSel) {
-			printf("YES\n");
 			return 1;
 		}
 	}
@@ -65,7 +63,7 @@ Brief:
     Clears timers and sets the idle color.
 */
 void Idle_Init(GameEntity* entity, StateMachine* sm, float dt) {
-	//printf("Player entered IDLE::INIT state\n");
+	printf("Player entered IDLE::INIT state\n");
 	entity->color.red = 100;
 	entity->color.green = 100;
 	entity->color.blue = 255;
@@ -109,7 +107,7 @@ Brief:
     Placeholder for cleanup when leaving idle.
 */
 void Idle_Exit(GameEntity* entity, StateMachine* sm, float dt) {
-	//printf("LEAVING IDLE state\n");
+	printf("LEAVING IDLE state\n");
 }
 
 /*---------------------------------PickUp Functions-----------------------------*/
@@ -169,7 +167,7 @@ void PickedUp_Update(GameEntity* entity, StateMachine* sm, float dt) {
 		if (Set_OnTile(entity, (CP_Vector) { CP_Input_GetMouseX(), CP_Input_GetMouseY() })) // Set_OnTile returns a tile that closley matches the curr Mouse Pos
 		{
 			entity->pickUpRemoval = 1;
-			//printf("removing %d %d\n", entity->pickUpRemoval, entity->pickUpIndex);
+			printf("removing %d %d\n", entity->pickUpRemoval, entity->pickUpIndex);
 			FSM_SetState(sm, IdleState, entity, dt);
 		}
 		return;
@@ -187,7 +185,7 @@ Brief:
     Resets entity flags, refreshes bullets, and plays place sound.
 */
 void PickedUp_Exit(GameEntity* entity, StateMachine* sm, float dt) {
-	//printf("Player left IDLE state\n");
+	printf("Player left IDLE state\n");
 	B_Arr_Refresh(&(entity->bullets.bulletArr), entity);
 	entity->isSel = 0;
 	CP_Sound_Play(entity->sound.soundPlace);
@@ -258,7 +256,7 @@ Brief:
     Clears selection flags and stops tile hover.
 */
 void Sel_Exit(GameEntity* entity, StateMachine* sm, float dt) {
-	//printf("BYE SELECTION\n");
+	printf("BYE SELECTION\n");
 	entity->isSel = 0;
 	Check_ForSel();
 	Hover_Tile_Exit();

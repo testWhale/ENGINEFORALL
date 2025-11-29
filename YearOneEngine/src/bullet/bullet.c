@@ -14,7 +14,7 @@
 
 
 //Properties of different bullet templates for normal, poison and stun attack
-Bullet Bullet_Template(const char* name) {
+Bullet Bullet_Template(char* name) {
     Bullet bullet = { 0 };
     if (strcmp(name, "poison") == 0) {
         bullet = (Bullet){
@@ -108,7 +108,7 @@ void B_Arr_Insert(BulletArr* A, Bullet Entity) {
         A->maxLength = newCap;
     }
 
-    Entity.id = A->used;
+    Entity.id = (int)A->used;
     Entity.opacity = 255;
     A->bulletArr[A->used++] = Entity;
 }

@@ -27,7 +27,7 @@ extern Tile g_TileMap[TILE_ROWS][TILE_COLUMNS]; //declaration of one global inst
 /* When called, place entity onto that tile, based on parameters mouse coords
 * input: GameEntity* entity to place. CP_Vector mouse coords
 * return: the tile that best matches the curr Mouse Coords. */
-Tile* Set_OnTile(GameEntity* Entity, CP_Vector mouse);
+int Set_OnTile(GameEntity* Entity, CP_Vector mouse);
 
 /* When mouse hovers above tile, light that tile up. 
 * input: GameEntity* entity to place. CP_Vector mouse coords
@@ -37,7 +37,7 @@ Tile* Hover_TileAt(GameEntity* Entity, CP_Vector mouse);
 /* When called all tiles are deselected. 
 * input: GameEntity* entity to place. CP_Vector mouse coords
 * return: the tile that best matches the curr Mouse Coords. */
-Tile* Hover_Tile_Exit();
+void Hover_Tile_Exit();
 
 /* Set the tile that entity is on. c_tile->tsel = 1; */
 void Sel_AfterPlaced(GameEntity* Entity, CP_Vector );
@@ -45,9 +45,5 @@ void Sel_AfterPlaced(GameEntity* Entity, CP_Vector );
 void Map_Init(CP_Vector startPos, float width, float height);
 
 void Map_Update();
-Tile* setOnTile(GameEntity* Entity, CP_Vector mouse);
-Tile* hoverTileAt(GameEntity* Entity, CP_Vector mouse);
-Tile* hoverTileExit();
-Tile* SelAfterPlaced(GameEntity* Entity, CP_Vector mouse);
 
 #endif

@@ -45,7 +45,7 @@ void Credits_Init(void)
 
     Button_Load(&BackButton, &defaultSound,
         156 * unit, 92 * unit,
-        55 * unit, 19.5 * unit,
+        55 * unit, 19.5f * unit,
         0 * unit,
         "Assets/Buttons/Back/BackNormal.png",
         "Assets/Buttons/Back/BackHighlighted.png",
@@ -112,7 +112,7 @@ void Credits_Update(void)
     CP_Image_Draw(Credits, 0, CreditsY, 168 * unit, 700 * unit, 255);
 
 
-    CreditsY -= 0.3 * unit;
+    CreditsY -= 0.3f * unit;
     Button_Behavior(&BackButton);
 
    

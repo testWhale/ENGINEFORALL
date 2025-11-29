@@ -345,7 +345,7 @@ void Main_Scene_Update(void)
                 player.pickUpIndex = Mouse_GetPickupCount(); // gives first pickup id: 1 
                 Mouse_AddPickup();
                 Arr_Insert(&playerArr, (ActiveEntity) {
-                    playerArr.used,
+                    (int)playerArr.used,
                         player, (StateMachine) { .currState = PickUpState },
                         .maxHealth = 100, .health = 100,
                         .alive = 1, .hasScored = 0, .lastLeftmostX = 0
@@ -363,7 +363,7 @@ void Main_Scene_Update(void)
                 player.pickUpIndex = Mouse_GetPickupCount(); // gives first pickup id: 1 
                 Mouse_AddPickup();
                 Arr_Insert(&playerArr, (ActiveEntity) {
-                    playerArr.used,
+                    (int)playerArr.used,
                         player, (StateMachine) { .currState = PickUpState },
                         .maxHealth = 100, .health = 100,
                         .alive = 1, .hasScored = 0, .lastLeftmostX = 0
@@ -385,7 +385,7 @@ void Main_Scene_Update(void)
                 player.pickUpIndex = Mouse_GetPickupCount(); // gives first pickup id: 1 
                 Mouse_AddPickup();
                 Arr_Insert(&playerArr, (ActiveEntity) {
-                    playerArr.used,
+                    (int)playerArr.used,
                         player, (StateMachine) { .currState = PickUpState
                     },
                         .maxHealth = 100, .health = 100,

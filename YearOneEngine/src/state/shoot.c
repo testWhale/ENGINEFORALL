@@ -12,7 +12,6 @@
 #include "shoot.h"
 #include "utils/utils.h"
 #include "utils/arr.h"
-#include "utils/container.h"
 #include "tile/tile.h"
 #include "bullet/bullet.h"
 #include <stdio.h>
@@ -54,7 +53,7 @@ void B_Arr_Refresh(BulletArr* array, GameEntity* turret) {
 		array->bulletArr[i].centerPos.x = turret->centerPos.x;
 		array->bulletArr[i].centerPos.y = turret->centerPos.y;
 		array->bulletArr[i].opacity = 255;
-		//printf("%d %f", turret->bullets.bulletArr[i].id, turret->bullets.bulletArr[i].opacity);
+		printf("%d %f", turret->bullets.bulletArr[i].id, turret->bullets.bulletArr[i].opacity);
 	}
 }
 
@@ -172,7 +171,7 @@ void Shoot_Update(GameEntity* turret, StateMachine* SM, float dt) {
 				bullet->centerPos = CP_Vector_Add(bullet->centerPos, CP_Vector_Scale(bullet->velocity, dt));
 				
 					if (bullet->centerPos.x >= CP_System_GetWindowWidth()) {
-					//printf("DEL\n");
+					printf("DEL\n");
 						B_Arr_Del(&(turret->bullets), bullet->id);
 					}
 			

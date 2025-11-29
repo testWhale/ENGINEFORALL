@@ -112,7 +112,7 @@ int Is_Mouse_Released(float circle_center_x, float circle_center_y, float diamet
 	double dist = sqrt(dist_x + dist_y);
 	if (dist <= radius && CP_Input_MouseDown(MOUSE_BUTTON_LEFT))
 	{
-		//printf("Circle Clicked\n");
+		printf("Circle Clicked\n");
 		return 1;
 	}
 	if (CP_Input_MouseReleased(MOUSE_BUTTON_LEFT))

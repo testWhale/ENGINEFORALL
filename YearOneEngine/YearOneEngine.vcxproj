@@ -37,11 +37,8 @@
     <ClCompile Include="src\state\pickup.c" />
     <ClCompile Include="src\state\shoot.c" />
     <ClCompile Include="src\utils\arr.c" />
-    <ClCompile Include="src\utils\unused\backend\containerStates.c" />
-    <ClCompile Include="src\utils\container.c" />
     <ClCompile Include="src\utils\health\health.c" />
     <ClCompile Include="src\utils\mouse\mouse.c" />
-    <ClCompile Include="src\utils\readTxt.c" />
     <ClCompile Include="src\utils\unused\arr\sample.c" />
     <ClCompile Include="src\utils\SM.c" />
     <ClCompile Include="src\utils\UI\Pause.c" />
@@ -75,9 +72,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\utils\arr.h" />
-    <ClInclude Include="src\utils\unused\backend\containerStates.h" />
-    <ClInclude Include="src\utils\container.h" />
-    <ClInclude Include="src\utils\readTxt.h" />
     <ClInclude Include="src\utils\SM.h" />
     <ClInclude Include="src\tile\tile.h" />
     <ClInclude Include="src\utils\utils.h" />

@@ -80,7 +80,7 @@ void Arr_Insert(TestArr* A, ActiveEntity e) {
     /* When we insert a new unit into arr, 
     -> we need to intilise its bullet array 
     -> and insert in some values */
-    A->ActiveEntityArr->id = A->used;
+    A->ActiveEntityArr->id = (int)(A->used);
     A->ActiveEntityArr[A->used] = e;
     GameEntity* unit = &A->ActiveEntityArr[A->used].unit;
     
@@ -95,7 +95,7 @@ void Arr_Insert(TestArr* A, ActiveEntity e) {
     }
 
     if (e.maxHealth <= 0) e.maxHealth = 100;
-    if (e.health <= 0) e.health = e.maxHealth;
+    if (e.health <= 0) e.health = (float)e.maxHealth;
     if (e.alive != 0 && e.alive != 1) e.alive = 1;
 
     A->ActiveEntityArr[A->used++] = e;

@@ -26,7 +26,7 @@ Output:
 Brief:
     Places the enemy/player on a random tile row, prepares enemy with velocity and accelelartion configures its texture/accelelartion
 */
-GameEntity* Start_Wave(GameEntity* entity, float dt) {
+void Start_Wave(GameEntity* entity, float dt) {
 	
 	// provides rdnm number till TILE_ROWS numbers range from 0-6
 	int rndm = rand() % TILE_ROWS;
@@ -40,11 +40,11 @@ GameEntity* Start_Wave(GameEntity* entity, float dt) {
 	/* This sets a random speed value for each enemy*/
 	entity->accel = (CP_Vector){ (rand() % 2), 0 };
 	if (entity->accel.x >= 1) {
-		entity->accel.x *= 0.04;
+		entity->accel.x *= (float)0.04;
 		entity->sprite = CP_Image_Load("Assets/Enemies/Tank_Mouse.png");
 	}
 	if (entity->accel.x == 0) {
-		entity->accel.x = 0.1;
+		entity->accel.x = (float)0.1;
 		entity->sprite = CP_Image_Load("Assets/Enemies/Electric_Mouse.png");
 	}
 	entity->sWidth = CP_Image_GetWidth(entity->sprite);
@@ -71,10 +71,11 @@ Output:
 Brief:
     Advances the entity along its current acceleration, moving it across the screen each frame.
 */
-GameEntity* Move_Wave(GameEntity* entity, float dt) {
+void Move_Wave(GameEntity* entity, float dt) {
 	 
 	entity->velocity = CP_Vector_Add(entity->velocity, entity->accel);
 	entity->centerPos = CP_Vector_Add(entity->centerPos,CP_Vector_Scale(entity->velocity, dt));
+
 }
 
 

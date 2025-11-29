@@ -55,15 +55,15 @@ void Map_Init(CP_Vector startPos, float width, float height) {
 
 
 /*---------------------------------Check TILE FUNCTIONS-----------------------------*/
-Tile* Set_OnTile(GameEntity* Entity, CP_Vector mouse) {
+int Set_OnTile(GameEntity* Entity, CP_Vector mouse) {
 	float y = mouse.y - g_TileMap[0][0].startPos.y;
 	float x = mouse.x - g_TileMap[0][0].startPos.x;
 	if (y < 0 || x < 0) { return; }
 	int row = (y) / g_TileMap[0][0].dim.y;
 	
 	int col = (x) / g_TileMap[0][0].dim.x; 
-	//printf("ROW NOT GOOD: %d %d", row, col);
-	//printf("The Value %f %f", mouse.x - g_TileMap[0][0].startPos.x, mouse.y - g_TileMap[0][0].startPos.y);
+	printf("ROW NOT GOOD: %d %d", row, col);
+	printf("The Value %f %f", mouse.x - g_TileMap[0][0].startPos.x, mouse.y - g_TileMap[0][0].startPos.y);
 	if (row < 0 || row > TILE_ROWS || col < 0 || col > TILE_COLUMNS) {  return 0; }
 	Tile* c_tile = &g_TileMap[row][col];
 
@@ -71,13 +71,13 @@ Tile* Set_OnTile(GameEntity* Entity, CP_Vector mouse) {
 		return;
 	}
 	if (1 == c_tile->hasEntity) {
-		//printf("Cannot Place Unit Here.\n");
+		printf("Cannot Place Unit Here.\n");
 		CP_Settings_Fill(CP_Color_Create(255, 0, 0, 255));
 		//Entity->centerPos = (CP_Vector){ 0,0 };
 		return NULL;
 	}
 	if (1 == c_tile->nextTileCheck) {
-		//printf("Cannot Place, Enemy Too Close.\n");
+		printf("Cannot Place, Enemy Too Close.\n");
 		CP_Settings_Fill(CP_Color_Create(255, 0, 0, 255));
 		//Entity->centerPos = (CP_Vector){ 0,0 };
 		return NULL;
@@ -89,6 +89,7 @@ Tile* Set_OnTile(GameEntity* Entity, CP_Vector mouse) {
 		Entity->centerPos = c_tile->centerPos; //magnetise entity to tile
 		c_tile->entity = Entity; //in case tile needs entity data give it
 	}
+
 }
 
 /*---------------------------------HOVER FUNCTIONS-----------------------------*/
@@ -114,7 +115,7 @@ Tile* Hover_TileAt(GameEntity* Entity, CP_Vector mouse) {
 
 	return c_tile;
 }
-Tile* Hover_Tile_Exit() {
+void Hover_Tile_Exit() {
 	for (int i = 0; i < TILE_ROWS; i++) {
 		for (int j = 0; j < TILE_COLUMNS; j++) {
 			g_TileMap[i][j].currHovered = 0;
