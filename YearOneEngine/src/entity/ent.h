@@ -101,7 +101,7 @@ Output:
 Brief:
     Preloads textures and precomputes lighting textures for the custom draw pipeline.
 */
-void setup(char* imgPath, char* normPath);
+void setup(const char* imgPath, const char* normPath);
 
 /* draw()
 Input:

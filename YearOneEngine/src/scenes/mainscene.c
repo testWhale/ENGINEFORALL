@@ -23,6 +23,7 @@
 #include "nuke/nuke.h"
 #include "health.h"
 #include "utils/wave/wave.h"
+#include "utils/mouse/mouse.h"
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
@@ -179,7 +180,7 @@ void Main_Scene_Update(void)
 
     if (HealthSystem_GetHearts(&gHealth) <= 0) {
         float finalTime = HealthSystem_GetTimer(&gHealth);
-        int   moneyEarn = (int)currentMoney;
+        float moneyEarn = currentMoney;
 
         GameOver_SetData(finalTime, moneyEarn);
         Free_Pickup();
@@ -253,8 +254,8 @@ void Main_Scene_Update(void)
 
     //prepares cost string to print and show
     CP_Settings_TextSize(4 * unit);
-    sprintf_s(clicker1Cost, 100, "%.0f$ ", Scaling_Cost(clickerUpgrade1Count, 50 ,1.08));
-    sprintf_s(clicker2Cost, 100, "%.0f$ ", Scaling_Cost(clickerUpgrade2Count, 10, 2.5));
+    sprintf_s(clicker1Cost, 100, "%.0f$ ", Scaling_Cost(clickerUpgrade1Count, 50.0f ,1.08f));
+    sprintf_s(clicker2Cost, 100, "%.0f$ ", Scaling_Cost(clickerUpgrade2Count, 10.0f, 2.5f));
     CP_Font_DrawText(clicker1Cost, 10 * unit, 75 * unit);
     CP_Font_DrawText(clicker2Cost, 25 * unit, 75 * unit);
     CP_Font_DrawText("50000$", 40 * unit, 75 * unit);
@@ -263,9 +264,9 @@ void Main_Scene_Update(void)
     CP_Font_DrawText("100$", 40 * unit, 95 * unit);
 
     if (DeveloperMode==0)
-    CP_Font_DrawText("Press D for Dev Mode", 115 * unit, 99.5 * unit);
+    CP_Font_DrawText("Press D for Dev Mode", 115.f * unit, 99.5f * unit);
     if (DeveloperMode == 1)
-        CP_Font_DrawText("Q to Quit, W to earn 1000$, E to Instant Kill Wave", 115 * unit, 99.5 * unit);
+        CP_Font_DrawText("Q to Quit, W to earn 1000$, E to Instant Kill Wave", 115 * unit, 99.5f * unit);
 
     if (!Pause_IsPaused())
     {
@@ -313,7 +314,7 @@ void Main_Scene_Update(void)
 
         //normal click upgrade
         if (ClickerUpgrade1.isClicked == 1) {
-            if (Purchase_System(&currentMoney, Scaling_Cost(clickerUpgrade1Count, 50, 1.08))) {
+            if (Purchase_System(&currentMoney, Scaling_Cost(clickerUpgrade1Count, 50, 1.08f))) {
                 clickerUpgrade1Count += 1;
                 Click_Upgrade();
             }
@@ -321,7 +322,7 @@ void Main_Scene_Update(void)
 
         //passive income upgrade
         if (ClickerUpgrade2.isClicked == 1) {
-            if (Purchase_System(&currentMoney, Scaling_Cost(clickerUpgrade2Count, 10, 2.5))) {
+            if (Purchase_System(&currentMoney, Scaling_Cost(clickerUpgrade2Count, 10, 2.5f))) {
                 clickerUpgrade2Count += 1;
                 Passive_Upgrade();
             }

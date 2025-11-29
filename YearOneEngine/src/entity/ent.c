@@ -56,13 +56,12 @@ GameEntity Make_Template(const char* name) {
 	if (name == "poison")
 	{
 		soundPlace = "Assets/Sound_Effects/units/posPlace.mp3";
-		Bullet temp = Bullet_Template("poison");
 
 		spritePath = "Assets/Cats/p.png";
 		shadowPath = "Assets/Cats/n_s.png";
 		e = (GameEntity){
 		.centerPos = {400, 150}, .rotation = 0, .isPlayer = 1, .forwardVector = {0, 0}, .color = {255,0,255,255},
-		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "poison" , .bullets = {0}, .sprite = "Assets/Cats/p.png"};
+		.diameter = 100, .stateTimer = 0, .isItOnMap = 0, .isSel = 0, .label = "poison" , .bullets = {0} };
 		//B_Arr_Insert(&e.bullets, temp);
 
 	}
@@ -70,7 +69,6 @@ GameEntity Make_Template(const char* name) {
 	if (name == "stun")
 	{
 		soundPlace = "Assets/Sound_Effects/units/elecPlace.mp3";
-		Bullet temp = Bullet_Template("stun");
 		spritePath = "Assets/Cats/e.png";
 		shadowPath = "Assets/Cats/n_s.png";
 		e = (GameEntity){
@@ -145,7 +143,7 @@ void Init_PlayerDemo() {
 		Arr_Insert(&enemyArr, ae);
 		Start_Wave(&enemyArr.ActiveEntityArr[i].unit, 0);
 		if (enemyArr.ActiveEntityArr[i].unit.accel.x > -0.5) {
-			enemyArr.ActiveEntityArr[i].maxHealth += 35 * -enemyArr.ActiveEntityArr[i].unit.accel.x;
+			enemyArr.ActiveEntityArr[i].maxHealth += 35 * -(int)enemyArr.ActiveEntityArr[i].unit.accel.x;
 			printf("THis enemy has more health %f\n", enemyArr.ActiveEntityArr[i].health);
 		}
 
@@ -175,8 +173,8 @@ void Init_NewWave(int currWave) {
 		ae.unit = enemy;
 		ae.fsm = (StateMachine){ .currState = EnemyIdleState };
 		/* Difficulty Curving */
-		ae.maxHealth = 100 + pow(currWave, 3);
-		ae.health = 100 + pow(currWave, 3);
+		ae.maxHealth = 100 + (int)pow(currWave, 3.0);
+		ae.health = 100.0f + (float)pow(currWave, 3.0);
 		printf("health %f\n", enemyArr.ActiveEntityArr[i].health);
 		ae.alive = 1;
 		ae.hasScored = 0;
@@ -189,8 +187,8 @@ void Init_NewWave(int currWave) {
 		/* TANK CODE */
 		/* this sets ur enemy health, if enemy is slower than -0.4 than it will be tankier */
 		if (enemyArr.ActiveEntityArr[i].unit.accel.x > -0.1) {
-			enemyArr.ActiveEntityArr[i].maxHealth += 1005 * -enemyArr.ActiveEntityArr[i].unit.accel.x;
-			enemyArr.ActiveEntityArr[i].health += 1005 * -enemyArr.ActiveEntityArr[i].unit.accel.x;
+			enemyArr.ActiveEntityArr[i].maxHealth += 1005 * -(int)enemyArr.ActiveEntityArr[i].unit.accel.x;
+			enemyArr.ActiveEntityArr[i].health += 1005.0f * -enemyArr.ActiveEntityArr[i].unit.accel.x;
 			printf("Tank HP %f\n", enemyArr.ActiveEntityArr[i].health);
 		}
 	}
@@ -563,7 +561,7 @@ void Draw_Entities(void)
 		//CP_Settings_Fill(CP_Color_Create(e->color.red, e->color.green, e->color.blue, e->color.opacity));
 		//CP_Graphics_DrawCircle(e->centerPos.x, e->centerPos.y, e->diameter);
 		CP_Settings_ImageMode(CP_POSITION_CENTER);
-		CP_Image_Draw(e->sprite, e->centerPos.x, e->centerPos.y - (2.5 * unit), e->sWidth* e->scale * 0.1, e->sHeight* e->scale * 0.1, 255);
+		CP_Image_Draw(e->sprite, e->centerPos.x, e->centerPos.y - (2.5f * unit), e->sWidth * e->scale * 0.1f, e->sHeight* e->scale * 0.1f, 255);
 	}
 
 	Draw_Bullets();
@@ -783,17 +781,17 @@ void draw(float worldX, float worldY, float drawW, float drawH, int alpha) {
 	int index0 = (int)fdir % NUM_DIRS;
 	int index1 = (index0 + 1) % NUM_DIRS;
 	float blend = fdir - index0;
-
+	
 	/* draw first texture fully opaque */
-	CP_Settings_Tint(CP_Color_Create(1.0f, 1.0f, 1.0f, 1.0f));
+	CP_Settings_Tint(CP_Color_Create(1, 1, 1, 1));
 	CP_Image_Draw(texDirs[index0], worldX * unit, worldY * unit, screenW, screenH, alpha);
 
 	/* draw second texture fully opaque, weighted by blend using color only */
-	CP_Settings_Tint(CP_Color_Create(blend, blend, blend, 1.0f));
+	CP_Settings_Tint(CP_Color_Create((int)blend, (int)blend, (int)blend, 1));
 	CP_Image_Draw(texDirs[index1], worldX * unit, worldY * unit, screenW, screenH, alpha);
 
 	/* reset tint */
-	CP_Settings_Tint(CP_Color_Create(1.0f, 1.0f, 1.0f, 1.0f));
+	CP_Settings_Tint(CP_Color_Create(1, 1, 1, 1));
 }
 
 /* cleanup()

@@ -177,7 +177,6 @@ void Button_Behavior(ButtonInfo* btnname) {
 			Draw_Button_Feedback(btnname);
 			if (CP_Input_MouseTriggered(MOUSE_BUTTON_LEFT)) {
 				CP_Sound_PlayAdvanced(btnname->soundEffect->onClick, 0.5, 1.0, FALSE, CP_SOUND_GROUP_1);
-				printf("1");
 			}
 
 		}
@@ -187,7 +186,6 @@ void Button_Behavior(ButtonInfo* btnname) {
 			{ //only return isClicked =1 on release
 				CP_Sound_PlayAdvanced(btnname->soundEffect->onRelease, 0.5, 1.0, FALSE, CP_SOUND_GROUP_1);
 				btnname->isClicked = 1;
-				printf("2");
 			}
 
 			else { //if its not being clicked or released draw the highlight frame and return isSel =1;

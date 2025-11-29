@@ -16,7 +16,6 @@
 //Properties of different bullet templates for normal, poison and stun attack
 Bullet Bullet_Template(const char* name) {
     Bullet bullet = { 0 };
-    int dt = CP_System_GetDt();
     if (strcmp(name, "poison") == 0) {
         bullet = (Bullet){
             .id = 0,
