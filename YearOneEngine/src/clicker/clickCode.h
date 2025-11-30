@@ -8,6 +8,10 @@
 // Copyright 2025 DigiPen, All rights reserved.
 //---------------------------------------------------------
 
+#ifndef clickCode_H
+#define clickCode_H
+
+
 
 extern int clickPower;
 extern float OneCountdown,passiveIncome;
@@ -37,3 +41,5 @@ void Click_Upgrade();
 
 /// </summary>
 void Passive_Upgrade();
+
+#endif

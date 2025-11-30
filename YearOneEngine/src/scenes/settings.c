@@ -16,7 +16,7 @@
 
 bool settingsTabOpen = true;
 float masterVolume = 1.0f;
-extern int unit;
+//extern int unit;
 float volume = 0.5f;
 CP_Font myFont;
 CP_Image MainMenuBackground;

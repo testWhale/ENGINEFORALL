@@ -18,8 +18,8 @@
 
 clickPower = 1;
 clickPurchaseAmount = 0;
-OneCountdown = 1.0f;
-passiveIncome = 0;
+float OneCountdown = 1.0f;
+float passiveIncome = 0;
 
 
 //this function generates money from one click
