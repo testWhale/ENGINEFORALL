@@ -687,6 +687,10 @@ void setup(const char* basePath, const char* normalPath) {
 	nxArr = malloc(sizeof(float) * totalPixels);
 	nyArr = malloc(sizeof(float) * totalPixels);
 	nzArr = malloc(sizeof(float) * totalPixels);
+	if (!nxArr || !nyArr || !nzArr) {
+		printf("Error: nxArr || nyArr || nzArr\n");
+		return;
+	}
 
 	/* fill arrays */
 	for (int i = 0; i < totalPixels; ++i) {
@@ -789,10 +793,17 @@ void draw(float worldX, float worldY, float drawW, float drawH, int alpha) {
 	int index1 = (index0 + 1) % NUM_DIRS;
 	float blend = fdir - index0;
 	
+	/* draw first texture fully opaque */
+	//I tried a lot of methods, updating every pixel, (too expensive) blending two sets of images, (normal map changes not as visible)
+	// and just using one normal map image rendered at differenet angles 
+	CP_Settings_Tint(CP_Color_Create(1, 1, 1, 1));
+	CP_Image_Draw(texDirs[index0], worldX * unit, worldY * unit, screenW, screenH, alpha);
 
 	/* draw second texture fully opaque, weighted by blend using color only */
-	CP_Settings_Tint(CP_Color_Create((int)blend, (int)blend, (int)blend, 1));
-	CP_Image_Draw(texDirs[index1], worldX * unit, worldY * unit, screenW, screenH, alpha);
+	//CP_Settings_Tint(CP_Color_Create((int)blend, (int)blend, (int)blend, 1));
+	//index1 is the normal map images 
+	//professors try changing the alpha here itll add or lower the shadow and light effect
+	CP_Image_Draw(texDirs[index1], worldX * unit, worldY * unit, screenW, screenH, 170);
 
 	/* reset tint */
 	CP_Settings_Tint(CP_Color_Create(1, 1, 1, 1));
