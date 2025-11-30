@@ -114,8 +114,8 @@ Description:
 */
 
 void Nuke_Exit(void) {
-    CP_Image_Free(&nuke);
-    CP_Image_Free(&explode);
+    CP_Image_Free(nuke);
+    CP_Image_Free(explode);
     CP_Sound_Free(drop);
     CP_Sound_Free(boom);
     CP_Sound_Free(boom2);
