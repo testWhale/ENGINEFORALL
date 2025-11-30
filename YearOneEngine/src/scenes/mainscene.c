@@ -48,6 +48,7 @@ static HealthSystem gHealth;
 
 void Main_Scene_Init(void)
 {
+    wave = 0;
     bgmMusic = CP_Sound_LoadMusic("Assets/Sound_Effects/BGM.mp3");
 
     CP_Sound_PlayAdvanced(bgmMusic, 1.7f, 1.0f, TRUE, CP_SOUND_GROUP_0);
@@ -455,5 +456,4 @@ void Main_Scene_Exit(void)
     clickerUpgrade2Count = 0;
     Arr_Free(&playerArr);
     Arr_Free(&enemyArr);
-    wave = 0;
 }
