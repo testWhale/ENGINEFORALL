@@ -14,7 +14,7 @@
 #include <stdio.h>
 #include <time.h>
 
-wave = 0;
+int wave = 0;
 waveFlag = 0;
 float waveState = 0;
 

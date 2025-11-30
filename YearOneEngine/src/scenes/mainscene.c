@@ -455,4 +455,5 @@ void Main_Scene_Exit(void)
     clickerUpgrade2Count = 0;
     Arr_Free(&playerArr);
     Arr_Free(&enemyArr);
+    wave = 0;
 }
