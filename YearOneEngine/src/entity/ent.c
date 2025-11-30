@@ -707,7 +707,10 @@ void setup(const char* basePath, const char* normalPath) {
 
 	/* allocate directional texture array */
 	texDirs = malloc(sizeof(CP_Image) * NUM_DIRS);
-
+	if (!texDirs) {
+		printf("Error: Out of memory allocating texDirs\n");
+		return;
+	}
 	/* precompute directional textures */
 	for (int d = 0; d < NUM_DIRS; ++d) {
 		float angle = (float)d / NUM_DIRS * 2.0f * 3.14159265f;
@@ -718,7 +721,10 @@ void setup(const char* basePath, const char* normalPath) {
 		Lx *= invLen; Ly *= invLen; Lz *= invLen;
 
 		CP_Color* buf = malloc(sizeof(CP_Color) * totalPixels);
-
+		if (!buf) {
+			printf("Error: Out of memory for buf (direction %d) \n", d);
+			continue;
+		}
 		for (int i = 0; i < totalPixels; ++i) {
 			float dot = nxArr[i] * Lx + nyArr[i] * Ly + nzArr[i] * Lz;
 			float shade;
@@ -783,9 +789,6 @@ void draw(float worldX, float worldY, float drawW, float drawH, int alpha) {
 	int index1 = (index0 + 1) % NUM_DIRS;
 	float blend = fdir - index0;
 	
-	/* draw first texture fully opaque */
-	CP_Settings_Tint(CP_Color_Create(1, 1, 1, 1));
-	CP_Image_Draw(texDirs[index0], worldX * unit, worldY * unit, screenW, screenH, alpha);
 
 	/* draw second texture fully opaque, weighted by blend using color only */
 	CP_Settings_Tint(CP_Color_Create((int)blend, (int)blend, (int)blend, 1));
